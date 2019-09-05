@@ -1,0 +1,13 @@
+Para buildear la image: 
+    sudo docker build -t flaskapp .
+
+Para correr el contenedor:
+    sudo docker run -it -p 7000:4000 -d flaskapp
+        -p (--publish): para linkear el puerto del contenedor con el de la maquina
+        -d para que corra el contenedor y lo deje en background
+
+Para ver los contenedores corriendo:
+    sudo docker container ls
+
+Para matar un contenedor corriendo:
+    sudo docker stop ID
