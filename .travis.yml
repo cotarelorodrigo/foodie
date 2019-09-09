@@ -7,3 +7,5 @@ install:
 script:
 # unit test
   - python -m pytest -v
+  - coveralls      
+
