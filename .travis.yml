@@ -1,11 +1,21 @@
 language: python
+
 python:
   - "3.6"
+
+services:
+  - docker
+
 install:
   - pip install -r ./python-apirest/requirements.txt
-# command to run tests
+
+before_script:
+  - sh build.sh
+  - sh run.sh
+
 script:
-# unit test
   - python -m pytest -v
   - coveralls      
 
+after_script:
+  - sh stop.sh
