@@ -10,12 +10,13 @@ install:
   - pip install -r ./python-apirest/requirements.txt
 
 before_script:
-  - sh build.sh
-  - sh run.sh
+  - docker build -f Dockerfile -t 7552-app-server .
+  - docker-compose -f docker-compose.yml up
 
 script:
   - python -m pytest -v
   - coveralls      
 
 after_script:
-  - sh stop.sh
+  - docker-compose -f docker-compose.yml stop
+  - docker-compose -f docker-compose.yml down
