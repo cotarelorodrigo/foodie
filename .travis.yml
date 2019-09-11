@@ -17,13 +17,13 @@ script:
 # unit test
   - python -m pytest -v 
   - coveralls      
-  - sudo docker build -f Dockerfile -t $DOCKER_USERNAME/7552-app-server .
+  - docker build -f Dockerfile -t $DOCKER_USERNAME/7552-app-server .
 
 
 deploy:
-provider: script
-script:
-  # push to dockerhub
-  docker push guidotrucco/7552-app-server;
-branch: master
+  provider: script
+  script:
+    # push to dockerhub
+    docker push guidotrucco/7552-app-server;
+  branch: master
 
