@@ -6,15 +6,16 @@ python:
 services:
   - docker
 
+before_install:
+  - sudo service postgresql stop
+
 install:
   - pip install -r ./requirements.txt
-
-before_script:
-  - sudo service postgresql stop
   - docker build -f Dockerfile -t 7552-app-server .
   - docker-compose -f docker-compose.yml up
 
 script:
+  - docker-compose status
   - python -m pytest -v
   - coveralls      
 
