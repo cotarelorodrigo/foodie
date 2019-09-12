@@ -3,7 +3,7 @@ services:
   app-server:
     image: "guidotrucco/7552-app-server"
     ports:
-      - "4000:4000"
+      - "5000:5000"
     depends_on:
       - db
   db:
