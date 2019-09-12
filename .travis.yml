@@ -11,13 +11,13 @@ language: python
 python:
   - "3.6"
 install:
-  - pip install -r ./python-apirest/requirements.txt
+  - pip install -r ./requirements.txt
 # command to run tests
 script:
 # unit test
   - python -m pytest -v 
   - coveralls      
-  - docker build -f python-apirest/Dockerfile -t $DOCKER_USERNAME/7552-app-server .
+  - docker build -f Dockerfile -t $DOCKER_USERNAME/7552-app-server .
 
 
 deploy:
