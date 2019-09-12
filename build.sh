@@ -1,2 +1,2 @@
-sudo docker build -f Dockerfile -t 7552-app-server .
+sudo docker build -f Dockerfile -t guidotrucco/7552-app-server .
 
