@@ -1,3 +1,12 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  # login to docker registries (dockerhub + heroku)
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
 language: python
 
 python:
@@ -14,11 +23,21 @@ install:
   - docker build -f Dockerfile -t 7552-app-server .
   - docker-compose -f docker-compose.yml up
 
+# command to run tests
 script:
-  - docker-compose status
+# unit test
   - python -m pytest -v
   - coveralls      
+  - docker build -f Dockerfile -t $DOCKER_USERNAME/7552-app-server .
 
 after_script:
   - docker-compose -f docker-compose.yml stop
   - docker-compose -f docker-compose.yml down
+
+deploy:
+  provider: script
+  script:
+    # push to dockerhub
+    docker push guidotrucco/7552-app-server;
+  branch: master
+
