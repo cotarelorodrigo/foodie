@@ -9,4 +9,5 @@ COPY . /app
 
 RUN pip3 --no-cache-dir install -r requirements.txt
 
-CMD ["python3", "/app/src/app.py"]
+EXPOSE 5000
+CMD ["gunicorn" , "-b", "0.0.0.0:5000", "wsgi:app"]
