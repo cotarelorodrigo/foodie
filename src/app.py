@@ -1,8 +1,9 @@
 import os
-from src.config import app_config
 from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from src.user_route import pedido_blueprint
+import src.settings
+from src.config import app_config
+from src.auth.controllers.user_route import pedido_blueprint
 
 app = Flask(__name__)
 app.config.from_object(app_config[os.getenv('APP_SETTINGS')])

@@ -1,6 +1,6 @@
 import os
 from src.app import app, db
-from src.models import UserModel
+from src.auth.models.models import UserModel
 
 db.create_all()
 db.session.commit()

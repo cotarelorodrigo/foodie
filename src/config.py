@@ -1,6 +1,6 @@
 # /src/config.py
 import os
-#import settings
+import src.settings
 
 class Development(object):
     """
@@ -10,7 +10,7 @@ class Development(object):
     TESTING = False
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL_LOCAL')
 
 class Production(object):
     """
