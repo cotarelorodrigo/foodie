@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
-from user_service import UserService
+from src.user_service import UserService
 from sqlalchemy.exc import IntegrityError
-from schemas import UserSchema
+from src.schemas import UserSchema
 
 pedido_blueprint = Blueprint('pedido', __name__)
 users_schema = UserSchema()

@@ -1,6 +1,6 @@
 # /src/config.py
 import os
-import settings
+#import settings
 
 class Development(object):
     """
