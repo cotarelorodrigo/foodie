@@ -11,3 +11,7 @@ Para ver los contenedores corriendo:
 
 Para matar un contenedor corriendo:
     sudo docker stop ID
+
+
+Para levantar la base de datos psotgresql local:
+sudo service psotgresql start
