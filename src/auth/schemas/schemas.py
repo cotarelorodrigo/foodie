@@ -3,9 +3,9 @@ from marshmallow import Schema, fields
 
 class UserSchema(Schema):
     name = fields.Str(required=True)
-    email = fields.Str(required=True)
-    password = fields.Email(required=True)
+    email = fields.Email(required=True)
+    password = fields.Str(required=True)
 
     class Meta:
         strict = True
-        fields = ('name', 'email')
+        fields = ('name', 'email', 'password')

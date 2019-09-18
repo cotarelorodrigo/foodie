@@ -16,13 +16,17 @@ def get_users():
     return result
 
 
-@pedido_blueprint.route('/add_user', methods=['GET'])
+@pedido_blueprint.route('/add_user', methods=['POST'])
 def add_user():
     service = UserService()
-    user_data = {'name':'Rodrigo', 'email': 'asd@asd.com', 'password':'123qwe'}
+    content = request.get_json()
+    user_data = users_schema.load(content)
+    # user_data = {'name':'Rodrigo', 'email': 'asd@asd.com', 'password':'123qwe'}
+    print(content)
+    print(user_data)
     try:
         service.create_user(user_data=user_data)
     except IntegrityError:
-        return jsonify({'200': 'El usuario default ya esta agregado'})
+        return jsonify({'200': 'El usuario existe'})
     else:
-        return jsonify({'200': 'Usuario default agregado'})
+        return jsonify({'200': 'Usuario agregado'})
