@@ -1,7 +1,8 @@
 import os
 from src.app import app, db
-from src.auth.models.models import UserModel
+from src.auth.models.users_table import UserModel
 
+db.drop_all() #Si queremos modificar la estructura de las tablass, hay que dropear todo
 db.create_all()
 db.session.commit()
 
