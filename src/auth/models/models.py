@@ -8,7 +8,10 @@ class UserModel(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(128), nullable=False)
   email = db.Column(db.String(128), unique=True, nullable=False)
-  password = db.Column(db.String(128), nullable=True)
+  password = db.Column(db.String(128), nullable=False)
+  signup_datetime = db.Column(db.DateTime, nullable=False)
+  firebase_uid = db.Column(db.String(128), unique=True, nullable=False)
+  picture = db.Column(db.String(128), nullable=True)
   created_at = db.Column(db.DateTime)
   modified_at = db.Column(db.DateTime)
 
@@ -17,9 +20,12 @@ class UserModel(db.Model):
     """
     Class constructor
     """
-    self.name = data.get('name')
+    self.name = data.get('fullName')
     self.email = data.get('email')
     self.password = data.get('password')
+    self.signup_datetime = data.get('signUpDate')
+    self.firebase_uid = data.get('firebaseUid')
+    self.picture = data.get('picture')
     self.created_at = datetime.datetime.utcnow()
     self.modified_at = datetime.datetime.utcnow()
 

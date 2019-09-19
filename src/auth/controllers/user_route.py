@@ -16,14 +16,11 @@ def get_users():
     return result
 
 
-@pedido_blueprint.route('/add_user', methods=['POST'])
+@pedido_blueprint.route('/user', methods=['POST'])
 def add_user():
     service = UserService()
     content = request.get_json()
     user_data = users_schema.load(content)
-    # user_data = {'name':'Rodrigo', 'email': 'asd@asd.com', 'password':'123qwe'}
-    print(content)
-    print(user_data)
     try:
         service.create_user(user_data=user_data)
     except IntegrityError:
