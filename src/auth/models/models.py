@@ -1,7 +1,8 @@
 import datetime
-from src.app import db
 
 class UserModel(db.Model):
+  from src.app import db
+
   # table name
   __tablename__ = 'users'
 
