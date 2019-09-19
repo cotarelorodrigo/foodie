@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from sqlalchemy.exc import IntegrityError
 from src.auth.services.user_service import UserService
 from src.auth.schemas.schemas import UserSchema
+from src.auth.auth_exception import InvalidUserInformation
 
 pedido_blueprint = Blueprint('pedido', __name__)
 users_schema = UserSchema()
@@ -25,7 +26,7 @@ def add_user():
     try:
         user_data = users_schema.load(content)
     except:
-        return jsonify({"error": "faltan parametros para agregar un usuario"}), 420
+        raise InvalidUserInformation("Falta informacion del usuario")
 
     try:
         service.create_user(user_data=user_data)
