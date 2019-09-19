@@ -21,7 +21,11 @@ def get_users():
 def add_user():
     service = UserService()
     content = request.get_json()
-    user_data = users_schema.load(content)
+    
+    try:
+        user_data = users_schema.load(content)
+    except:
+        return jsonify({"error": "faltan parametros para agregar un usuario"}), 420
 
     try:
         service.create_user(user_data=user_data)
