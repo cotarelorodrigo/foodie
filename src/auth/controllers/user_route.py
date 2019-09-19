@@ -23,7 +23,7 @@ def add_user():
     user_data = users_schema.load(content)
     try:
         service.create_user(user_data=user_data)
-    except IntegrityError:
-        return jsonify({'200': 'El usuario existe'})
+    except IntegrityError as e:
+        return jsonify({'409': 'user with this email already exists.'})
     else:
-        return jsonify({'200': 'Usuario agregado'})
+        return jsonify({'200': 'a new user was created.'})
