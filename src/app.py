@@ -7,6 +7,7 @@ from src.auth.controllers.user_route import pedido_blueprint
 
 app = Flask(__name__)
 app.config.from_object(app_config[os.getenv('APP_SETTINGS')])
+
 db = SQLAlchemy(app)
 
 app.register_blueprint(pedido_blueprint)
