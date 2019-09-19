@@ -9,10 +9,6 @@ app = Flask(__name__)
 app.config.from_object(app_config[os.getenv('APP_SETTINGS')])
 
 db = SQLAlchemy(app)
-from src.auth.models.models import UserModel
-db.drop_all()
-db.create_all()
-db.session.commit()
 
 app.register_blueprint(pedido_blueprint)
 
