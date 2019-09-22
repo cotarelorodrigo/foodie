@@ -1,9 +1,10 @@
 import unittest
 from unittest.mock import patch
 import json
-
 from src.app import app
+from src.auth.services import user_service
 
+mock_user = {"fullName": "Rodrigo", "email":"asd@asd.com", "password":"asfaga", "signUpDate":"2019-02-15" , "firebaseUid":"DGHAHAEHR", "picture":"garehqerae"}
 
 class AuthControllerTestCase(unittest.TestCase):
     def setUp(self):
@@ -23,3 +24,16 @@ class AuthControllerTestCase(unittest.TestCase):
         )
 
         assert response._status_code == 420
+
+    @patch("src.auth.services.user_service.UserService.check_email")
+    def test_check_existing_email(self, check_email_mock):
+        check_email_mock.return_value = True
+        response = self.app.post(
+            '/user/email',
+            data=json.dumps({
+                "email": "asd@asd.com"
+            }),
+            content_type='application/json'
+        )
+
+        assert response._status_code == 200

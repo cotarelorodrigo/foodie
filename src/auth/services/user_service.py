@@ -7,3 +7,11 @@ class UserService:
     def get_users(self):
         from src.auth.models.user_table import UserModel
         return UserModel.query.all()
+
+    def check_email(self, user_email):
+        from src.app import db
+        query_emails = db.engine.execute("SELECT email from users")
+        emails = []
+        for email in list(query_emails):
+            emails.append(email[0])
+        return (user_email in emails)

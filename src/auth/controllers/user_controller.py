@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from sqlalchemy.exc import IntegrityError
 from src.auth.services.user_service import UserService
 from src.auth.schemas.schemas import UserSchema
-from src.auth.auth_exception import InvalidUserInformation
+from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail
 
 pedido_blueprint = Blueprint('pedido', __name__)
 users_schema = UserSchema()
@@ -34,3 +34,13 @@ def add_user():
         return jsonify({'409': 'user with this email already exists.'})
     else:
         return jsonify({'200': 'a new user was created.'})
+
+
+@pedido_blueprint.route('/user/email', methods=['POST'])
+def check_user_email():
+    service = UserService()
+    content = request.get_json()
+    if service.check_email(content['email']):
+        return "user with that email exists", 200
+    else:
+        raise NotFoundEmail("user with that email doesnt exist")
