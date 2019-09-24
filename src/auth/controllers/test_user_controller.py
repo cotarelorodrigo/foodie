@@ -37,3 +37,14 @@ class AuthControllerTestCase(unittest.TestCase):
         )
 
         assert response._status_code == 200
+
+    
+    @patch("src.auth.services.user_service.UserService.get_user")
+    def test_check_existing_id(self, check_id_mock):
+        check_id_mock.return_value = True
+        response = self.app.head('/user/1')
+        assert response._status_code == 200
+
+    def test_check_nonexisting_id(self):
+        response = self.app.head('/user/2')
+        assert response._status_code == 404

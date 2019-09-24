@@ -21,8 +21,8 @@ def get_users():
 def get_user(_id):
     service = UserService()
     user = service.get_user(_id)
-    if not user: return jsonify({'404': "user with that id doesn't exist."})
-    return jsonify({'200': "user with that id exists."})
+    if not user: return jsonify({'404': "user with that id doesn't exist."}), 404
+    return jsonify({'200': "user with that id exists."}), 200
 
 
 @pedido_blueprint.route('/user', methods=['POST'])
