@@ -52,11 +52,10 @@ def add_user():
         return jsonify({'200': 'a new user was created.'})
 
 
-@pedido_blueprint.route('/user/email', methods=['POST'])
-def check_user_email():
+@pedido_blueprint.route('/user/email/<email>', methods=['GET'])
+def check_user_email(email):
     service = UserService()
-    content = request.get_json()
-    if service.check_email(content['email']):
+    if service.check_email(email):
         return "user with that email exists", 200
     else:
         raise NotFoundEmail("user with that email doesnt exist")

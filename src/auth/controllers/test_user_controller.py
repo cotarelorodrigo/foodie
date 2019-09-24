@@ -28,16 +28,8 @@ class AuthControllerTestCase(unittest.TestCase):
     @patch("src.auth.services.user_service.UserService.check_email")
     def test_check_existing_email(self, check_email_mock):
         check_email_mock.return_value = True
-        response = self.app.post(
-            '/user/email',
-            data=json.dumps({
-                "email": "asd@asd.com"
-            }),
-            content_type='application/json'
-        )
-
+        response = self.app.head('/user/email/asd@asd.com')
         assert response._status_code == 200
-
     
     @patch("src.auth.services.user_service.UserService.get_user")
     def test_check_existing_id(self, check_id_mock):
