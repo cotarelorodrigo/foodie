@@ -17,6 +17,13 @@ def get_users():
         result[u.name] = u.email
     return result
 
+@pedido_blueprint.route('/user/<_id>', methods=['GET'])
+def get_user(_id):
+    service = UserService()
+    user = service.get_user(_id)
+    if not user: return jsonify({'404': "user with that id doesn't exist."})
+    return jsonify({'200': "user with that id exists."})
+
 
 @pedido_blueprint.route('/user', methods=['POST'])
 def add_user():

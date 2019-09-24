@@ -8,6 +8,10 @@ class UserService:
         from src.auth.models.user_table import UserModel
         return UserModel.query.all()
 
+    def get_user(self,_id):
+        from src.auth.models.user_table import UserModel
+        return UserModel.query.get(_id)
+
     def check_email(self, user_email):
         from src.app import db
         query_emails = db.engine.execute("SELECT email from users")
