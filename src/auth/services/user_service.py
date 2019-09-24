@@ -12,6 +12,14 @@ class UserService:
         from src.auth.models.user_table import UserModel
         return UserModel.query.get(_id)
 
+    def delete_user(self,_id):
+        from src.app import db
+        from src.auth.models.user_table import UserModel
+        response = UserModel.query.filter_by(id=_id).delete()
+        db.session.commit()
+        return response
+
+
     def check_email(self, user_email):
         from src.app import db
         query_emails = db.engine.execute("SELECT email from users")
@@ -19,3 +27,4 @@ class UserService:
         for email in list(query_emails):
             emails.append(email[0])
         return (user_email in emails)
+

@@ -48,3 +48,16 @@ class AuthControllerTestCase(unittest.TestCase):
     def test_check_nonexisting_id(self):
         response = self.app.head('/user/2')
         assert response._status_code == 404
+
+    @patch("src.auth.services.user_service.UserService.delete_user")
+    def test_delete_existing_id(self, delete_id_mock):
+        delete_id_mock.return_value = True
+        response = self.app.delete('/user/1')
+        assert response._status_code == 200
+
+    def test_delete_nonexisting_id(self):
+        response = self.app.delete('/user/2')
+        assert response._status_code == 404
+
+
+
