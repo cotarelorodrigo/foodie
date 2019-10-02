@@ -12,3 +12,17 @@ class UserSchema(Schema):
     class Meta:
         strict = True
         fields = ('fullName', 'email', 'password', 'signUpDate', 'firebaseUid', 'picture')
+
+class ShopSchema(Schema):
+    id = fields.Int(required=True)
+    name = fields.Str(required=True)
+    address = fields.Str(required=True)
+    description = fields.Str(required=True)
+    photoUrl = fields.Str(required=True)
+    rating = fields.Int(required=True)
+    #To do: Falta meter el campo menu, que seria?
+
+
+    class Meta:
+        strict = True
+        fields = ('id', 'name', 'address', 'description', 'photoUrl', 'rating')
