@@ -1,6 +1,7 @@
 import os
 from src.app import app, db
 from src.auth.models.user_table import UserModel
+from src.auth.models.shop_table import ShopModel
 
 
 db.drop_all()
