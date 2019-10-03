@@ -12,3 +12,10 @@ class UserSchema(Schema):
     class Meta:
         strict = True
         fields = ('fullName', 'email', 'password', 'signUpDate', 'firebaseUid', 'picture')
+
+class LoginSchema(Schema):
+    email = fields.Email(required=True)
+    password = fields.Str(required=True)
+
+    class Meta:
+        strict = True
