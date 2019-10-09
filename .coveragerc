@@ -1,0 +1,13 @@
+[run]
+include =
+    ./src/**
+omit =
+    # omit anything in a virtualenv directory anywhere
+    *./venv/*
+    test*
+[report]
+omit =
+    # omit anything in a virtualenv directory anywhere
+    *./venv/*
+
+
