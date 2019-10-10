@@ -14,6 +14,11 @@ RUN \
  python3 -m pip install -r requirements.txt --no-cache-dir && \
  apk --purge del .build-deps
 
+#RUN apk add --no-cache bash
+
 EXPOSE 5000
-CMD ["gunicorn", "wsgi:app"]
-#CMD ["gunicorn" , "-b", "0.0.0.0:5000", "wsgi:app"]
+
+#RUN ["chmod", "+x", "./wait-for-it.sh"]
+
+#CMD ["gunicorn", "wsgi:app"]
+CMD ["gunicorn" , "-b", "0.0.0.0:5000", "wsgi:app"]
