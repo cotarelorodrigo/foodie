@@ -18,7 +18,7 @@ install:
 # command to run tests
 script:
 # unit test
-  - python -m pytest -v 
+  - python -m pytest -v --cov
   - coveralls      
   - docker build -f Dockerfile -t $DOCKER_USERNAME/7552-app-server .
   - docker tag $DOCKER_USERNAME/7552-app-server registry.heroku.com/$HEROKU_APP_NAME/web
