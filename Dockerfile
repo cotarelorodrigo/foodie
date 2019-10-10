@@ -1,11 +1,11 @@
-FROM alpine:3.10
-
-RUN apk add --no-cache python3-dev \
-    && pip3 install --upgrade pip
+FROM alpine:3.10 as builder
 
 WORKDIR /app
 
-COPY . /app
+COPY requirements.txt /app
+
+RUN apk add --no-cache python3-dev \
+    && pip3 install --upgrade pip
 
 #RUN pip3 --no-cache-dir install -r requirements.txt
 RUN \
@@ -14,11 +14,12 @@ RUN \
  python3 -m pip install -r requirements.txt --no-cache-dir && \
  apk --purge del .build-deps
 
-#RUN apk add --no-cache bash
+
+FROM builder as code_files
+
+COPY . /app
 
 EXPOSE 5000
-
-#RUN ["chmod", "+x", "./wait-for-it.sh"]
 
 #CMD ["gunicorn", "wsgi:app"]
 CMD ["gunicorn" , "-b", "0.0.0.0:5000", "wsgi:app"]
