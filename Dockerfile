@@ -20,11 +20,6 @@ FROM builder as code_files
 COPY . /app
 
 EXPOSE 5000
-<<<<<<< HEAD
-CMD ["gunicorn" , "wsgi:app"]
-#CMD ["gunicorn" , "-b", "0.0.0.0:5000", "wsgi:app"]
-=======
 
-#CMD ["gunicorn", "wsgi:app"]
-CMD ["gunicorn" , "-b", "0.0.0.0:5000", "wsgi:app"]
->>>>>>> d1e83f870b5915e6197894f3885ecb0a70118d39
+CMD ["gunicorn", "wsgi:app"]
+#CMD ["gunicorn" , "-b", "0.0.0.0:5000", "wsgi:app"]
