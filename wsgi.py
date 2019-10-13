@@ -4,9 +4,9 @@ from src.auth.models.user_table import UserModel
 from src.auth.models.shop_table import ShopModel
 
 def set_shops():
-	shops = [{"id": 12, "name":"Mc Donalds", "address":"call3 falsa", "description":"comida rapida", "photoUrl":"wqatgayeesyws", "rating":8},
-	 		{"id": 13, "name":"Subway", "address":"call3 falsa", "description":"comida rapida", "photoUrl":"dsgw", "rating":7.3},
-			 {"id": 14, "name":"Mostaza", "address":"call3 falsa", "description":"comida rapida", "photoUrl":"dsgw", "rating":9}]
+	shops = [{"id": 12, "name":"Mc Donalds", "address":"call3 falsa", "latitude": 50.45, "longitude": 100.123, "photoUrl":"wqatgayeesyws", "rating":8},
+	 		{"id": 13, "name":"Subway", "address":"call3 falsa", "latitude": 50.45, "longitude": 100.123, "photoUrl":"dsgw", "rating":7.3},
+			 {"id": 14, "name":"Mostaza", "address":"call3 falsa", "latitude": 50.45, "longitude": 100.123, "photoUrl":"dsgw", "rating":9}]
 	for shop_data in shops:
 		shop = ShopModel(shop_data)
 		shop.save()
