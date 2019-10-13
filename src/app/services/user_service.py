@@ -1,31 +1,31 @@
 from sqlalchemy.orm.exc import NoResultFound
-from src.auth.auth_exception import UserNotFoundException
+from src.app.app_exception import UserNotFoundException
 
 class UserService:
     def create_user(self, user_data):
-        from src.auth.models.user_table import UserModel
+        from src.app.models.user_table import UserModel
         user_data["password"] = self._encrypt_password(user_data["password"])
         user = UserModel(user_data)
         user.save()
 
     def get_users(self):
-        from src.auth.models.user_table import UserModel
+        from src.app.models.user_table import UserModel
         return UserModel.query.all()
 
     def get_user(self,_id):
-        from src.auth.models.user_table import UserModel
+        from src.app.models.user_table import UserModel
         return UserModel.query.get(_id)
 
     def delete_user(self,_id):
         from src.app import db
-        from src.auth.models.user_table import UserModel
+        from src.app.models.user_table import UserModel
         response = UserModel.query.filter_by(id=_id).delete()
         db.session.commit()
         return response
 
     def get_user_by_email(self,value):
         from src.app import db
-        from src.auth.models.user_table import UserModel
+        from src.app.models.user_table import UserModel
         try:
             response = UserModel.query.filter_by(email=value).one().__dict__
         except NoResultFound:

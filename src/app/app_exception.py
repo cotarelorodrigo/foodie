@@ -13,3 +13,7 @@ class NotFoundEmail(Exception):
 class AccessDeniedException(Exception):
     def __init__(self, message):
         self.msg = message
+
+class ShopNotFound(Exception):
+    def __init__(self, message):
+        self.msg = message

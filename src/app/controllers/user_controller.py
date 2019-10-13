@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
 from sqlalchemy.exc import IntegrityError
-from src.auth.services.user_service import UserService
-from src.auth.schemas.schemas import UserSchema, LoginSchema
-from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException
+from src.app.services.user_service import UserService
+from src.app.schemas.schemas import UserSchema, LoginSchema
+from src.app.app_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException
 from src.jwt_handler import encode_data_to_jwt
 
 pedido_blueprint = Blueprint('pedido', __name__)
