@@ -1,7 +1,7 @@
 import unittest
 import json
 from unittest.mock import patch
-from src.auth import app
+from src.app import app
 from src.auth.services import shop_service
 
 mock_shop = {"id": 12, "name":"Mc Donalds", "photoUrl":"wqatgayeesyws", "rating":0.3}
