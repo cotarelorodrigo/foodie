@@ -213,4 +213,7 @@ dmypy.json
 # postgres
 postgres-data/
 
+# guido workspace
+taller2*
+
 # End of https://www.gitignore.io/api/python,pycharm
