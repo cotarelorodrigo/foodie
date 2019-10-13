@@ -9,17 +9,12 @@ shops_blueprint = Blueprint('shops', __name__)
 def get_shop(_id):
     service = ShopService()
     shop = service.get_shop(_id)
-    print(shop,flush=True)
-    if not shop: 
-        return jsonify({'401': "shop with that id doesn't exist."}), 404
     return jsonify(shop)
 
 @shops_blueprint.route('/shops/<_id>/menu', methods=['GET'])
 def get_shop_menu(_id):
     service = ShopService()
     shop = service.get_shop(_id)
-    if not shop: 
-        return jsonify({'401': "shop with that id doesn't exist."}), 404
     return jsonify({'200': "ACA VA EL MENU ???"}), 200
 
 @shops_blueprint.route('/shops/top', methods=['GET'])

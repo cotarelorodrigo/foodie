@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 import json
-from src.auth import app
+from src.app import app
 from src.auth.services import user_service
 
 mock_user = {"fullName": "Rodrigo", "email":"asd@asd.com", "password":"asfaga", "signUpDate":"2019-02-15" , "firebaseUid":"DGHAHAEHR", "picture":"garehqerae"}
