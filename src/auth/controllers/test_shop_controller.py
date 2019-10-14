@@ -19,3 +19,8 @@ class AuthControllerTestCase(unittest.TestCase):
         check_id_mock.return_value = mock_shop
         response = self.app.head('/shops/2')
         assert response._status_code == 200
+
+    @patch("src.auth.services.shop_service.ShopService.get_N_top_shops")
+    def test_get_top_shops(self, get_N_top_shops):
+        response = self.app.head('/shops/top')
+        assert response._status_code == 200
