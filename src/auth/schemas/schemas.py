@@ -34,3 +34,26 @@ class LoginSchema(Schema):
 
     class Meta:
         strict = True
+
+class ItemSchema(Schema):
+    id = fields.Int(required=True)
+    units = fields.Int(required=True)
+
+    class Meta:
+        strict = True
+
+class CoordinateSchema(Schema):
+    latitude = fields.Float(required=True)
+    longitude = fields.Float(required=True)
+
+    class Meta:
+        strict = True
+
+class OrderSchema(Schema):
+    shopId = fields.Int(required=True)
+    items = fields.List(fields.Nested(ItemSchema), required=True)
+    coordinates = fields.Nested(CoordinateSchema, required=True)
+    payWithPoints = fields.Boolean(required=True)
+
+    class Meta:
+        strict = True

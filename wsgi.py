@@ -3,6 +3,7 @@ from src.app import app, db
 from src.auth.models.user_table import UserModel
 from src.auth.models.product_table import ProductModel
 from src.auth.models.shop_table import ShopModel
+from src.auth.models.order_table import OrderModel
 
 def set_shops():
 	shops = [{"id": 12, "name":"Mc Donalds", "address":"call3 falsa", "latitude": 50.45, "longitude": 100.123, "photoUrl":"wqatgayeesyws", "rating":8},
