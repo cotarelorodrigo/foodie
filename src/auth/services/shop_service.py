@@ -12,6 +12,15 @@ class ShopService:
         response.pop("_sa_instance_state")
         return response 
 
+    def get_products(self,shop_id):
+        from src.auth.models.product_table import ProductModel
+        response = ProductModel.query.filter_by(shopId=shop_id).all()
+        if not response:
+            return []
+        products = [p.__dict__ for p in response]
+        for p in products: p.pop("_sa_instance_state")
+        return products
+
     def get_N_top_shops(self, n_shops):
         from src.auth.models.shop_table import ShopModel
         return ShopModel.query.order_by(ShopModel.rating.desc()).limit(n_shops)

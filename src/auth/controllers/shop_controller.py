@@ -15,7 +15,8 @@ def get_shop(_id):
 def get_shop_menu(_id):
     service = ShopService()
     shop = service.get_shop(_id)
-    return jsonify({'200': "ACA VA EL MENU ???"}), 200
+    products = service.get_products(_id)
+    return jsonify(products)
 
 @shops_blueprint.route('/shops/top', methods=['GET'])
 def get_top_shops():
