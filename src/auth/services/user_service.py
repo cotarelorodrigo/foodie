@@ -1,7 +1,8 @@
 from sqlalchemy.orm.exc import NoResultFound
 from src.auth.auth_exception import NotFoundException
+from src.auth.services.service import Service
 
-class UserService:
+class UserService(Service):
     def create_user(self, user_data):
         from src.auth.models.user_table import UserModel
         user_data["password"] = self._encrypt_password(user_data["password"])
@@ -24,14 +25,12 @@ class UserService:
         return response
 
     def get_user_by_email(self,value):
-        from src.auth import db
         from src.auth.models.user_table import UserModel
         try:
-            response = UserModel.query.filter_by(email=value).one().__dict__
+            response = UserModel.query.filter_by(email=value).one()
         except NoResultFound:
             raise NotFoundException("No user with provided email")
-        response.pop("_sa_instance_state")
-        return response 
+        return self.sqlachemy_to_dict(response)
 
     def check_email(self, user_email):
         from src.auth import db
