@@ -1,2 +1,2 @@
-sudo docker-compose -f docker-compose.yml stop
-sudo docker-compose -f docker-compose.yml down
+sudo docker-compose -f docker-compose-local.yml stop
+sudo docker-compose -f docker-compose-local.yml down

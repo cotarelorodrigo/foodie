@@ -1,2 +1,2 @@
-sudo docker build -f Dockerfile -t guidotrucco/7552-app-server .
-
+#!/bin/bash
+sudo docker-compose -f docker-compose-local.yml build
