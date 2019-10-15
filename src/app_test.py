@@ -1,15 +1,8 @@
 import unittest
-from app import app
+from src.auth.controllers.baseTest import BaseTest
 
-
-class TestApp(unittest.TestCase):
-
-    def setUp(self):
-        self.app = app.test_client()
-
-    def tearDown(self):
-        pass
+class TestApp(BaseTest):
 
     def test_hello_world(self):
-        response = self.app.get('/')
+        response = self.client.get('/')
         self.assertEqual(response.status_code, 200)

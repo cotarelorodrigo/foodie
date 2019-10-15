@@ -1,5 +1,7 @@
 import os
-from src.app import app, db
+import pytest
+from src.app import create_app, db
+from src.config import app_config
 from src.auth.models.user_table import UserModel
 from src.auth.models.product_table import ProductModel
 from src.auth.models.shop_table import ShopModel
@@ -30,10 +32,22 @@ def set_shops():
 		product = ProductModel(product_data)
 		product.save()
 
-db.drop_all()
-db.create_all()
-set_shops()
-db.session.commit()
+@pytest.fixture
+def app():
+    app = create_app()
+    app.config.from_object(app_config['development'])
+    with app.app_context():   
+        db.create_all()
+        yield app   # Note that we changed return for yield, see below for why
+        db.drop_all()
+
+
+app = create_app()
+with app.app_context():
+  db.drop_all()
+  db.create_all()
+  set_shops()
+  db.session.commit()
 
 if __name__ == "__main__":
 	port = int(os.environ.get('PORT', 5000))

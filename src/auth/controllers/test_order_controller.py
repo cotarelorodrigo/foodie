@@ -1,17 +1,12 @@
 import unittest
 from unittest.mock import patch
 import json
-from src.app import app
-#from src.auth.services import user_service
+from src.auth.controllers.baseTest import BaseTest
 
-class AuthControllerTestCase(unittest.TestCase):
-    def setUp(self):
-        app.config['TESTING'] = True
-        self.app = app.test_client()
-
+class AuthControllerTestCase(BaseTest):
 
     def test_add_order(self):
-        response = self.app.post(
+        response = self.client.post(
             '/orders',
             data=json.dumps({
                 "shopId": 8572833,
