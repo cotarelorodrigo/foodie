@@ -24,8 +24,20 @@ def add_order():
                     }
             service.create_order(order)
     except:
-        print("Hello2")
         raise
     else:
         return jsonify({'200': 'The order was created without problems'})
-    
+
+@orders_blueprint.route('/showorders', methods=['GET'])
+def show_orders():
+    service = OrderService()
+    orders = service.get_orders()
+    return jsonify(orders)
+
+@orders_blueprint.route('/orders/cancel/<_id>', methods=['DELETE'])
+def cancel_order(_id):
+    service = OrderService()
+    shop = service.delete_order(_id)
+    if not shop: 
+        return jsonify({'404': "order with that id doesn't exist."}), 404
+    return jsonify({'200': "order with that id was deleted."}), 200

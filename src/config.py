@@ -30,7 +30,7 @@ class Testing(object):
     Development environment configuration
     """
     DEBUG = True
-    TESTING = False
+    TESTING = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JSON_SORT_KEYS = False
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')

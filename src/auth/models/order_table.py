@@ -6,13 +6,13 @@ class OrderModel(db.Model):
   # table name
   __tablename__ = 'orders'
 
-  id = db.Column(db.Integer, primary_key=True)
+  order_id = db.Column(db.Integer, primary_key=True)
   shop_id = db.Column(db.Integer, nullable=False)
   item = db.Column(db.Integer, nullable=False)
   cantidad = db.Column(db.Integer, nullable=False)
   latitud = db.Column(db.Float, nullable=False)
   longitud = db.Column(db.Float, nullable=False)
-  #payWithPoints = db.Column(db.Boolean, nullable=False)
+  payWithPoints = db.Column(db.Boolean, nullable=False)
 
 
   # class constructor
@@ -25,7 +25,7 @@ class OrderModel(db.Model):
     self.cantidad = data.get('cantidad')
     self.latitud = data.get('latitud')
     self.longitud = data.get('longitud')
-    #self.payWithPoints = data.get('payWithPoints')
+    self.payWithPoints = data.get('payWithPoints')
 
   def save(self):
     db.session.add(self)

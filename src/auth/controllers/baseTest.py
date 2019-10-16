@@ -16,8 +16,7 @@ class BaseTest(unittest.TestCase):
         ctx.push()  
         db.create_all()
         self.client = app.test_client()
-        #yield app   # Note that we changed return for yield, see below for why
-        #db.drop_all()
 
     def tearDown(self):
-        db.drop_all()
+        pass
+        #db.drop_all()
