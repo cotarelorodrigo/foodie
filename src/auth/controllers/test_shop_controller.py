@@ -9,7 +9,7 @@ mock_shops = [{"id": 12, "name":"Mc Donalds", "address":"call3 falsa", "descript
 	 		{"id": 13, "name":"Subway", "address":"call3 falsa", "description":"comida rapida", "photoUrl":"dsgw", "rating":7.3},
 			 {"id": 14, "name":"Mostaza", "address":"call3 falsa", "description":"comida rapida", "photoUrl":"dsgw", "rating":9}]
 
-class AuthControllerTestCase(BaseTest):
+class ShopTestCase(BaseTest):
 
     @patch("src.auth.services.shop_service.ShopService.get_shop")
     def test_get_shop_by_id(self, check_id_mock):

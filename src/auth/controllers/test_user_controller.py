@@ -7,7 +7,7 @@ from src.auth.controllers.baseTest import BaseTest
 
 mock_user = {"fullName": "Rodrigo", "email":"asd@asd.com", "password":"asfaga", "signUpDate":"2019-02-15" , "firebaseUid":"DGHAHAEHR", "picture":"garehqerae"}
 
-class AuthControllerTestCase(BaseTest):
+class UserTestCase(BaseTest):
 
     def test_wrong_less_fields_new_user(self):
         response = self.client.post(
