@@ -11,7 +11,7 @@ class BaseTest(unittest.TestCase):
 
     def setUp(self):
         app = create_app()
-        app.config.from_object(app_config['development'])
+        app.config.from_object(app_config['testing'])
         ctx = app.app_context()
         ctx.push()  
         db.create_all()

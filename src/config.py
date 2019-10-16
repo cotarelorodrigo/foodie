@@ -25,7 +25,20 @@ class Production(object):
     SQLALCHEMY_ENGINE_OPTIONS = {"pool_timeout":240}
     JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
 
+class Testing(object):
+    """
+    Development environment configuration
+    """
+    DEBUG = True
+    TESTING = False
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    JSON_SORT_KEYS = False
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY')
+    SQLALCHEMY_ENGINE_OPTIONS = {}
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL_TEST')
+
 app_config = {
     'development': Development,
-    'production': Production
+    'production': Production,
+    'testing': Testing
 }
