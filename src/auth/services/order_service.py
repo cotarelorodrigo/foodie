@@ -18,7 +18,7 @@ class OrderService(Service):
         for product in order_data['products']:
             p = {"product_id": product['product_id'],
                 "units": product['units']}
-            #p = ProductSchema(p).load(p)
+            p = ProductSchema().load(p)
             products.append(OrderProductsModel(p))
 
         order.save() #Hay que guardar primero la orden orden porq es la parte unaria de la relacion
