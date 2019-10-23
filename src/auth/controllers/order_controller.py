@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from src.auth.services.order_service import OrderService
 from src.auth.schemas.schemas import OrderSchema
+import marshmallow 
 
 orders_blueprint = Blueprint('orders', __name__)
 order_schema = OrderSchema()
@@ -12,12 +13,12 @@ def add_order():
     try:
         order_data = order_schema.load(content)
         service.create_order(order_data)
-    except ValidationError:
-        return jsonify({'400': 'Invalid order information'})
+    except marshmallow.exceptions.ValidationError:
+        return jsonify({'400': 'Invalid order information'}), 400
     except:
         raise
     else:
-        return jsonify({'200': 'The order was created without problems'})
+        return jsonify({'200': 'The order was created without problems'}), 200
 
 @orders_blueprint.route('/showorders', methods=['GET'])
 def show_orders():
