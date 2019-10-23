@@ -8,21 +8,12 @@ order_schema = OrderSchema()
 @orders_blueprint.route('/orders', methods=['POST'])
 def add_order():
     content = request.get_json()
-    order_data = order_schema.load(content)
-    
     service = OrderService()
-  
     try:
-        for product in order_data['items']:
-            order = {
-                    "shop_id": order_data['shopId'],
-                    "item": product['id'],
-                    "cantidad": product['units'],
-                    "latitud": order_data['coordinates']['latitude'],
-                    "longitud": order_data['coordinates']['longitude'],
-                    "payWithPoints": order_data['payWithPoints']
-                    }
-            service.create_order(order)
+        order_data = order_schema.load(content)
+        service.create_order(order_data)
+    except ValidationError:
+        return jsonify({'400': 'Invalid order information'})
     except:
         raise
     else:
@@ -32,6 +23,12 @@ def add_order():
 def show_orders():
     service = OrderService()
     orders = service.get_orders()
+    return jsonify(orders)
+
+@orders_blueprint.route('/showproductorders', methods=['GET'])
+def show_products_orders():
+    service = OrderService()
+    orders = service.get_products_orders()
     return jsonify(orders)
 
 @orders_blueprint.route('/orders/cancel/<_id>', methods=['DELETE'])

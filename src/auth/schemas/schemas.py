@@ -35,8 +35,8 @@ class LoginSchema(Schema):
     class Meta:
         strict = True
 
-class ItemSchema(Schema):
-    id = fields.Int(required=True)
+class ProductSchema(Schema):
+    product_id = fields.Int(required=True)
     units = fields.Int(required=True)
 
     class Meta:
@@ -50,8 +50,8 @@ class CoordinateSchema(Schema):
         strict = True
 
 class OrderSchema(Schema):
-    shopId = fields.Int(required=True)
-    items = fields.List(fields.Nested(ItemSchema), required=True)
+    shop_id = fields.Int(required=True)
+    products = fields.List(fields.Nested(ProductSchema), required=True)
     coordinates = fields.Nested(CoordinateSchema, required=True)
     payWithPoints = fields.Boolean(required=True)
 

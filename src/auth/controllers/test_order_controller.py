@@ -9,13 +9,13 @@ class OrderTestCase(BaseTest):
         response = self.client.post(
             '/orders',
             data=json.dumps({
-                "shopId": 8572833,
-                "items": [{
-                    "id": 248524,
+                "shop_id": 8572833,
+                "products": [{
+                    "product_id": 248524,
                     "units": 2
                 },
                 {
-                    "id": 1414488,
+                    "product_id": 1414488,
                     "units": 1
                 }],
                 "coordinates": {
@@ -32,13 +32,13 @@ class OrderTestCase(BaseTest):
         response = self.client.post(
             '/orders',
             data=json.dumps({
-                "shopId": 8572833,
-                "items": [{
-                    "id": 248524,
+                "shop_id": 8572833,
+                "products": [{
+                    "product_id": 248524,
                     "units": 2
                 },
                 {
-                    "id": 1414488,
+                    "product_id": 1414488,
                     "units": 1
                 }],
                 "coordinates": {

@@ -6,6 +6,7 @@ from src.auth.models.user_table import UserModel
 from src.auth.models.product_table import ProductModel
 from src.auth.models.shop_table import ShopModel
 from src.auth.models.order_table import OrderModel
+from src.auth.models.order_product_table import OrderProductsModel
 
 def set_shops():
 	shops = [{"id": 12, "name":"Mc Donalds", "address":"call3 falsa", "latitude": 50.45, "longitude": 100.123, "photoUrl":"wqatgayeesyws", "rating":8},
@@ -31,16 +32,6 @@ def set_shops():
 	for product_data in products:
 		product = ProductModel(product_data)
 		product.save()
-
-@pytest.fixture
-def app():
-    app = create_app()
-    app.config.from_object(app_config['development'])
-    with app.app_context():   
-        db.create_all()
-        yield app   # Note that we changed return for yield, see below for why
-        db.drop_all()
-
 
 app = create_app()
 with app.app_context():
