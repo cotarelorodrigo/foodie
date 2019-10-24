@@ -4,14 +4,27 @@ from marshmallow import Schema, fields
 class UserSchema(Schema):
     name = fields.Str(required=True)
     email = fields.Email(required=True)
+    phone_number = fields.Int(required=True)
+    role = fields.String(required=True)
     password = fields.Str(required=True)
-    signup_date = fields.DateTime(required=True)
     firebase_uid = fields.Str(required=True)
-    picture = fields.Str(required=False)
 
     class Meta:
         strict = True
-        fields = ('fullName', 'email', 'password', 'signUpDate', 'firebaseUid', 'picture')
+
+class NormalUserSchema(UserSchema):
+    picture = fields.Str(required=False)
+    suscripcion = fields.Str(required=True)
+
+    class Meta:
+        strict = True
+
+class DeliveryUserSchema(UserSchema):
+    picture = fields.Str(required=True)
+    balance = fields.Float(required=True)
+
+    class Meta:
+        strict = True
 
 
 class ShopSchema(Schema):

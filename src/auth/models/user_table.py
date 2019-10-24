@@ -6,15 +6,19 @@ class UserModel(db.Model):
   # table name
   __tablename__ = 'users'
 
-  id = db.Column(db.Integer, primary_key=True)
+  user_id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(128), nullable=False)
   email = db.Column(db.String(128), unique=True, nullable=False)
+  phone_number = db.Column(db.Integer, nullable=False)
+  role = db.Column(db.String(128), nullable=False)
   password = db.Column(db.String(128), nullable=False)
-  signup_datetime = db.Column(db.DateTime, nullable=False)
   firebase_uid = db.Column(db.String(128), unique=True, nullable=False)
-  picture = db.Column(db.String(128), nullable=True)
   created_at = db.Column(db.DateTime)
   modified_at = db.Column(db.DateTime)
+
+  __mapper_args__ = {
+    'polymorphic_identity':'users'
+  }
 
   # class constructor
   def __init__(self, data):
@@ -23,10 +27,10 @@ class UserModel(db.Model):
     """
     self.name = data.get('fullName')
     self.email = data.get('email')
+    self.phone_number = data.get('phone_number')
+    self.role = data.get('role')
     self.password = data.get('password')
-    self.signup_datetime = data.get('signUpDate')
-    self.firebase_uid = data.get('firebaseUid')
-    self.picture = data.get('picture')
+    self.firebase_uid = data.get('firebase_uid')
     self.created_at = datetime.datetime.utcnow()
     self.modified_at = datetime.datetime.utcnow()
 
@@ -37,3 +41,47 @@ class UserModel(db.Model):
   @staticmethod
   def get_one_user(id):
     return UserModel.query.get(id)
+
+
+class NormalUserModel(UserModel):
+
+  # table name
+  __tablename__ = 'normal_users'
+
+  user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+  suscripcion = db.Column(db.String(128), nullable=False)
+  picture = db.Column(db.String(128), nullable=True)
+
+  __mapper_args__ = {
+    'polymorphic_identity':'normal_users',
+  }
+
+  # class constructor
+  def __init__(self, data):
+    """
+    Class constructor
+    """
+    self.suscripcion = data.get('suscripcion')
+    self.picture = data.get('picture')
+
+
+class NormalUserModel(UserModel):
+
+  # table name
+  __tablename__ = 'delivery_users'
+
+  user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+  balance = db.Column(db.Integer, nullable=False)
+  picture = db.Column(db.String(128), nullable=False)
+
+  __mapper_args__ = {
+    'polymorphic_identity':'delivery_users',
+  }
+
+  # class constructor
+  def __init__(self, data):
+    """
+    Class constructor
+    """
+    self.balance = data.get('balance')
+    self.picture = data.get('picture')
