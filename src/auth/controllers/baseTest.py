@@ -1,7 +1,7 @@
 import unittest
 from src.app import create_app, db
 from src.config import app_config
-from src.auth.models.user_table import UserModel
+from src.auth.models.user_table import NormalUserModel, DeliveryUserModel, UserModel
 from src.auth.models.product_table import ProductModel
 from src.auth.models.shop_table import ShopModel
 from src.auth.models.order_table import OrderModel

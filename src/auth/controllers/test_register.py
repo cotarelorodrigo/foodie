@@ -15,7 +15,7 @@ class RegisterTestCase(BaseTest):
                 "phone_number": 42223333,
                 "role": "usuario",
                 "password": "password",
-                "firebase_uid": "ajsjfkasf",
+                "firebase_uid": "rjrr",
                 "suscripcion": "flat"
             }),
             content_type='application/json'
@@ -28,7 +28,7 @@ class RegisterTestCase(BaseTest):
             '/register/delivery',
             data=json.dumps({
                 "name": "Rodrigo",
-                "email": "asd@asd.com",
+                "email": "asd@asdtk.com",
                 "phone_number": 42223333,
                 "role": "usuario",
                 "password": "password",

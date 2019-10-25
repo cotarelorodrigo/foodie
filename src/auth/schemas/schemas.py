@@ -5,7 +5,7 @@ class UserSchema(Schema):
     name = fields.Str(required=True)
     email = fields.Email(required=True)
     phone_number = fields.Int(required=True)
-    role = fields.String(required=True)
+    #role = fields.String(required=True)
     password = fields.Str(required=True)
     firebase_uid = fields.Str(required=True)
 
@@ -13,6 +13,7 @@ class UserSchema(Schema):
         strict = True
 
 class NormalUserSchema(UserSchema):
+    role = fields.Constant('usuario')
     picture = fields.Str(required=False)
     suscripcion = fields.Str(required=True)
 
@@ -20,6 +21,7 @@ class NormalUserSchema(UserSchema):
         strict = True
 
 class DeliveryUserSchema(UserSchema):
+    role = fields.Constant('delivery')
     picture = fields.Str(required=True)
     balance = fields.Float(required=True)
 

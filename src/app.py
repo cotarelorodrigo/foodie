@@ -6,6 +6,7 @@ from src.config import app_config
 from src.auth.controllers.user_controller import pedido_blueprint
 from src.auth.controllers.shop_controller import shops_blueprint
 from src.auth.controllers.order_controller import orders_blueprint
+from src.auth.controllers.register_controller import register_blueprint
 from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException, NotFoundException
 
 db = SQLAlchemy()
@@ -18,6 +19,7 @@ def create_app():
     app.register_blueprint(pedido_blueprint)
     app.register_blueprint(shops_blueprint)
     app.register_blueprint(orders_blueprint)
+    app.register_blueprint(register_blueprint)
 
     @app.errorhandler(InvalidUserInformation)
     def user_error_handler(e):

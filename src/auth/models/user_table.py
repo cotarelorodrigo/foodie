@@ -25,7 +25,7 @@ class UserModel(db.Model):
     """
     Class constructor
     """
-    self.name = data.get('fullName')
+    self.name = data.get('name')
     self.email = data.get('email')
     self.phone_number = data.get('phone_number')
     self.role = data.get('role')
@@ -48,7 +48,7 @@ class NormalUserModel(UserModel):
   # table name
   __tablename__ = 'normal_users'
 
-  user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+  user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
   suscripcion = db.Column(db.String(128), nullable=False)
   picture = db.Column(db.String(128), nullable=True)
 
@@ -61,16 +61,17 @@ class NormalUserModel(UserModel):
     """
     Class constructor
     """
+    super(NormalUserModel, self).__init__(data)
     self.suscripcion = data.get('suscripcion')
     self.picture = data.get('picture')
 
 
-class NormalUserModel(UserModel):
+class DeliveryUserModel(UserModel):
 
   # table name
   __tablename__ = 'delivery_users'
 
-  user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
+  user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
   balance = db.Column(db.Integer, nullable=False)
   picture = db.Column(db.String(128), nullable=False)
 
@@ -83,5 +84,6 @@ class NormalUserModel(UserModel):
     """
     Class constructor
     """
+    super(DeliveryUserModel, self).__init__(data)
     self.balance = data.get('balance')
     self.picture = data.get('picture')

@@ -36,11 +36,7 @@ def login():
 def get_users():
     service = UserService()
     all_users = service.get_users()
-    result = {}
-    print(all_users)
-    for u in all_users:
-        result[u.name] = u.email
-    return result
+    return jsonify(all_users), 200
 
 @pedido_blueprint.route('/user/<_id>', methods=['GET'])
 def get_user(_id):

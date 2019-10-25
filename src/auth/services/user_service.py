@@ -3,15 +3,24 @@ from src.auth.auth_exception import NotFoundException
 from src.auth.services.service import Service
 
 class UserService(Service):
-    def create_user(self, user_data):
-        from src.auth.models.user_table import UserModel
+    def create_normal_user(self, user_data):
+        from src.auth.models.user_table import NormalUserModel
         user_data["password"] = self._encrypt_password(user_data["password"])
-        user = UserModel(user_data)
+        user = NormalUserModel(user_data)
+        user.save()
+    
+    def create_delivery_user(self, user_data):
+        from src.auth.models.user_table import DeliveryUserModel
+        user_data["password"] = self._encrypt_password(user_data["password"])
+        user = DeliveryUserModel(user_data)
         user.save()
 
     def get_users(self):
         from src.auth.models.user_table import UserModel
-        return UserModel.query.all()
+        response = UserModel.query.all()
+        if not response:
+            return []
+        return self.sqlachemy_to_dict(response)
 
     def get_user(self,_id):
         from src.auth.models.user_table import UserModel
