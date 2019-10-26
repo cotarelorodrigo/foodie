@@ -3,7 +3,7 @@ from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import src.settings
 from src.config import app_config
-from src.auth.controllers.user_controller import pedido_blueprint
+from src.auth.controllers.user_controller import user_blueprint
 from src.auth.controllers.shop_controller import shops_blueprint
 from src.auth.controllers.order_controller import orders_blueprint
 from src.auth.controllers.register_controller import register_blueprint
@@ -16,7 +16,7 @@ def create_app():
     app.config.from_object(app_config[os.getenv('APP_SETTINGS')])
     db.init_app(app)
 
-    app.register_blueprint(pedido_blueprint)
+    app.register_blueprint(user_blueprint)
     app.register_blueprint(shops_blueprint)
     app.register_blueprint(orders_blueprint)
     app.register_blueprint(register_blueprint)

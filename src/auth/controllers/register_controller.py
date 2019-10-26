@@ -10,7 +10,7 @@ register_blueprint = Blueprint('register', __name__)
 normal_user_schema = NormalUserSchema()
 delivery_user_schema = DeliveryUserSchema()
 
-@register_blueprint.route('/register/user', methods=['POST'])
+@register_blueprint.route('/user', methods=['POST'])
 def add_user():
     content = request.get_json()
     service = UserService()
@@ -26,7 +26,7 @@ def add_user():
     else:
         return jsonify({'200': 'a new user was created.'}), 200
 
-@register_blueprint.route('/register/delivery', methods=['POST'])
+@register_blueprint.route('/delivery', methods=['POST'])
 def add_delivery():
     content = request.get_json()
     service = UserService()
