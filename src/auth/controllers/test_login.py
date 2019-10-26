@@ -10,13 +10,8 @@ class LoginTestCase(BaseTest):
         response = self.client.post(
             '/user/login',
             data=json.dumps({
-                "name": "Rodrigo",
                 "email": "asd@asd.com",
-                "phone_number": 42223333,
-                "role": "usuario",
-                "password": "password",
-                "firebase_uid": "rjrr",
-                "suscripcion": "flat"
+                "password": "password"
             }),
             content_type='application/json'
         )
