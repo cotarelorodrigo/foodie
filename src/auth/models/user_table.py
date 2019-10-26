@@ -1,4 +1,5 @@
 import datetime
+import secrets
 from src.app import db
 
 class UserModel(db.Model):
@@ -13,6 +14,7 @@ class UserModel(db.Model):
   role = db.Column(db.String(128), nullable=False)
   password = db.Column(db.String(128), nullable=False)
   firebase_uid = db.Column(db.String(128), unique=True, nullable=False)
+  token = db.Column(db.String(128), unique=True, nullable=False)
   created_at = db.Column(db.DateTime)
   modified_at = db.Column(db.DateTime)
 
@@ -31,6 +33,7 @@ class UserModel(db.Model):
     self.role = data.get('role')
     self.password = data.get('password')
     self.firebase_uid = data.get('firebase_uid')
+    self.token = secrets.token_hex(32)
     self.created_at = datetime.datetime.utcnow()
     self.modified_at = datetime.datetime.utcnow()
 
@@ -38,9 +41,9 @@ class UserModel(db.Model):
     db.session.add(self)
     db.session.commit()
 
-  @staticmethod
-  def get_one_user(id):
-    return UserModel.query.get(id)
+  #@staticmethod
+  #def get_one_user(id):
+    #return UserModel.query.get(id)
 
 
 class NormalUserModel(UserModel):
