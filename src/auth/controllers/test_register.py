@@ -30,7 +30,7 @@ class RegisterTestCase(BaseTest):
                 "name": "Rodrigo",
                 "email": "asd@asdtk.com",
                 "phone_number": 42223333,
-                "role": "usuario",
+                "role": "delivery",
                 "password": "password",
                 "firebase_uid": "ajsjfkasf",
                 "picture": "www.photo.com",

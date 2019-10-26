@@ -13,7 +13,7 @@ class UserSchema(Schema):
         strict = True
 
 class NormalUserSchema(UserSchema):
-    role = fields.Constant('usuario')
+    role = fields.Str(required=True, validate=lambda s: s =='usuario')
     picture = fields.Str(required=False)
     suscripcion = fields.Str(required=True)
 
@@ -21,7 +21,7 @@ class NormalUserSchema(UserSchema):
         strict = True
 
 class DeliveryUserSchema(UserSchema):
-    role = fields.Constant('delivery')
+    role = fields.Str(required=True, validate=lambda s: s =='delivery')
     picture = fields.Str(required=True)
     balance = fields.Float(required=True)
 
