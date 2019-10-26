@@ -50,6 +50,12 @@ class LoginSchema(Schema):
     class Meta:
         strict = True
 
+class RecoverSchema(Schema):
+    email = fields.Email(required=True)
+
+    class Meta:
+        strict = True
+
 class ProductSchema(Schema):
     product_id = fields.Int(required=True)
     units = fields.Int(required=True)

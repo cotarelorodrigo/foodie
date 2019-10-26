@@ -1,5 +1,6 @@
 import os
 from flask import Flask, jsonify
+from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
 import src.settings
 from src.config import app_config
@@ -9,13 +10,21 @@ from src.auth.controllers.order_controller import orders_blueprint
 from src.auth.controllers.register_controller import register_blueprint
 from src.auth.controllers.login_controller import login_blueprint
 from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException, NotFoundException
+from flask_mail import Message
 
 db = SQLAlchemy()
+mail = Mail()
+app = Flask('foodie-app')
+
+def send_email(msag, to):
+    with app.app_context():
+        msg = Message(msag, recipients=to)
+        mail.send(msg)
 
 def create_app():
-    app = Flask('foodie-app')
     app.config.from_object(app_config[os.getenv('APP_SETTINGS')])
     db.init_app(app)
+    mail.init_app(app)
 
     app.register_blueprint(user_blueprint)
     app.register_blueprint(shops_blueprint)
