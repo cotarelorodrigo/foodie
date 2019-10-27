@@ -48,6 +48,16 @@ class UserService(Service):
         for email in list(query_emails):
             emails.append(email[0])
         return (user_email in emails)
+        
+    def change_password(self, email, new_password):
+        from src.app import db
+        from src.auth.models.user_table import UserModel
+        try:
+            response = UserModel.query.filter_by(email=email).one()
+            response.password = self._encrypt_password(new_password)
+            db.session.commit()
+        except NoResultFound:
+            raise NotFoundException("No user with provided email")
 
     @staticmethod
     def compare_password(hashed, plain):

@@ -56,3 +56,21 @@ def recover():
         raise
     else:
         return jsonify('Recover email sended'), 200
+
+
+@login_blueprint.route('/user/password', methods=['POST'])
+def new_password():
+    try: 
+        token = request.headers.get('new-password-token')
+        content = request.get_json()
+        user_data = login_schema.load(content)
+        service = UserService()
+        service.change_password(user_data["email"], user_data["password"])
+    except NotFoundException as e:
+        return jsonify({"error": e.msg}), 411
+    except ValidationError:
+        return jsonify({"error": "Informacion Incorrecta"}), 410
+    except:
+        raise
+    else:
+        return jsonify('New password seted'), 200
