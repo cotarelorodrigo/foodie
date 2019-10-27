@@ -16,9 +16,10 @@ db = SQLAlchemy()
 mail = Mail()
 app = Flask('foodie-app')
 
-def send_email(msag, to):
+def send_email(msg_info):
     with app.app_context():
-        msg = Message(msag, recipients=to)
+        msg = Message(msg_info["tittle"], recipients=msg_info["recipients"])
+        msg.body = msg_info["body"]
         mail.send(msg)
 
 def create_app():

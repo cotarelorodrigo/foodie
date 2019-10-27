@@ -4,7 +4,6 @@ from src.auth.services.user_service import UserService
 from src.auth.schemas.schemas import LoginSchema, RecoverSchema
 from src.auth.auth_exception import NotFoundException
 from src.jwt_handler import encode_data_to_jwt
-from flask_mail import Message
 
 login_blueprint = Blueprint('login', __name__)
 login_schema = LoginSchema()
@@ -38,12 +37,17 @@ def login():
 
 @login_blueprint.route('/user/recover', methods=['POST'])
 def recover():
-    from src.app import mail, app
+    from src.app import send_email
     try: 
         content = request.get_json()
         user_data = recover_schema.load(content)
         service = UserService()
         user = service.get_user_by_email(user_data["email"])
+        msg_info = {}
+        msg_info['tittle'] = "Foodie recover password"
+        msg_info['body'] = "Hello {}, you recover token is: {}".format(user["name"], user["token"])
+        msg_info['recipients'] = [user_data['email']]
+        send_email(msg_info)
     except NotFoundException as e:
         return jsonify({"error": e.msg}), 411
     except ValidationError:
@@ -51,8 +55,4 @@ def recover():
     except:
         raise
     else:
-        msg = Message("Hello, you recover token is: {}".format(user["token"]),
-                recipients=user_data['email'])
-        
-        mail.send(msg)
         return jsonify('Recover email sended'), 200
