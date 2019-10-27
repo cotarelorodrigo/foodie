@@ -48,10 +48,6 @@ def create_app():
     @app.errorhandler(AccessDeniedException)
     def user_error_handler(e):
         return jsonify({"error": e.msg}), 401
-
-    @app.route('/', methods=['GET'])
-    def ping():
-        return jsonify({'response': 'hello world'})
     
     return app
 
