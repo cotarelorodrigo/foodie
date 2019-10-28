@@ -14,6 +14,18 @@ def get_users():
     all_users = service.get_users()
     return jsonify(all_users), 200
 
+@user_blueprint.route('/get_normal_users', methods=['GET'])
+def get_normal_users():
+    service = UserService()
+    all_users = service.get_normal_users()
+    return jsonify(all_users), 200
+
+@user_blueprint.route('/get_delivery_users', methods=['GET'])
+def get_delivery_users():
+    service = UserService()
+    all_users = service.get_delivery_users()
+    return jsonify(all_users), 200
+
 @user_blueprint.route('/user/<_id>', methods=['GET'])
 def get_user(_id):
     service = UserService()
@@ -38,3 +50,10 @@ def check_user_email(email):
         return "user with that email exists", 200
     else:
         raise NotFoundEmail("user with that email doesnt exist")
+
+
+@user_blueprint.route('/user/profile/<email>', methods=['GET'])
+def get_user_profile(email):
+    service = UserService()
+    response = service.get_user_profile(email)
+    return jsonify(response), 200
