@@ -1,7 +1,6 @@
 from sqlalchemy.orm.exc import NoResultFound
 from src.auth.auth_exception import NotFoundException
 from src.auth.services.service import Service
-from sqlalchemy.orm import with_polymorphic
 
 class UserService(Service):
     def create_normal_user(self, user_data):
@@ -79,17 +78,17 @@ class UserService(Service):
 
     def get_user_profile(self, email_d):
         from src.app import db
-        user = self._get_userModel_email(email_d)
-        print("response 1: {}".format(user))
-        user = db.engine.execute("""SELECT *
+        response = db.engine.execute("""SELECT *
                                     FROM users u
                                     LEFT OUTER JOIN normal_users nu
                                     ON u.user_id = nu.user_id
                                     LEFT OUTER JOIN delivery_users du
                                     ON u.user_id = du.user_id
                                     WHERE u.email = '{}'""".format(email_d))
-        print("response 2: {}".format(user))
-        return self.sqlachemy_to_dict(user)          
+        #print("response 2: {}".format(user.items()))
+        #print("response 2: {}".format(user.keys()))
+        #return self.sqlachemy_to_dict(user)
+        return [dict(zip(response.keys(), row)) for row in response.fetchall()]
 
 
     @staticmethod
