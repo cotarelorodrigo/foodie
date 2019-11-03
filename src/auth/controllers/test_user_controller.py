@@ -1,6 +1,7 @@
 import unittest
 import pytest
 from unittest.mock import patch
+from flask import jsonify
 import json
 from src.auth.services import user_service
 from src.auth.controllers.baseTest import BaseTest
@@ -73,5 +74,12 @@ class UserTestCase(BaseTest):
         response = self.client.get('/user/profile/asddd@asddd.com', headers={'Authorization':'tokenfalso123'})
         assert response._status_code == 200
 
+    def test_wrong_auth_no_header(self):
+        response = self.client.get('/user/profile/asddd@asddd.com')
+        assert response._status_code == 421
+
+    def test_wrong_invalid_token(self):
+        response = self.client.get('/user/profile/asddd@asddd.com', headers={'Authorization':'tokenfalso123'})
+        assert response._status_code == 422
 
 
