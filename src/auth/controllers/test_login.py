@@ -93,6 +93,31 @@ class LoginTestCase(BaseTest):
         )
         assert response._status_code == 200
     
+    def test_good_login(self):
+        response = self.client.post(
+            '/user',
+            data=json.dumps({
+                "name": "Rodrigo",
+                "email": "asddd@asddd.com",
+                "phone_number": 42223333,
+                "role": "usuario",
+                "password": "123",
+                "firebase_uid": "agrrr",
+                "suscripcion": "flat"
+            }),
+            content_type='application/json'
+        )
+        assert response._status_code == 200
+        response = self.client.post(
+            '/user/login',
+            data=json.dumps({
+                "email": "asddd@asddd.com",
+                "password": "123"
+            }),
+            content_type='application/json'
+        )
+        assert response._status_code == 200
+    
 
     def test_recover_password(self):
         response = self.client.post(
