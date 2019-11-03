@@ -4,6 +4,7 @@ from src.auth.services.user_service import UserService
 from src.auth.schemas.schemas import UserSchema, LoginSchema
 from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException
 from src.jwt_handler import encode_data_to_jwt
+from common_functions_controllers import auth_required
 
 user_blueprint = Blueprint('user', __name__)
 users_schema = UserSchema()
@@ -53,6 +54,7 @@ def check_user_email(email):
 
 
 @user_blueprint.route('/user/profile/<email>', methods=['GET'])
+@auth_required
 def get_user_profile(email):
     service = UserService()
     response = service.get_user_profile(email)

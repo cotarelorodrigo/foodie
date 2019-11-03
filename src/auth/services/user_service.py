@@ -85,8 +85,6 @@ class UserService(Service):
                                     LEFT OUTER JOIN delivery_users du
                                     ON u.user_id = du.user_id
                                     WHERE u.email = '{}'""".format(email_d))
-        #print("response 2: {}".format(user.items()))
-        #print("response 2: {}".format(user.keys()))
         #return self.sqlachemy_to_dict(user)
         return [dict(zip(response.keys(), row)) for row in response.fetchall()]
 

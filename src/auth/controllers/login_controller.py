@@ -4,6 +4,7 @@ from src.auth.services.user_service import UserService
 from src.auth.schemas.schemas import LoginSchema, RecoverSchema
 from src.auth.auth_exception import NotFoundException
 from src.jwt_handler import encode_data_to_jwt
+from functools import wraps
 
 login_blueprint = Blueprint('login', __name__)
 login_schema = LoginSchema()
@@ -61,7 +62,7 @@ def recover():
 @login_blueprint.route('/user/password', methods=['POST'])
 def new_password():
     try: 
-        token = request.headers.get('new-password-token')
+        token = request.headers.get('recover-password-token')
         content = request.get_json()
         user_data = login_schema.load(content)
         service = UserService()
@@ -74,3 +75,20 @@ def new_password():
         raise
     else:
         return jsonify('New password seted'), 200
+
+def auth_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('Authorization')
+
+        if not token:
+            return {"error":"Token is missing!"}, 403
+
+        try:
+            data = decode_jwt_data(token)
+        except:
+            return {"error":"Invalid token"}, 404
+        
+        return f(*args, **kwargs)
+    
+    return decorated
