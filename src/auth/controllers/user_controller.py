@@ -4,7 +4,7 @@ from src.auth.services.user_service import UserService
 from src.auth.schemas.schemas import UserSchema, LoginSchema
 from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException
 from src.jwt_handler import encode_data_to_jwt
-from common_functions_controllers import auth_required
+from src.auth.controllers.common_functions_controllers import auth_required
 
 user_blueprint = Blueprint('user', __name__)
 users_schema = UserSchema()

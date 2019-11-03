@@ -11,7 +11,6 @@ from src.auth.controllers.register_controller import register_blueprint
 from src.auth.controllers.login_controller import login_blueprint
 from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException, NotFoundException
 from flask_mail import Message
-from src.jwt_handler import decode_jwt_data
 
 db = SQLAlchemy()
 mail = Mail()
@@ -22,23 +21,6 @@ def send_email(msg_info):
         msg = Message(msg_info["tittle"], recipients=msg_info["recipients"])
         msg.body = msg_info["body"]
         mail.send(msg)
-
-def auth_required(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        token = request.headers.get('Authorization')
-
-        if not token:
-            return {"error":"Token is missing!"}, 403
-
-        try:
-            data = decode_jwt_data(token)
-        except:
-            return {"error":"Invalid token"}, 404
-        
-        return f(*args, **kwargs)
-    
-    return decorated
 
 def create_app():
     app.config.from_object(app_config[os.getenv('APP_SETTINGS')])
