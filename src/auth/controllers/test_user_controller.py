@@ -1,9 +1,11 @@
 import unittest
 import pytest
 from unittest.mock import patch
+from flask import jsonify
 import json
 from src.auth.services import user_service
 from src.auth.controllers.baseTest import BaseTest
+import jwt
 
 mock_user = {"fullName": "Rodrigo", "email":"asd@asd.com", "password":"asfaga", "signUpDate":"2019-02-15" , "firebaseUid":"DGHAHAEHR", "picture":"garehqerae"}
 
@@ -52,5 +54,32 @@ class UserTestCase(BaseTest):
         response = self.client.delete('/user/2')
         assert response._status_code == 404
 
+    @patch("jwt.decode")
+    def test_user_profile(self, jwt_decode):
+        response = self.client.post(
+            '/user',
+            data=json.dumps({
+                "name": "Rodrigo",
+                "email": "asddd@asddd.com",
+                "phone_number": 42223333,
+                "role": "usuario",
+                "password": "123",
+                "firebase_uid": "agrrr",
+                "suscripcion": "flat"
+            }),
+            content_type='application/json'
+        )
+        assert response._status_code == 200
+        jwt_decode.return_value = 'token_valido'
+        response = self.client.get('/user/profile/asddd@asddd.com', headers={'Authorization':'tokenfalso123'})
+        assert response._status_code == 200
+
+    def test_wrong_auth_no_header(self):
+        response = self.client.get('/user/profile/asddd@asddd.com')
+        assert response._status_code == 421
+
+    def test_wrong_invalid_token(self):
+        response = self.client.get('/user/profile/asddd@asddd.com', headers={'Authorization':'tokenfalso123'})
+        assert response._status_code == 422
 
 

@@ -3,15 +3,39 @@ from src.auth.auth_exception import NotFoundException
 from src.auth.services.service import Service
 
 class UserService(Service):
-    def create_user(self, user_data):
-        from src.auth.models.user_table import UserModel
+    def create_normal_user(self, user_data):
+        from src.auth.models.user_table import NormalUserModel
         user_data["password"] = self._encrypt_password(user_data["password"])
-        user = UserModel(user_data)
+        user = NormalUserModel(user_data)
+        user.save()
+    
+    def create_delivery_user(self, user_data):
+        from src.auth.models.user_table import DeliveryUserModel
+        user_data["password"] = self._encrypt_password(user_data["password"])
+        user = DeliveryUserModel(user_data)
         user.save()
 
     def get_users(self):
         from src.auth.models.user_table import UserModel
-        return UserModel.query.all()
+        response = UserModel.query.all()
+        if not response:
+            return []
+        return self.sqlachemy_to_dict(response)
+    
+    def get_normal_users(self):
+        from src.auth.models.user_table import NormalUserModel
+        response = NormalUserModel.query.all()
+        if not response:
+            return []
+        return self.sqlachemy_to_dict(response)
+
+    def get_delivery_users(self):
+        from src.auth.models.user_table import DeliveryUserModel
+        response = DeliveryUserModel.query.all()
+        if not response:
+            return []
+        return self.sqlachemy_to_dict(response)
+
 
     def get_user(self,_id):
         from src.auth.models.user_table import UserModel
@@ -24,13 +48,19 @@ class UserService(Service):
         db.session.commit()
         return response
 
-    def get_user_by_email(self,value):
+    def _get_userModel_email(self, email):
         from src.auth.models.user_table import UserModel
         try:
-            response = UserModel.query.filter_by(email=value).one()
+            user = UserModel.query.filter_by(email=email).one()
         except NoResultFound:
             raise NotFoundException("No user with provided email")
-        return self.sqlachemy_to_dict(response)
+        except:
+            raise
+        else:
+            return user
+
+    def get_user_by_email(self, email):
+        return self.sqlachemy_to_dict(self._get_userModel_email(email))
 
     def check_email(self, user_email):
         from src.auth import db
@@ -39,6 +69,25 @@ class UserService(Service):
         for email in list(query_emails):
             emails.append(email[0])
         return (user_email in emails)
+        
+    def change_password(self, email, new_password):
+        from src.app import db
+        user = self._get_userModel_email(email)
+        user.password = self._encrypt_password(new_password)
+        db.session.commit()
+
+    def get_user_profile(self, email_d):
+        from src.app import db
+        response = db.engine.execute("""SELECT *
+                                    FROM users u
+                                    LEFT OUTER JOIN normal_users nu
+                                    ON u.user_id = nu.user_id
+                                    LEFT OUTER JOIN delivery_users du
+                                    ON u.user_id = du.user_id
+                                    WHERE u.email = '{}'""".format(email_d))
+        #return self.sqlachemy_to_dict(user)
+        return [dict(zip(response.keys(), row)) for row in response.fetchall()]
+
 
     @staticmethod
     def compare_password(hashed, plain):
