@@ -12,11 +12,12 @@ class BaseTest(unittest.TestCase):
     def setUp(self):
         app = create_app()
         app.config.from_object(app_config['testing'])
-        ctx = app.app_context()
-        ctx.push()  
+        self.ctx = app.app_context()
+        self.ctx.push()  
         db.create_all()
         self.client = app.test_client()
 
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+        self.ctx.pop()
