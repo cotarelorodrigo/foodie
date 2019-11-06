@@ -5,5 +5,5 @@ direc_blueprint = Blueprint('direc', __name__)
 
 
 
-@direc_blueprint.route('/user/login', methods=['POST'])
-def login():
+#@direc_blueprint.route('/user/login', methods=['POST'])
+#def lo():

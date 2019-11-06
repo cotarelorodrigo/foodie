@@ -33,7 +33,7 @@ def create_app():
     app.register_blueprint(orders_blueprint)
     app.register_blueprint(register_blueprint)
     app.register_blueprint(login_blueprint)
-    app.register_blueprint(direc_blueprint)
+    #app.register_blueprint(direc_blueprint)
 
     @app.errorhandler(InvalidUserInformation)
     def user_error_handler(e):
