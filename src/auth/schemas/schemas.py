@@ -56,7 +56,7 @@ class RecoverSchema(Schema):
     class Meta:
         strict = True
 
-class ProductSchema(Schema):
+class OrderProductSchema(Schema):
     product_id = fields.Int(required=True)
     units = fields.Int(required=True)
 
@@ -72,7 +72,7 @@ class CoordinateSchema(Schema):
 
 class OrderSchema(Schema):
     shop_id = fields.Int(required=True)
-    products = fields.List(fields.Nested(ProductSchema), required=True)
+    products = fields.List(fields.Nested(OrderProductSchema), required=True)
     coordinates = fields.Nested(CoordinateSchema, required=True)
     payWithPoints = fields.Boolean(required=True)
 

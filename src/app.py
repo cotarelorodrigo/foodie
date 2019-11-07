@@ -9,6 +9,7 @@ from src.auth.controllers.shop_controller import shops_blueprint
 from src.auth.controllers.order_controller import orders_blueprint
 from src.auth.controllers.register_controller import register_blueprint
 from src.auth.controllers.login_controller import login_blueprint
+from src.auth.controllers.direc_controller import direc_blueprint
 from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException, NotFoundException
 from flask_mail import Message
 
@@ -32,6 +33,7 @@ def create_app():
     app.register_blueprint(orders_blueprint)
     app.register_blueprint(register_blueprint)
     app.register_blueprint(login_blueprint)
+    #app.register_blueprint(direc_blueprint)
 
     @app.errorhandler(InvalidUserInformation)
     def user_error_handler(e):
