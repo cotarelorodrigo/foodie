@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from src.auth.services.order_service import OrderService
 from src.auth.schemas.schemas import OrderSchema
+import sqlalchemy
 import marshmallow 
 
 orders_blueprint = Blueprint('orders', __name__)
@@ -12,8 +13,10 @@ def add_order():
     service = OrderService()
     try:
         service.create_order(content)
-    except marshmallow.exceptions.ValidationError:
-        return jsonify({'400': 'Invalid order information'}), 400
+    except marshmallow.exceptions.ValidationError as e:
+        return jsonify({'400': 'Missing order information: {}'.format(e)}), 400
+    except sqlalchemy.exc.IntegrityError:
+        return jsonify({'430': 'User_id not registered'}), 430
     except:
         raise
     else:

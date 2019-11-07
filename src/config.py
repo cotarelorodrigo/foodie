@@ -41,7 +41,7 @@ class Testing(object):
     """
     Testing environment configuration
     """
-    DEBUG = True
+    DEBUG = False
     TESTING = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JSON_SORT_KEYS = False
