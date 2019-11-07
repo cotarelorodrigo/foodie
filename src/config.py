@@ -39,9 +39,9 @@ class Production(object):
 
 class Testing(object):
     """
-    Development environment configuration
+    Testing environment configuration
     """
-    DEBUG = False
+    DEBUG = True
     TESTING = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     JSON_SORT_KEYS = False
