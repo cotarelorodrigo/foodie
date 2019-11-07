@@ -22,7 +22,8 @@ class OrderTestCase(BaseTest):
                     "latitude": -33.58672,
                     "longitude": -52.52345
                 },
-                "payWithPoints": False
+                "payWithPoints": False,
+                "state": 'created'
                 }),
             content_type='application/json'
         )
@@ -45,7 +46,8 @@ class OrderTestCase(BaseTest):
                     "latitude": -33.58672,
                     "longitude": -52.52345
                 },
-                "payWithPoints": False
+                "payWithPoints": False,
+                "state": 'created'
                 }),
             content_type='application/json'
         )

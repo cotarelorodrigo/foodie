@@ -13,6 +13,7 @@ class OrderModel(db.Model):
   latitud = db.Column(db.Float, nullable=False)
   longitud = db.Column(db.Float, nullable=False)
   payWithPoints = db.Column(db.Boolean, nullable=False)
+  state = db.Column(db.String(128), nullable=False)
 
 
   # class constructor
@@ -24,6 +25,7 @@ class OrderModel(db.Model):
     self.latitud = data.get('latitud')
     self.longitud = data.get('longitud')
     self.payWithPoints = data.get('payWithPoints')
+    self.state = data.get('state')
 
   def save(self):
     db.session.add(self)

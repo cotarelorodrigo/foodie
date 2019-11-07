@@ -11,7 +11,8 @@ class OrderService(Service):
                 "shop_id": order_data['shop_id'],
                 "latitud": order_data['coordinates']['latitude'],
                 "longitud": order_data['coordinates']['longitude'],
-                "payWithPoints": order_data['payWithPoints']
+                "payWithPoints": order_data['payWithPoints'],
+                "state": order_data['state']
         }
         order = OrderModel(order_info)
         products = []

@@ -70,11 +70,14 @@ class CoordinateSchema(Schema):
     class Meta:
         strict = True
 
+OrderState = {'delivered', 'onWay', 'cancelled', 'created'}
+
 class OrderSchema(Schema):
     shop_id = fields.Int(required=True)
     products = fields.List(fields.Nested(OrderProductSchema), required=True)
     coordinates = fields.Nested(CoordinateSchema, required=True)
     payWithPoints = fields.Boolean(required=True)
+    state = fields.Str(required=True, validate=lambda s: s in OrderState)
 
     class Meta:
         strict = True
