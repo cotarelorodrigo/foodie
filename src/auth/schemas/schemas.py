@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, post_load, post_dump
 
 
 class UserSchema(Schema):
@@ -78,6 +78,15 @@ class OrderSchema(Schema):
     coordinates = fields.Nested(CoordinateSchema, required=True)
     payWithPoints = fields.Boolean(required=True)
     state = fields.Str(required=True, validate=lambda s: s in OrderState)
+    user_id = fields.Int(required=True)
+
+    @post_load
+    def make_order_products(self, data, **kwargs):
+        coordinates = data.pop('coordinates')
+        products = data.pop('products')
+        data['latitude'] = coordinates['latitude']
+        data['longitude'] = coordinates['longitude']
+        return data, products
 
     class Meta:
         strict = True

@@ -11,8 +11,7 @@ def add_order():
     content = request.get_json()
     service = OrderService()
     try:
-        order_data = order_schema.load(content)
-        service.create_order(order_data)
+        service.create_order(content)
     except marshmallow.exceptions.ValidationError:
         return jsonify({'400': 'Invalid order information'}), 400
     except:

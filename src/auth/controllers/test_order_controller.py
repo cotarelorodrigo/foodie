@@ -23,7 +23,8 @@ class OrderTestCase(BaseTest):
                     "longitude": -52.52345
                 },
                 "payWithPoints": False,
-                "state": 'created'
+                "state": 'created',
+                "user_id": 8541
                 }),
             content_type='application/json'
         )
@@ -47,7 +48,8 @@ class OrderTestCase(BaseTest):
                     "longitude": -52.52345
                 },
                 "payWithPoints": False,
-                "state": 'created'
+                "state": 'created',
+                "user_id": 8541
                 }),
             content_type='application/json'
         )

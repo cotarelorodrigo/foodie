@@ -6,22 +6,11 @@ class OrderService(Service):
     def create_order(self, order_data):
         from src.auth.models.order_table import OrderModel
         from src.auth.models.order_product_table import OrderProductsModel
-        from src.auth.schemas.schemas import OrderProductSchema
-        order_info = {
-                "shop_id": order_data['shop_id'],
-                "latitud": order_data['coordinates']['latitude'],
-                "longitud": order_data['coordinates']['longitude'],
-                "payWithPoints": order_data['payWithPoints'],
-                "state": order_data['state']
-        }
+        from src.auth.schemas.schemas import OrderSchema
+        order_schema = OrderSchema()
+        order_info, products_info = order_schema.load(order_data)
         order = OrderModel(order_info)
-        products = []
-        for product in order_data['products']:
-            p = {"product_id": product['product_id'],
-                "units": product['units']}
-            p = OrderProductSchema().load(p)
-            products.append(OrderProductsModel(p))
-
+        products = [OrderProductsModel(product) for product in products_info]
         order.save() #Hay que guardar primero la orden orden porq es la parte unaria de la relacion
         for p in products:
             order.products.append(p)

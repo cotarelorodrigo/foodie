@@ -14,6 +14,7 @@ class OrderModel(db.Model):
   longitud = db.Column(db.Float, nullable=False)
   payWithPoints = db.Column(db.Boolean, nullable=False)
   state = db.Column(db.String(128), nullable=False)
+  user_id = db.Column(db.Integer, nullable=False)
 
 
   # class constructor
@@ -22,10 +23,11 @@ class OrderModel(db.Model):
     Class constructor
     """
     self.shop_id = data.get('shop_id')
-    self.latitud = data.get('latitud')
-    self.longitud = data.get('longitud')
+    self.latitud = data.get('latitude')
+    self.longitud = data.get('longitude')
     self.payWithPoints = data.get('payWithPoints')
     self.state = data.get('state')
+    self.user_id = data.get('user_id')
 
   def save(self):
     db.session.add(self)
