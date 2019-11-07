@@ -17,3 +17,8 @@ class AccessDeniedException(Exception):
 class ShopNotFound(Exception):
     def __init__(self, message):
         self.msg = message
+
+
+class InvalidInformation(Exception):
+    def __init__(self, message):
+        self.msg = message

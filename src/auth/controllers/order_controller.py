@@ -37,7 +37,7 @@ def show_products_orders():
 @orders_blueprint.route('/orders/cancel/<_id>', methods=['DELETE'])
 def cancel_order(_id):
     service = OrderService()
-    shop = service.delete_order(_id)
-    if not shop: 
+    order = service.change_order_state(_id, 'cancelled')
+    if not order: 
         return jsonify({'404': "order with that id doesn't exist."}), 404
-    return jsonify({'200': "order with that id was deleted."}), 200
+    return jsonify({'200': "order with that id was cancelled."}), 200

@@ -31,9 +31,24 @@ class OrderService(Service):
             return []
         return self.sqlachemy_to_dict(response)
 
-    def delete_order(self,_id):
+    def catch_order(self, _order_id, _delivery_id):
         from src.app import db
         from src.auth.models.order_table import OrderModel
-        response = OrderModel.query.filter_by(order_id=_id).delete()
-        db.session.commit()
-        return response
+        order = OrderModel.query.filter_by(order_id=_order_id).one()
+        order.delivery_id = _delivery_id
+        order.state = "onWay"
+        
+        return order
+
+    def change_order_state(self, _order_id, _state):
+        from src.app import db
+        from src.auth.models.order_table import OrderModel
+        from src.auth.schemas.schemas import OrderState
+        from src.auth.auth_exception import InvalidInformation
+        order = OrderModel.query.filter_by(order_id=_order_id).one()
+        if _state in OrderState:
+            order.state = _state
+            db.session.commit()
+        else:
+            raise InvalidInformation('Estado de orden invalido')
+        return order
