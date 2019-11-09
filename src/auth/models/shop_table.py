@@ -1,5 +1,6 @@
 import datetime
 from src.app import db
+from src.auth.auth_exception import NotFoundException
 
 class ShopModel(db.Model):
 
@@ -9,7 +10,7 @@ class ShopModel(db.Model):
   shop_id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(128), nullable=False)
   address = db.Column(db.String(128), nullable=False)
-  descripton = db.Column(db.String(128), nullable=True)
+  description = db.Column(db.String(128), nullable=True)
   photoUrl = db.Column(db.String(128), nullable=False)
   rating = db.Column(db.Integer, nullable=False)
   latitude = db.Column(db.Float, nullable=False)
@@ -24,7 +25,7 @@ class ShopModel(db.Model):
     """
     self.name = data.get('name')
     self.address = data.get('address')
-    self.descripton = data.get('descripton', '')
+    self.description = data.get('description', '')
     self.latitude = data.get('latitude')
     self.longitude = data.get('longitude')
     self.photoUrl = data.get('photoUrl')
@@ -33,7 +34,21 @@ class ShopModel(db.Model):
   def save(self):
     db.session.add(self)
     db.session.commit()
+    return True
 
   def delete(self):
     db.session.delete(self)
     db.session.commit()
+    return True
+
+  def update(self, data):
+    self.__init__(data)
+    db.session.commit()
+    return True
+
+  @staticmethod
+  def get_shop(shop_id):
+    response = ShopModel.query.get(shop_id)
+    if not response:
+        raise NotFoundException("Invalid ID")
+    return response

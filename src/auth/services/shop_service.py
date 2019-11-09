@@ -7,22 +7,25 @@ class ShopService(Service):
     def create_shop(self, shop_data):
         from src.auth.models.shop_table import ShopModel
         from src.auth.schemas.schemas import ShopSchema
-        shop_data = ShopSchema().load(shop_data)
+        shop_data, products = ShopSchema().load(shop_data)
         shop = ShopModel(shop_data)
-        shop.save()
+        return shop.save()
 
     def get_shop(self, _id):
         from src.auth.models.shop_table import ShopModel
-        try:
-            response = ShopModel.query.get(_id)
-        except AttributeError:
-            raise NotFoundException("No shop with provided id")
+        response = ShopModel.get_shop(_id)
         return self.sqlachemy_to_dict(response)
     
     def delete_shop(self, _id):
         from src.auth.models.shop_table import ShopModel
-        response = ShopModel.query.filter_by(shop_id=_id).delete()
-        return response
+        return ShopModel.get_shop(_id).delete()
+    
+    def update_shop(self, _id, data):
+        from src.auth.models.shop_table import ShopModel
+        from src.auth.schemas.schemas import ShopSchema
+        shop_data, products = ShopSchema().load(data)
+        return ShopModel.get_shop(_id).update(shop_data)
+        
 
 
     def get_products(self,shop_id):

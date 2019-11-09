@@ -58,7 +58,7 @@ class ShopSchema(Schema):
         try:
             products = data.pop('menu')
         except:
-            return data
+            products = []
         return data, products
 
     class Meta:

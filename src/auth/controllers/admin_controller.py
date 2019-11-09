@@ -6,6 +6,7 @@ from src.auth.services.shop_service import ShopService
 from src.auth.schemas.schemas import StaticsDatetimeRangeSchema
 from src.auth.controllers.common_functions_controllers import auth_required, user_is_admin
 from marshmallow import ValidationError
+from src.auth.auth_exception import NotFoundException
 import sqlalchemy
 import marshmallow 
 
@@ -119,9 +120,11 @@ def create_shop():
 @auth_required
 @user_is_admin
 def get_shop():
+     shop_id = request.args.get('id')
      try:
-          shop_id = request.args.get('id')
           response = ShopService().get_shop(shop_id)
+     except NotFoundException as e:
+          return jsonify({'404': "shop {}".format(e.msg)}), 404
      except:
           raise
      else:
@@ -132,7 +135,26 @@ def get_shop():
 @user_is_admin
 def delete_shop():
      shop_id = request.args.get('id')
-     response = ShopService().delete_shop(shop_id)
-     if not response:
-          return jsonify({'404': "order with that id doesn't exist."}), 404
-     return jsonify({'200': "Shop deleted"}), 200
+     try:
+          response = ShopService().delete_shop(shop_id)
+     except NotFoundException as e:
+          return jsonify({'404': "shop {}".format(e.msg)}), 404
+     except:
+          raise
+     else:
+          return jsonify({'OK': "Shop deleted"}), 200
+
+@admins_blueprint.route('/admin/shop', methods=['PUT'])
+@auth_required
+@user_is_admin
+def update_shop():
+     shop_id = request.args.get('id')
+     content = request.get_json()
+     try: 
+          response = ShopService().update_shop(shop_id, content)
+     except NotFoundException as e:
+          return jsonify({'404': "shop {}".format(e.msg)}), 404
+     except:
+          raise
+     else:
+          return jsonify({"OK": "Shop actualizado con exito!"}), 200
