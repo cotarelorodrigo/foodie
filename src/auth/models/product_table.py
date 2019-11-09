@@ -6,7 +6,7 @@ class ProductModel(db.Model):
   __tablename__ = 'products'
 
   id = db.Column(db.Integer, primary_key=True)
-  shopId = db.Column(db.Integer, db.ForeignKey('shops.id'), nullable=False)
+  shop_id = db.Column(db.Integer, db.ForeignKey('shops.shop_id'), nullable=False)
   name = db.Column(db.String(128), nullable=False)
   description = db.Column(db.String(128), nullable=False)
   price = db.Column(db.Float, nullable=False)
@@ -16,8 +16,7 @@ class ProductModel(db.Model):
     """
     Class constructor
     """
-    self.id = data.get('id')
-    self.shopId = data.get('shopId')
+    self.shop_id = data.get('shop_id')
     self.name = data.get('name')
     self.description = data.get('description')
     self.price = data.get('price')

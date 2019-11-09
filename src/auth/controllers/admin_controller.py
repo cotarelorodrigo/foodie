@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from src.auth.services.user_service import UserService
 from src.auth.services.delivery_service import DeliveryService
 from src.auth.services.order_service import OrderService
+from src.auth.services.shop_service import ShopService
 from src.auth.schemas.schemas import StaticsDatetimeRangeSchema
 from src.auth.controllers.common_functions_controllers import auth_required, user_is_admin
 from marshmallow import ValidationError
@@ -27,7 +28,7 @@ def statics():
     return jsonify({"users": UserService().get_quantity_users(), "deliverys": DeliveryService().get_quantity_deliverys(), 
     "completeOrders": OrderService().get_quantity_complete_orders(), "canceledOrders": OrderService().get_quantity_cancelled_orders()}), 200
 
-@admins_blueprint.route('/admin/statics/users', methods=['GET'])
+@admins_blueprint.route('/admin/statistics/users', methods=['GET'])
 @auth_required
 @user_is_admin
 def statics_users():
@@ -43,7 +44,7 @@ def statics_users():
      else:
           return jsonify(result), 200
 
-@admins_blueprint.route('/admin/statics/deliverys', methods=['GET'])
+@admins_blueprint.route('/admin/statistics/deliverys', methods=['GET'])
 @auth_required
 @user_is_admin
 def statics_deliverys():
@@ -59,7 +60,7 @@ def statics_deliverys():
      else:
           return jsonify(result), 200
     
-@admins_blueprint.route('/admin/statics/orders/completed', methods=['GET'])
+@admins_blueprint.route('/admin/statistics/orders/completed', methods=['GET'])
 @auth_required
 @user_is_admin
 def statics_orders_completed():
@@ -75,7 +76,7 @@ def statics_orders_completed():
      else:
           return jsonify(result), 200
 
-@admins_blueprint.route('/admin/statics/orders/cancelled', methods=['GET'])
+@admins_blueprint.route('/admin/statistics/orders/cancelled', methods=['GET'])
 @auth_required
 @user_is_admin
 def statics_orders_cancelled():
@@ -90,3 +91,26 @@ def statics_orders_cancelled():
           raise
      else:
           return jsonify(result), 200
+
+@admins_blueprint.route('/admin/shops', methods=['GET'])
+@auth_required
+@user_is_admin
+def shops():
+     pageNumber = request.args.get('p')
+     pageSize = request.args.get('pSize')
+     result = ShopService().get_N_shops(int(pageNumber), int(pageSize))
+     return jsonify(result), 200
+
+@admins_blueprint.route('/admin/shop', methods=['POST'])
+@auth_required
+@user_is_admin
+def create_shop():
+     try:
+          content = request.get_json()
+          ShopService().create_shop(content)
+     except ValidationError:
+        return jsonify({"error": "Informacion del shop Incorrecta"}), 410
+     except:
+          raise
+     else:
+          return jsonify({"OK": "Shop creado con exito!"}), 200

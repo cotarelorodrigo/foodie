@@ -28,20 +28,31 @@ class DeliveryUserSchema(UserSchema):
     class Meta:
         strict = True
 
+class CoordinateSchema(Schema):
+    latitude = fields.Float(required=True)
+    longitude = fields.Float(required=True)
+
+    class Meta:
+        strict = True
 
 class ShopSchema(Schema):
-    id = fields.Int(required=True)
     name = fields.Str(required=True)
     address = fields.Str(required=True)
-    description = fields.Str(required=True)
+    description = fields.Str(required=False)
+    coordinates = fields.Nested(CoordinateSchema, required=True)
     photoUrl = fields.Str(required=True)
     rating = fields.Int(required=True)
     #To do: Falta meter el campo menu, que seria?
 
+    @post_load
+    def make_order_products(self, data, **kwargs):
+        coordinates = data.pop('coordinates')
+        data['latitude'] = coordinates['latitude']
+        data['longitude'] = coordinates['longitude']
+        return data
 
     class Meta:
         strict = True
-        fields = ('id', 'name', 'address', 'description', 'photoUrl', 'rating')
 
 class LoginSchema(Schema):
     email = fields.Email(required=True)
@@ -59,13 +70,6 @@ class RecoverSchema(Schema):
 class OrderProductSchema(Schema):
     product_id = fields.Int(required=True)
     units = fields.Int(required=True)
-
-    class Meta:
-        strict = True
-
-class CoordinateSchema(Schema):
-    latitude = fields.Float(required=True)
-    longitude = fields.Float(required=True)
 
     class Meta:
         strict = True
