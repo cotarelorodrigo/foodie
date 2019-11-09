@@ -59,4 +59,34 @@ def statics_deliverys():
      else:
           return jsonify(result), 200
     
+@admins_blueprint.route('/admin/statics/orders/completed', methods=['GET'])
+@auth_required
+@user_is_admin
+def statics_orders_completed():
+     try:
+          data = {"year_from":request.args.get('year_from'), "month_from":request.args.get('month_from'),
+                    "year_to":request.args.get('year_to'), "month_to":request.args.get('month_to')}
+          data = statics_datetime_schema.load(data)
+          result = OrderService().get_quantity_orders_by_month(data['year_from'], data['month_from'], data['year_to'], data['month_to'], 'delivered')
+     except ValidationError:
+        return jsonify({"error": "Informacion Incorrecta"}), 410
+     except:
+          raise
+     else:
+          return jsonify(result), 200
 
+@admins_blueprint.route('/admin/statics/orders/cancelled', methods=['GET'])
+@auth_required
+@user_is_admin
+def statics_orders_cancelled():
+     try:
+          data = {"year_from":request.args.get('year_from'), "month_from":request.args.get('month_from'),
+                    "year_to":request.args.get('year_to'), "month_to":request.args.get('month_to')}
+          data = statics_datetime_schema.load(data)
+          result = OrderService().get_quantity_orders_by_month(data['year_from'], data['month_from'], data['year_to'], data['month_to'], 'cancelled')
+     except ValidationError:
+        return jsonify({"error": "Informacion Incorrecta"}), 410
+     except:
+          raise
+     else:
+          return jsonify(result), 200
