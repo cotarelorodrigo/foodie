@@ -22,6 +22,10 @@ class UserService(Service):
             return []
         return self.sqlachemy_to_dict(response)
     
+    def get_quantity_users(self):
+        from src.auth.models.user_table import NormalUserModel
+        return NormalUserModel.query.count()
+    
     def get_normal_users(self):
         from src.auth.models.user_table import NormalUserModel
         response = NormalUserModel.query.all()
@@ -35,7 +39,6 @@ class UserService(Service):
         if not response:
             return []
         return self.sqlachemy_to_dict(response)
-
 
     def get_user(self,_id):
         from src.auth.models.user_table import UserModel

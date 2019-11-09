@@ -12,3 +12,7 @@ class DeliveryService:
         delivery = Delivery(distance,datetime.now(),1,20)
         price = delivery.calculate_price()
         return price
+
+    def get_quantity_deliverys(self):
+        from src.auth.models.user_table import DeliveryUserModel
+        return DeliveryUserModel.query.count()
