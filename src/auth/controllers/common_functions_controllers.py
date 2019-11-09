@@ -1,6 +1,7 @@
 from flask import request, jsonify
 from functools import wraps
 from src.jwt_handler import decode_jwt_data
+from flask import g
 
 def auth_required(f):
     @wraps(f)
@@ -11,7 +12,7 @@ def auth_required(f):
             return jsonify({"error":"Token is missing!"}), 421
 
         try:
-            kwargs['data'] = decode_jwt_data(token)
+            g.data = decode_jwt_data(token)
         except:
             return jsonify({"error":"Invalid token"}), 422
         
@@ -23,8 +24,8 @@ def auth_required(f):
 def user_is_admin(f):
     @wraps(f)
     def decorated(*args, **kwargs):
-        if not kwargs['data']["is_admin"]:
+        if not g.data["is_admin"]:
             return jsonify({"error":"You are not an admin"}), 422
-        del kwargs['data']
+        #del kwargs['data']
         return f(*args, **kwargs)
     return decorated
