@@ -90,3 +90,12 @@ class OrderSchema(Schema):
 
     class Meta:
         strict = True
+
+class StaticsDatetimeRangeSchema(Schema):
+    year_from = fields.Int(required=True)
+    month_from = fields.Int(required=True)
+    year_to = fields.Int(required=True)
+    month_to = fields.Int(required=True)
+
+    class Meta:
+        strict = True

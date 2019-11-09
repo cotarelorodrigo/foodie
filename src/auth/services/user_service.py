@@ -1,6 +1,8 @@
 from sqlalchemy.orm.exc import NoResultFound
 from src.auth.auth_exception import NotFoundException
 from src.auth.services.service import Service
+import datetime
+from dateutil import relativedelta
 
 class UserService(Service):
     def create_normal_user(self, user_data):
@@ -25,7 +27,23 @@ class UserService(Service):
     def get_quantity_users(self):
         from src.auth.models.user_table import NormalUserModel
         return NormalUserModel.query.count()
-    
+
+    def get_quantity_users_date(self, date_from, date_to):
+        from src.auth.models.user_table import NormalUserModel
+        return NormalUserModel.query.filter(NormalUserModel.created_at >= date_from).filter(NormalUserModel.created_at <= date_to).count()
+
+    def get_quantity_users_by_month(self, year_from, month_from, year_to, month_to):
+        date_from = datetime.date(year=year_from,month=month_from, day=1)
+        date_to = datetime.date(year=year_to,month=month_to, day=1)
+        result = []
+        delta = relativedelta.relativedelta(date_from, date_to)
+        for delta_month in range(abs(delta.months)):
+            date_from_aux = date_from + relativedelta.relativedelta(months=delta_month)
+            date_to_aux = date_from + relativedelta.relativedelta(months=delta_month+1)
+            result.append({"year": date_to_aux.year, "month": date_to_aux.month, "amount": self.get_quantity_users_date(date_from_aux, date_to_aux)})
+        return result
+
+
     def get_normal_users(self):
         from src.auth.models.user_table import NormalUserModel
         response = NormalUserModel.query.all()
