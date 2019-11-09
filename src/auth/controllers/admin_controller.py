@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from src.auth.services.user_service import UserService
 from src.auth.services.delivery_service import DeliveryService
+from src.auth.services.order_service import OrderService
 from src.auth.controllers.common_functions_controllers import auth_required, user_is_admin
 import sqlalchemy
 import marshmallow 
@@ -20,7 +21,8 @@ def admin():
 @auth_required
 @user_is_admin
 def statics():
-    return jsonify({"users": UserService().get_quantity_users(), "deliverys": DeliveryService().get_quantity_deliverys(), "completeOrders": 0, "canceledOrders": 0}), 200
+    return jsonify({"users": UserService().get_quantity_users(), "deliverys": DeliveryService().get_quantity_deliverys(), 
+    "completeOrders": OrderService().get_quantity_complete_orders(), "canceledOrders": OrderService().get_quantity_cancelled_orders()}), 200
 
 
 

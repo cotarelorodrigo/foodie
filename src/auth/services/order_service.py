@@ -52,3 +52,11 @@ class OrderService(Service):
         else:
             raise InvalidInformation('Estado de orden invalido')
         return order
+
+    def get_quantity_complete_orders(self):
+        from src.auth.models.order_table import OrderModel
+        return OrderModel.query.filter_by(state='delivered').count()
+
+    def get_quantity_cancelled_orders(self):
+        from src.auth.models.order_table import OrderModel
+        return OrderModel.query.filter_by(state='cancelled').count()
