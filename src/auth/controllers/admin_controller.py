@@ -36,12 +36,27 @@ def statics_users():
                     "year_to":request.args.get('year_to'), "month_to":request.args.get('month_to')}
           data = statics_datetime_schema.load(data)
           result = UserService().get_quantity_users_by_month(data['year_from'], data['month_from'], data['year_to'], data['month_to'])
-     #except ValidationError:
-     #   return jsonify({"error": "Informacion Incorrecta"}), 410
+     except ValidationError:
+        return jsonify({"error": "Informacion Incorrecta"}), 410
      except:
           raise
      else:
           return jsonify(result), 200
 
+@admins_blueprint.route('/admin/statics/deliverys', methods=['GET'])
+@auth_required
+@user_is_admin
+def statics_deliverys():
+     try:
+          data = {"year_from":request.args.get('year_from'), "month_from":request.args.get('month_from'),
+                    "year_to":request.args.get('year_to'), "month_to":request.args.get('month_to')}
+          data = statics_datetime_schema.load(data)
+          result = DeliveryService().get_quantity_deliverys_by_month(data['year_from'], data['month_from'], data['year_to'], data['month_to'])
+     except ValidationError:
+        return jsonify({"error": "Informacion Incorrecta"}), 410
+     except:
+          raise
+     else:
+          return jsonify(result), 200
     
 
