@@ -7,7 +7,7 @@ class AdminModel(db.Model):
   __tablename__ = 'admins'
 
   admin_id = db.Column(db.Integer, primary_key=True)
-  username = db.Column(db.String(128), nullable=False, unique=True)
+  email = db.Column(db.String(128), nullable=False, unique=True)
   password = db.Column(db.String(128), nullable=False)
   last_login = db.Column(db.DateTime)
 
@@ -16,7 +16,7 @@ class AdminModel(db.Model):
     """
     Class constructor
     """
-    self.username = data.get('username')
+    self.email = data.get('email')
     self.password = data.get('password')
     self.last_login = datetime.datetime.utcnow()
 

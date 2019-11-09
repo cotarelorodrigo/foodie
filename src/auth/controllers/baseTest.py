@@ -5,6 +5,7 @@ from src.auth.models.user_table import NormalUserModel, DeliveryUserModel, UserM
 from src.auth.models.product_table import ProductModel
 from src.auth.models.shop_table import ShopModel
 from src.auth.models.order_table import OrderModel
+from src.auth.models.admin_table import AdminModel
 from src.auth.models.order_product_table import OrderProductsModel
 
 class BaseTest(unittest.TestCase):

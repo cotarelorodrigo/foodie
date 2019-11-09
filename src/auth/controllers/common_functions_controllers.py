@@ -11,10 +11,20 @@ def auth_required(f):
             return jsonify({"error":"Token is missing!"}), 421
 
         try:
-            data = decode_jwt_data(token)
+            kwargs['data'] = decode_jwt_data(token)
         except:
             return jsonify({"error":"Invalid token"}), 422
         
         return f(*args, **kwargs)
     
+    return decorated
+
+
+def user_is_admin(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if not kwargs['data']["is_admin"]:
+            return jsonify({"error":"You are not an admin"}), 422
+        del kwargs['data']
+        return f(*args, **kwargs)
     return decorated

@@ -6,6 +6,7 @@ from src.auth.models.user_table import UserModel
 from src.auth.models.product_table import ProductModel
 from src.auth.models.shop_table import ShopModel
 from src.auth.models.order_table import OrderModel
+from src.auth.models.admin_table import AdminModel
 from src.auth.models.order_product_table import OrderProductsModel
 
 def set_shops():
@@ -33,11 +34,17 @@ def set_shops():
 		product = ProductModel(product_data)
 		product.save()
 
+def set_admin():
+  admin = {"email": "admin@foodie.com", "password": "admin"}
+  admin = AdminModel(admin)
+  admin.save()
+
 app = create_app()
 with app.app_context():
   db.drop_all()
   db.create_all()
   set_shops()
+  set_admin()
   db.session.commit()
 
 if __name__ == "__main__":
