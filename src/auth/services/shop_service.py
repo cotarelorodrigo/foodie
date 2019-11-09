@@ -18,6 +18,12 @@ class ShopService(Service):
         except AttributeError:
             raise NotFoundException("No shop with provided id")
         return self.sqlachemy_to_dict(response)
+    
+    def delete_shop(self, _id):
+        from src.auth.models.shop_table import ShopModel
+        response = ShopModel.query.filter_by(shop_id=_id).delete()
+        return response
+
 
     def get_products(self,shop_id):
         from src.auth.models.product_table import ProductModel

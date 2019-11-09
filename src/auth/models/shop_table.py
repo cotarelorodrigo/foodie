@@ -14,6 +14,7 @@ class ShopModel(db.Model):
   rating = db.Column(db.Integer, nullable=False)
   latitude = db.Column(db.Float, nullable=False)
   longitude = db.Column(db.Float, nullable=False)
+  menu = db.relationship('ProductModel', backref='order', lazy=True)
 
 
   # class constructor
@@ -31,4 +32,8 @@ class ShopModel(db.Model):
 
   def save(self):
     db.session.add(self)
+    db.session.commit()
+
+  def delete(self):
+    db.session.delete(self)
     db.session.commit()

@@ -6,8 +6,7 @@ from dateutil import relativedelta
 
 class OrderService(Service):
     def create_order(self, order_data):
-        from src.auth.models.order_table import OrderModel
-        from src.auth.models.order_product_table import OrderProductsModel
+        from src.auth.models.order_table import OrderModel, OrderProductsModel
         from src.auth.schemas.schemas import OrderSchema
         order_schema = OrderSchema()
         order_info, products_info = order_schema.load(order_data)
@@ -27,7 +26,7 @@ class OrderService(Service):
         return self.sqlachemy_to_dict(response)
     
     def get_products_orders(self):
-        from src.auth.models.order_product_table import OrderProductsModel
+        from src.auth.models.order_table import OrderProductsModel
         response = OrderProductsModel.query.all()
         if not response:
             return []

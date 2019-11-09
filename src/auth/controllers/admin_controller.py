@@ -109,8 +109,30 @@ def create_shop():
           content = request.get_json()
           ShopService().create_shop(content)
      except ValidationError:
-        return jsonify({"error": "Informacion del shop Incorrecta"}), 410
+        return jsonify({"error": "Informacion del shop Incorrecta"}), 420
      except:
           raise
      else:
           return jsonify({"OK": "Shop creado con exito!"}), 200
+
+@admins_blueprint.route('/admin/shop', methods=['GET'])
+@auth_required
+@user_is_admin
+def get_shop():
+     try:
+          shop_id = request.args.get('id')
+          response = ShopService().get_shop(shop_id)
+     except:
+          raise
+     else:
+          return jsonify(response), 200
+
+@admins_blueprint.route('/admin/shop', methods=['DELETE'])
+@auth_required
+@user_is_admin
+def delete_shop():
+     shop_id = request.args.get('id')
+     response = ShopService().delete_shop(shop_id)
+     if not response:
+          return jsonify({'404': "order with that id doesn't exist."}), 404
+     return jsonify({'200': "Shop deleted"}), 200

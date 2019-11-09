@@ -35,6 +35,12 @@ class CoordinateSchema(Schema):
     class Meta:
         strict = True
 
+class ProductSchema(Schema):
+    shop_id = fields.Int(required=True) 
+    name = fields.Str(required=True)
+    description = fields.Str(required=True)
+    price = fields.Int(required=True)
+
 class ShopSchema(Schema):
     name = fields.Str(required=True)
     address = fields.Str(required=True)
@@ -42,14 +48,18 @@ class ShopSchema(Schema):
     coordinates = fields.Nested(CoordinateSchema, required=True)
     photoUrl = fields.Str(required=True)
     rating = fields.Int(required=True)
-    #To do: Falta meter el campo menu, que seria?
+    menu = fields.List(fields.Nested(ProductSchema), required=False)
 
     @post_load
     def make_order_products(self, data, **kwargs):
         coordinates = data.pop('coordinates')
         data['latitude'] = coordinates['latitude']
         data['longitude'] = coordinates['longitude']
-        return data
+        try:
+            products = data.pop('menu')
+        except:
+            return data
+        return data, products
 
     class Meta:
         strict = True
