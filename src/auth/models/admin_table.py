@@ -1,7 +1,8 @@
 import datetime
 from src.app import db
+from src.auth.models.base_table import BaseModel
 
-class AdminModel(db.Model):
+class AdminModel(BaseModel):
 
   # table name
   __tablename__ = 'admins'
@@ -19,7 +20,3 @@ class AdminModel(db.Model):
     self.email = data.get('email')
     self.password = data.get('password')
     self.last_login = datetime.datetime.utcnow()
-
-  def save(self):
-    db.session.add(self)
-    db.session.commit()

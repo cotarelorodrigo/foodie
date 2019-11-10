@@ -1,8 +1,9 @@
 import datetime
 import secrets
 from src.app import db
+from src.auth.models.base_table import BaseModel
 
-class UserModel(db.Model):
+class UserModel(BaseModel):
 
   # table name
   __tablename__ = 'users'
@@ -36,15 +37,6 @@ class UserModel(db.Model):
     self.token = secrets.token_hex(32)
     self.created_at = datetime.datetime.utcnow()
     self.modified_at = datetime.datetime.utcnow()
-
-  def save(self):
-    db.session.add(self)
-    db.session.commit()
-
-  #@staticmethod
-  #def get_one_user(id):
-    #return UserModel.query.get(id)
-
 
 class NormalUserModel(UserModel):
 

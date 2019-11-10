@@ -1,6 +1,7 @@
 from src.app import db
+from src.auth.models.base_table import BaseModel
 
-class ProductModel(db.Model):
+class ProductModel(BaseModel):
 
   # table name
   __tablename__ = 'products'
@@ -20,7 +21,3 @@ class ProductModel(db.Model):
     self.name = data.get('name')
     self.description = data.get('description')
     self.price = data.get('price')
-    
-  def save(self):
-    db.session.add(self)
-    db.session.commit()

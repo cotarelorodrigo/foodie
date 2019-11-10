@@ -1,8 +1,8 @@
 import datetime
 from src.app import db
-#from src.auth.models.order_product_table import OrderProductsModel
+from src.auth.models.base_table import BaseModel
 
-class OrderModel(db.Model):
+class OrderModel(BaseModel):
 
   # table name
   __tablename__ = 'orders'
@@ -34,11 +34,8 @@ class OrderModel(db.Model):
     self.created_at = datetime.datetime.utcnow()
     self.modified_at = datetime.datetime.utcnow()
 
-  def save(self):
-    db.session.add(self)
-    db.session.commit()
 
-class OrderProductsModel(db.Model):
+class OrderProductsModel(BaseModel):
 
   # table name
   __tablename__ = 'order_products'
@@ -48,8 +45,6 @@ class OrderProductsModel(db.Model):
   product_id = db.Column(db.Integer, nullable=False)
   units = db.Column(db.Integer, nullable=False)
 
-
-
   # class constructor
   def __init__(self, data):
     """
@@ -57,7 +52,3 @@ class OrderProductsModel(db.Model):
     """
     self.product_id = data.get('product_id')
     self.units = data.get('units')
-
-  def save(self):
-    db.session.add(self)
-    db.session.commit()

@@ -1,8 +1,9 @@
 import datetime
 from src.app import db
 from src.auth.auth_exception import NotFoundException
+from src.auth.models.base_table import BaseModel
 
-class ShopModel(db.Model):
+class ShopModel(BaseModel):
 
   # table name
   __tablename__ = 'shops'
@@ -31,20 +32,6 @@ class ShopModel(db.Model):
     self.photoUrl = data.get('photoUrl')
     self.rating = data.get('rating')
 
-  def save(self):
-    db.session.add(self)
-    db.session.commit()
-    return True
-
-  def delete(self):
-    db.session.delete(self)
-    db.session.commit()
-    return True
-
-  def update(self, data):
-    self.__init__(data)
-    db.session.commit()
-    return True
 
   @staticmethod
   def get_shop(shop_id):
