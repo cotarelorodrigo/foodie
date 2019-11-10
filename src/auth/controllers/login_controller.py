@@ -5,7 +5,8 @@ from src.auth.services.admin_service import AdminService
 from src.auth.schemas.schemas import LoginSchema, RecoverSchema, LoginSchemaToken
 from src.auth.auth_exception import NotFoundException
 from src.jwt_handler import encode_data_to_jwt
-from firebase_admin import auth
+#from src.auth.controllers.common_functions_controllers import verify_firebase_uid
+
 
 login_blueprint = Blueprint('login', __name__)
 login_schema = LoginSchema()
@@ -21,7 +22,7 @@ def login():
     content = request.get_json()
     try:
         user_data = login_schema_token.load(content)
-        auth.verify_id_token(user_data['firebase_uid'])
+        verify_firebase_uid(user_data['firebase_uid'])
     except:
         try:
             user_data = login_schema.load(content)
