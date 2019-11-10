@@ -14,6 +14,9 @@ from src.auth.controllers.login_controller import login_blueprint
 from src.auth.controllers.direc_controller import direc_blueprint
 from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException, NotFoundException
 from flask_mail import Message
+import firebase_admin
+
+firebase_app = firebase_admin.initialize_app()
 
 db = SQLAlchemy()
 mail = Mail()

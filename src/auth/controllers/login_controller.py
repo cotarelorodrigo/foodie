@@ -2,12 +2,14 @@ from flask import Blueprint, request, jsonify
 from marshmallow import ValidationError
 from src.auth.services.user_service import UserService
 from src.auth.services.admin_service import AdminService
-from src.auth.schemas.schemas import LoginSchema, RecoverSchema
+from src.auth.schemas.schemas import LoginSchema, RecoverSchema, LoginSchemaToken
 from src.auth.auth_exception import NotFoundException
 from src.jwt_handler import encode_data_to_jwt
+from firebase_admin import auth
 
 login_blueprint = Blueprint('login', __name__)
 login_schema = LoginSchema()
+login_schema_token = LoginSchemaToken()
 recover_schema = RecoverSchema()
 
 def get_user_token(user_data):
@@ -16,31 +18,40 @@ def get_user_token(user_data):
 @login_blueprint.route('/user/login', methods=['POST'])
 def login():
     MINUTES_VALID_TOKEN = 20
-    try: 
-        content = request.get_json()
-        user_data = login_schema.load(content)
-        service = UserService()
-        user = service.get_user_by_email(user_data["email"])
-    except NotFoundException as e:
-        service = AdminService()
-        is_admin = service.user_is_admin(user_data["email"], user_data["password"])
-        if is_admin:
-            token = encode_data_to_jwt({"user":user_data["email"], "is_admin": True}, MINUTES_VALID_TOKEN)
-            return jsonify({"token": token}), 200
-        return jsonify({"error": e.msg}), 411
-    except ValidationError:
-        return jsonify({"error": "Falta informacion de login"}), 410
+    content = request.get_json()
+    try:
+        user_data = login_schema_token.load(content)
+        auth.verify_id_token(user_data['firebase_uid'])
     except:
-        raise
-    else:
-        is_valid = UserService.compare_password(
-            hashed=user["password"],
-            plain=user_data["password"]
-        )
+        try:
+            user_data = login_schema.load(content)
+            service = UserService()
+            user = service.get_user_by_email(user_data["email"])
+        except ValidationError:
+            return jsonify({"msg": "Informacion Incorrecta"}), 410
+        except NotFoundException as e:
+            service = AdminService()
+            is_admin = service.user_is_admin(user_data["email"], user_data["password"])
+            if is_admin:
+                token = encode_data_to_jwt({"user":user_data["email"], "is_admin": True}, MINUTES_VALID_TOKEN)
+                return jsonify({"token": token}), 200
+            return jsonify({"msg": e.msg}), 411
+        except ValidationError:
+            return jsonify({"msg": "Falta informacion de login"}), 410
+        except:
+            raise
+        else:
+            is_valid = UserService.compare_password(
+                hashed=user["password"],
+                plain=user_data["password"]
+            )
 
-        if not is_valid:
-            return jsonify({"error": "User not found or wrong password"}), 412
-        
+            if not is_valid:
+                return jsonify({"msg": "User not found or wrong password"}), 412
+            
+            token = encode_data_to_jwt({"user":user_data["email"], "is_admin": False}, MINUTES_VALID_TOKEN)
+            return jsonify({"token": token}), 200
+    else:
         token = encode_data_to_jwt({"user":user_data["email"], "is_admin": False}, MINUTES_VALID_TOKEN)
         return jsonify({"token": token}), 200
 
@@ -59,13 +70,13 @@ def recover():
         msg_info['recipients'] = [user_data['email']]
         send_email(msg_info)
     except NotFoundException as e:
-        return jsonify({"error": e.msg}), 411
+        return jsonify({"msg": e.msg}), 411
     except ValidationError:
-        return jsonify({"error": "Informacion Incorrecta"}), 410
+        return jsonify({"msg": "Informacion Incorrecta"}), 410
     except:
         raise
     else:
-        return jsonify('Recover email sended'), 200
+        return jsonify({'msg':'Recover email sended'}), 200
 
 
 @login_blueprint.route('/user/password', methods=['POST'])
@@ -77,10 +88,10 @@ def new_password():
         service = UserService()
         service.change_password(user_data["email"], user_data["password"])
     except NotFoundException as e:
-        return jsonify({"error": e.msg}), 411
+        return jsonify({"msg": e.msg}), 411
     except ValidationError:
-        return jsonify({"error": "Informacion Incorrecta"}), 410
+        return jsonify({"msg": "Informacion Incorrecta"}), 410
     except:
         raise
     else:
-        return jsonify('New password seted'), 200
+        return jsonify({'msg': 'New password seted'}), 200
