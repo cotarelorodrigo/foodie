@@ -2,6 +2,7 @@ import os
 from flask import Flask, jsonify
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 import src.settings
 from src.config import app_config
 from src.auth.controllers.user_controller import user_blueprint
@@ -17,6 +18,7 @@ from flask_mail import Message
 db = SQLAlchemy()
 mail = Mail()
 app = Flask('foodie-app')
+CORS(app)
 
 def send_email(msg_info):
     with app.app_context():
