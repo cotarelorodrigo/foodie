@@ -20,11 +20,11 @@ def add_user():
         user_data = normal_user_schema.load(content)
         service.create_normal_user(user_data=user_data)
     except IntegrityError as e:
-        return jsonify({'409': 'user with this email already exists.'}), 409
+        return jsonify({'msg': 'user with this email already exists.'}), 409
     except:
         pass
     else:
-        return jsonify({'200': 'a new user was created.'}), 200
+        return jsonify({'msg': 'a new user was created.'}), 200
 
     try:
         service = DeliveryService()
@@ -33,8 +33,8 @@ def add_user():
     except ValidationError:
         raise InvalidUserInformation("Falta informacion del usuario")
     except IntegrityError as e:
-        return jsonify({'409': 'delivery with this email already exists.'}), 409
+        return jsonify({'msg': 'delivery with this email already exists.'}), 409
     except:
         raise
     else:
-        return jsonify({'200': 'a new delivery was created.'}), 200
+        return jsonify({'msg': 'a new delivery was created.'}), 200
