@@ -16,29 +16,25 @@ def add_user():
     content = request.get_json()
     service = UserService()
     try:
+        service = UserService()
         user_data = normal_user_schema.load(content)
         service.create_normal_user(user_data=user_data)
-    except ValidationError:
-        raise InvalidUserInformation("Falta informacion del usuario")
     except IntegrityError as e:
         return jsonify({'409': 'user with this email already exists.'}), 409
     except:
-        raise
+        pass
     else:
         return jsonify({'200': 'a new user was created.'}), 200
 
-@register_blueprint.route('/delivery', methods=['POST'])
-def add_delivery():
-    content = request.get_json()
-    service = DeliveryService()
     try:
+        service = DeliveryService()
         user_data = delivery_user_schema.load(content)
         service.create_delivery_user(user_data=user_data)
     except ValidationError:
         raise InvalidUserInformation("Falta informacion del usuario")
     except IntegrityError as e:
-        return jsonify({'409': 'user with this email already exists.'}), 409
+        return jsonify({'409': 'delivery with this email already exists.'}), 409
     except:
         raise
     else:
-        return jsonify({'200': 'a new user was created.'}), 200
+        return jsonify({'200': 'a new delivery was created.'}), 200
