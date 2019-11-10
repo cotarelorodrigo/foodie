@@ -10,12 +10,6 @@ class UserService(Service):
         user_data["password"] = self._encrypt_password(user_data["password"])
         user = NormalUserModel(user_data)
         user.save()
-    
-    def create_delivery_user(self, user_data):
-        from src.auth.models.user_table import DeliveryUserModel
-        user_data["password"] = self._encrypt_password(user_data["password"])
-        user = DeliveryUserModel(user_data)
-        user.save()
 
     def get_users(self):
         from src.auth.models.user_table import UserModel
@@ -108,15 +102,4 @@ class UserService(Service):
                                     WHERE u.email = '{}'""".format(email_d))
         #return self.sqlachemy_to_dict(user)
         return [dict(zip(response.keys(), row)) for row in response.fetchall()]
-
-
-    @staticmethod
-    def compare_password(hashed, plain):
-        import hashlib
-        return hashed == hashlib.md5(plain.encode('utf-8')).hexdigest()
-
-    @staticmethod
-    def _encrypt_password(password):
-        import hashlib
-        return hashlib.md5(password.encode('utf-8')).hexdigest()
 

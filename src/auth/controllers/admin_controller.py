@@ -21,8 +21,9 @@ statics_datetime_schema = StaticsDatetimeRangeSchema()
 def admin():
      return jsonify({'200': 'Hola admin!!!'}), 200
 
+###################### STATISTICS ######################
 
-@admins_blueprint.route('/admin/statics', methods=['GET'])
+@admins_blueprint.route('/admin/statistics', methods=['GET'])
 @auth_required
 @user_is_admin
 def statics():
@@ -93,6 +94,8 @@ def statics_orders_cancelled():
      else:
           return jsonify(result), 200
 
+###################### SHOPS ######################
+
 @admins_blueprint.route('/admin/shops', methods=['GET'])
 @auth_required
 @user_is_admin
@@ -101,6 +104,7 @@ def shops():
      pageSize = request.args.get('pSize')
      result = ShopService().get_N_shops(int(pageNumber), int(pageSize))
      return jsonify(result), 200
+
 
 @admins_blueprint.route('/admin/shop', methods=['POST'])
 @auth_required
@@ -158,3 +162,72 @@ def update_shop():
           raise
      else:
           return jsonify({"OK": "Shop actualizado con exito!"}), 200
+
+###################### DELIVERYS ######################
+@admins_blueprint.route('/admin/deliveries', methods=['GET'])
+@auth_required
+@user_is_admin
+def deliveries():
+     pageNumber = request.args.get('p')
+     pageSize = request.args.get('pSize')
+     result = DeliveryService().get_N_deliverys(int(pageNumber), int(pageSize))
+     return jsonify(result), 200
+
+@admins_blueprint.route('/admin/delivery', methods=['POST'])
+@auth_required
+@user_is_admin
+def create_delivery():
+     try:
+          content = request.get_json()
+          DeliveryService().create_delivery_user(content)
+     except ValidationError:
+        return jsonify({"error": "Informacion del delivery Incorrecta"}), 420
+     except:
+          raise
+     else:
+          return jsonify({"OK": "Delivery creado con exito!"}), 200
+
+
+@admins_blueprint.route('/admin/delivery', methods=['GET'])
+@auth_required
+@user_is_admin
+def get_delivery():
+     delivery_id = request.args.get('id')
+     try:
+          response = DeliveryService().get_delivery(delivery_id)
+     except NotFoundException as e:
+          return jsonify({'404': "delivery {}".format(e.msg)}), 404
+     except:
+          raise
+     else:
+          return jsonify(response), 200
+
+@admins_blueprint.route('/admin/delivery', methods=['DELETE'])
+@auth_required
+@user_is_admin
+def delete_delivery():
+     delivery_id = request.args.get('id')
+     try:
+          response = DeliveryService().delete_delivery(delivery_id)
+     except NotFoundException as e:
+          return jsonify({'404': "delivery {}".format(e.msg)}), 404
+     except:
+          raise
+     else:
+          return jsonify({'OK': "delivery deleted"}), 200
+
+
+@admins_blueprint.route('/admin/delivery', methods=['PUT'])
+@auth_required
+@user_is_admin
+def update_delivery():
+     delivery_id = request.args.get('id')
+     content = request.get_json()
+     try: 
+          response = DeliveryService().update_delivery(delivery_id, content)
+     except NotFoundException as e:
+          return jsonify({'404': "delivery {}".format(e.msg)}), 404
+     except:
+          raise
+     else:
+          return jsonify({"OK": "Delivery actualizado con exito!"}), 200

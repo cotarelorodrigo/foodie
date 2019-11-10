@@ -13,3 +13,13 @@ class Service:
             #response = [dict(zip(response.keys(), row)) for row in response.fetchall()]
         finally:
             return response
+
+    @staticmethod
+    def compare_password(hashed, plain):
+        import hashlib
+        return hashed == hashlib.md5(plain.encode('utf-8')).hexdigest()
+
+    @staticmethod
+    def _encrypt_password(password):
+        import hashlib
+        return hashlib.md5(password.encode('utf-8')).hexdigest()

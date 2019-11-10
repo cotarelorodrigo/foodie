@@ -1,9 +1,39 @@
 from geopy.distance import distance
 from src.auth.services.delivery_rules import Delivery
+from src.auth.services.service import Service
 import datetime
 from dateutil import relativedelta
 
-class DeliveryService:
+class DeliveryService(Service):
+
+    def create_delivery_user(self, user_data):
+        from src.auth.models.user_table import DeliveryUserModel
+        user_data["password"] = self._encrypt_password(user_data["password"])
+        user = DeliveryUserModel(user_data)
+        user.save()
+
+    def get_delivery(self, _id):
+        from src.auth.models.user_table import DeliveryUserModel
+        response = DeliveryUserModel.get_delivery(_id)
+        return self.sqlachemy_to_dict(response)
+
+    def delete_delivery(self, _id):
+        from src.auth.models.user_table import DeliveryUserModel
+        return DeliveryUserModel.get_delivery(_id).delete()
+
+    def update_delivery(self, _id, data):
+        from src.auth.models.user_table import DeliveryUserModel
+        from src.auth.schemas.schemas import DeliveryUserSchema
+        delivery_data = DeliveryUserSchema().load(data)
+        return DeliveryUserModel.get_delivery(_id).update(delivery_data)
+
+    def get_N_deliverys(self, pageNumber, pageSize):
+        from src.auth.models.user_table import DeliveryUserModel
+        query = DeliveryUserModel.query.offset(pageNumber*pageSize).limit(pageSize)
+        response = {}
+        response['items'] = self.sqlachemy_to_dict(query.all())
+        response['totalItems'] = query.count()
+        return response
 
     def get_distance(self,lat_1,long_1,lat_2,long_2):
         return distance((lat_1,long_1),(lat_2,long_2)).km

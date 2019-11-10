@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from sqlalchemy.exc import IntegrityError
 from src.auth.services.user_service import UserService
+from src.auth.services.delivery_service import DeliveryService
 from src.auth.schemas.schemas import NormalUserSchema, DeliveryUserSchema
 from marshmallow import ValidationError
 from src.auth.auth_exception import InvalidUserInformation
@@ -29,7 +30,7 @@ def add_user():
 @register_blueprint.route('/delivery', methods=['POST'])
 def add_delivery():
     content = request.get_json()
-    service = UserService()
+    service = DeliveryService()
     try:
         user_data = delivery_user_schema.load(content)
         service.create_delivery_user(user_data=user_data)

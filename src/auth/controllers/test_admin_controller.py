@@ -9,5 +9,5 @@ class AdminTestCase(BaseTest):
     @patch("jwt.decode")
     def test_admin_statics(self, jwt_decode):
         jwt_decode.return_value = {"is_admin": True}
-        response = self.client.get('/admin/statics',  headers={'Authorization':'tokenfalso123'})
+        response = self.client.get('/admin/statistics',  headers={'Authorization':'tokenfalso123'})
         assert response._status_code == 200

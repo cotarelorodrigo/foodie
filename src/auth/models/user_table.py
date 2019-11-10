@@ -1,5 +1,6 @@
 import datetime
 import secrets
+from src.auth.auth_exception import NotFoundException
 from src.app import db
 from src.auth.models.base_table import BaseModel
 
@@ -38,6 +39,7 @@ class UserModel(BaseModel):
     self.created_at = datetime.datetime.utcnow()
     self.modified_at = datetime.datetime.utcnow()
 
+
 class NormalUserModel(UserModel):
 
   # table name
@@ -59,6 +61,13 @@ class NormalUserModel(UserModel):
     super(NormalUserModel, self).__init__(data)
     self.suscripcion = data.get('suscripcion')
     self.picture = data.get('picture')
+
+  @staticmethod
+  def get_user(user_id):
+    response = NormalUserModel.query.get(user_id)
+    if not response:
+        raise NotFoundException("Invalid ID")
+    return response
 
 
 class DeliveryUserModel(UserModel):
@@ -82,3 +91,10 @@ class DeliveryUserModel(UserModel):
     super(DeliveryUserModel, self).__init__(data)
     self.balance = data.get('balance')
     self.picture = data.get('picture')
+
+  @staticmethod
+  def get_delivery(user_id):
+    response = DeliveryUserModel.query.get(user_id)
+    if not response:
+        raise NotFoundException("Invalid ID")
+    return response
