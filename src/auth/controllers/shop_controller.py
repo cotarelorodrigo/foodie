@@ -12,6 +12,13 @@ def get_shop(_id):
     shop = service.get_shop(_id)
     return jsonify(shop)
 
+@shops_blueprint.route('/shops', methods=['GET'])
+def shops():
+     pageNumber = request.args.get('p')
+     pageSize = request.args.get('pSize')
+     result = ShopService().get_N_shops(int(pageNumber), int(pageSize))
+     return jsonify(result["items"]), 200
+
 @shops_blueprint.route('/shops/<_id>/menu', methods=['GET'])
 def get_shop_menu(_id):
     service = ShopService()
