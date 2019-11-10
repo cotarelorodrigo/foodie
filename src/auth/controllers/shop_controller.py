@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from src.auth.services.shop_service import ShopService
+from src.auth.services.delivery_service import DeliveryService
 from src.auth.schemas.schemas import ShopSchema
 
 shops_blueprint = Blueprint('shops', __name__)
@@ -9,17 +10,21 @@ shops_blueprint = Blueprint('shops', __name__)
 def get_shop(_id):
     service = ShopService()
     shop = service.get_shop(_id)
-    if not shop: 
-        return jsonify({'401': "shop with that id doesn't exist."}), 404
-    return jsonify({'200': "shop with that id exists."}), 200
+    return jsonify(shop)
 
 @shops_blueprint.route('/shops/<_id>/menu', methods=['GET'])
 def get_shop_menu(_id):
     service = ShopService()
     shop = service.get_shop(_id)
-    if not shop: 
-        return jsonify({'401': "shop with that id doesn't exist."}), 404
-    return jsonify({'200': "ACA VA EL MENU ???"}), 200
+    products = service.get_products(_id)
+    return jsonify(products)
+
+@shops_blueprint.route('/shops/<_id>/deliveryPrice', methods=['GET'])
+def get_delivery_price(_id):
+    service = ShopService()
+    shop = service.get_shop(_id)
+    delivery_service = DeliveryService()
+    return jsonify(delivery_service.get_delivery_price(None,None,shop,50.44,100.133))
 
 @shops_blueprint.route('/shops/top', methods=['GET'])
 def get_top_shops():
