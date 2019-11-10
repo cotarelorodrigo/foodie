@@ -14,7 +14,7 @@ class UserModel(BaseModel):
   email = db.Column(db.String(128), unique=True, nullable=False)
   phone_number = db.Column(db.Integer, nullable=False)
   role = db.Column(db.String(128), nullable=False)
-  password = db.Column(db.String(128), nullable=False)
+  password = db.Column(db.String(128), nullable=True)
   firebase_uid = db.Column(db.String(128), unique=True, nullable=False)
   token = db.Column(db.String(128), unique=True, nullable=False)
   created_at = db.Column(db.DateTime)

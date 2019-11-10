@@ -6,7 +6,7 @@ class UserSchema(Schema):
     email = fields.Email(required=True)
     phone_number = fields.Int(required=True)
     #role = fields.String(required=True)
-    password = fields.Str(required=True)
+    password = fields.Str(required=False)
     firebase_uid = fields.Str(required=True)
 
     class Meta:
@@ -70,6 +70,13 @@ class LoginSchema(Schema):
 
     class Meta:
         strict = True
+
+class LoginSchemaToken(Schema):
+    firebase_uid = fields.Str(required=True)
+
+    class Meta:
+        strict = True
+
 
 class RecoverSchema(Schema):
     email = fields.Email(required=True)

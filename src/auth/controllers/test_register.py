@@ -25,7 +25,7 @@ class RegisterTestCase(BaseTest):
 
     def test_register_delivery(self):
         response = self.client.post(
-            '/delivery',
+            '/user',
             data=json.dumps({
                 "name": "Rodrigo",
                 "email": "asd@asdtk.com",
