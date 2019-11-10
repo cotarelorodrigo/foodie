@@ -231,3 +231,73 @@ def update_delivery():
           raise
      else:
           return jsonify({"OK": "Delivery actualizado con exito!"}), 200
+
+
+###################### USERS ######################
+
+@admins_blueprint.route('/admin/users', methods=['GET'])
+@auth_required
+@user_is_admin
+def users():
+     pageNumber = request.args.get('p')
+     pageSize = request.args.get('pSize')
+     result = UserService().get_N_users(int(pageNumber), int(pageSize))
+     return jsonify(result), 200
+
+
+@admins_blueprint.route('/admin/user', methods=['POST'])
+@auth_required
+@user_is_admin
+def create_user():
+     try:
+          content = request.get_json()
+          UserService().create_normal_user(content)
+     except ValidationError:
+        return jsonify({"error": "Informacion del usuario Incorrecta"}), 420
+     except:
+          raise
+     else:
+          return jsonify({"OK": "Usuario creado con exito!"}), 200
+
+@admins_blueprint.route('/admin/user', methods=['GET'])
+@auth_required
+@user_is_admin
+def get_user():
+     user_id = request.args.get('id')
+     try:
+          response = UserService().get_user(user_id)
+     except NotFoundException as e:
+          return jsonify({'404': "user {}".format(e.msg)}), 404
+     except:
+          raise
+     else:
+          return jsonify(response), 200
+
+@admins_blueprint.route('/admin/user', methods=['DELETE'])
+@auth_required
+@user_is_admin
+def delete_user():
+     user_id = request.args.get('id')
+     try:
+          response = UserService().delete_user(user_id)
+     except NotFoundException as e:
+          return jsonify({'404': "user {}".format(e.msg)}), 404
+     except:
+          raise
+     else:
+          return jsonify({'OK': "user deleted"}), 200
+
+@admins_blueprint.route('/admin/user', methods=['PUT'])
+@auth_required
+@user_is_admin
+def update_user():
+     user_id = request.args.get('id')
+     content = request.get_json()
+     try: 
+          response = UserService().update_user(user_id, content)
+     except NotFoundException as e:
+          return jsonify({'404': "user {}".format(e.msg)}), 404
+     except:
+          raise
+     else:
+          return jsonify({"OK": "user actualizado con exito!"}), 200

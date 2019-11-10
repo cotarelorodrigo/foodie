@@ -11,6 +11,29 @@ class UserService(Service):
         user = NormalUserModel(user_data)
         user.save()
 
+    def get_user(self, _id):
+        from src.auth.models.user_table import NormalUserModel
+        response = NormalUserModel.get_user(_id)
+        return self.sqlachemy_to_dict(response)
+
+    def delete_user(self, _id):
+        from src.auth.models.user_table import NormalUserModel
+        return NormalUserModel.get_user(_id).delete()
+
+    def update_user(self, _id, data):
+        from src.auth.models.user_table import NormalUserModel
+        from src.auth.schemas.schemas import NormalUserSchema
+        user_data = NormalUserSchema().load(data)
+        return NormalUserModel.get_user(_id).update(user_data)
+
+    def get_N_users(self, pageNumber, pageSize):
+        from src.auth.models.user_table import NormalUserModel
+        query = NormalUserModel.query.offset(pageNumber*pageSize).limit(pageSize)
+        response = {}
+        response['items'] = self.sqlachemy_to_dict(query.all())
+        response['totalItems'] = query.count()
+        return response    
+
     def get_users(self):
         from src.auth.models.user_table import UserModel
         response = UserModel.query.all()
@@ -51,17 +74,6 @@ class UserService(Service):
         if not response:
             return []
         return self.sqlachemy_to_dict(response)
-
-    def get_user(self,_id):
-        from src.auth.models.user_table import UserModel
-        return UserModel.query.get(_id)
-
-    def delete_user(self,_id):
-        from src.auth import db
-        from src.auth.models.user_table import UserModel
-        response = UserModel.query.filter_by(id=_id).delete()
-        db.session.commit()
-        return response
 
     def _get_userModel_email(self, email):
         from src.auth.models.user_table import UserModel
