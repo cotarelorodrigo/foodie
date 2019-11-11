@@ -23,6 +23,7 @@ def login():
     try:
         user_data = login_schema_token.load(content)
         verify_firebase_uid(user_data['firebase_uid'])
+
     except:
         try:
             user_data = login_schema.load(content)
@@ -51,10 +52,12 @@ def login():
                 return jsonify({"msg": "User not found or wrong password"}), 412
             
             token = encode_data_to_jwt({"user":user_data["email"], "is_admin": False}, MINUTES_VALID_TOKEN)
-            return jsonify({"token": token}), 200
+            return jsonify({"token": token,"role":user["role"]}), 200
     else:
         token = encode_data_to_jwt({"user":user_data["email"], "is_admin": False}, MINUTES_VALID_TOKEN)
-        return jsonify({"token": token}), 200
+        service = UserService()
+        user = service.get_user_by_email(user_data["email"])
+        return jsonify({"token": token,"role":user["role"]}), 200
 
 
 @login_blueprint.route('/user/recover', methods=['POST'])
