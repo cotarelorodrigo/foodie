@@ -3,6 +3,7 @@ services:
   app-server:
     build: #Para correr de forma local
       context: .
+      dockerfile: Dockerfile.local
       target: code_files
     env_file: .env
     restart: always
