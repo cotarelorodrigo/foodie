@@ -22,7 +22,6 @@ COPY . /app
 EXPOSE 5000
 
 #ARG branch==master
-    #CMD ["gunicorn", "wsgi:app"]
+CMD ["gunicorn", "wsgi:app"]
 #ARG branch!=master
-
-CMD ["gunicorn" , "-b", "0.0.0.0:5000", "wsgi:app"]
+    #CMD ["gunicorn" , "-b", "0.0.0.0:5000", "wsgi:app"]
