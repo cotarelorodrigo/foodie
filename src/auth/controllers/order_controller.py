@@ -12,15 +12,15 @@ def add_order():
     content = request.get_json()
     service = OrderService()
     try:
-        service.create_order(content)
+        order = service.create_order(content)
     except marshmallow.exceptions.ValidationError as e:
-        return jsonify({'400': 'Missing order information: {}'.format(e)}), 400
+        return jsonify({'msg': 'Missing order information: {}'.format(e)}), 400
     except sqlalchemy.exc.IntegrityError:
-        return jsonify({'430': 'User_id not registered'}), 430
+        return jsonify({'msg': 'User_id not registered'}), 430
     except:
         raise
     else:
-        return jsonify({'200': 'The order was created without problems'}), 200
+        return jsonify({'order_id': order.order_id}), 200
 
 @orders_blueprint.route('/showorders', methods=['GET'])
 def show_orders():
@@ -39,5 +39,5 @@ def cancel_order(_id):
     service = OrderService()
     order = service.change_order_state(_id, 'cancelled')
     if not order: 
-        return jsonify({'404': "order with that id doesn't exist."}), 404
-    return jsonify({'200': "order with that id was cancelled."}), 200
+        return jsonify({'msg': "order with that id doesn't exist."}), 404
+    return jsonify({'msg': "order with that id was cancelled."}), 200

@@ -16,6 +16,7 @@ class OrderService(Service):
         for p in products:
             order.products.append(p)
             p.save()
+        return order
 
 
     def get_orders(self):

@@ -19,3 +19,10 @@ def add_delivery_ofert():
         raise
     else:
         return jsonify({'msg': 'The order ofert was created without problems'}), 200
+
+
+@delivery_blueprint.route('/showoferts', methods=['GET'])
+def show_oferts():
+    service = OrderOfertService()
+    oferts = service.get_oferts()
+    return jsonify(oferts)

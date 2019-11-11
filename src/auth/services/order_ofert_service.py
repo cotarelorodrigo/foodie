@@ -12,3 +12,10 @@ class OrderOfertService(Service):
         order_ofert_data["state"] = 'oferted'
         order_ofert = OrderOfertsModel(order_ofert_data)
         order_ofert.save() 
+
+    def get_oferts(self):
+        from src.auth.models.order_table import OrderOfertsModel
+        response = OrderOfertsModel.query.all()
+        if not response:
+            return []
+        return self.sqlachemy_to_dict(response)
