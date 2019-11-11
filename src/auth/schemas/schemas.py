@@ -93,6 +93,13 @@ class OrderProductSchema(Schema):
 
 OrderState = {'delivered', 'onWay', 'cancelled', 'created'}
 
+class OrderOfertSchema(Schema):
+    order_id = fields.Int(required=True)
+    delivery_id = fields.Int(required=True)
+
+    class Meta:
+        strict = True
+
 class OrderSchema(Schema):
     shop_id = fields.Int(required=True)
     products = fields.List(fields.Nested(OrderProductSchema), required=True)

@@ -1,6 +1,7 @@
 import datetime
 from src.app import db
 from src.auth.models.base_table import BaseModel
+from src.auth.models.user_table import DeliveryUserModel
 
 class OrderModel(BaseModel):
 
@@ -52,3 +53,25 @@ class OrderProductsModel(BaseModel):
     """
     self.product_id = data.get('product_id')
     self.units = data.get('units')
+
+  
+class OrderOfertsModel(BaseModel):
+
+  # table name
+  __tablename__ = 'order_oferts'
+
+  id = db.Column(db.Integer, primary_key=True)
+  order_id = db.Column(db.Integer, db.ForeignKey('orders.order_id', ondelete='CASCADE'), nullable=False)
+  delivery_id = db.Column(db.Integer, db.ForeignKey('delivery_users.user_id', ondelete='CASCADE'), nullable=False)
+  created_at = db.Column(db.DateTime)
+  state = db.Column(db.String(128), nullable=False)
+
+  # class constructor
+  def __init__(self, data):
+    """
+    Class constructor
+    """
+    self.order_id = data.get("order_id")
+    self.delivery_id = data.get('delivery_id')
+    self.created_at = datetime.datetime.utcnow()
+    self.state = data.get('state')
