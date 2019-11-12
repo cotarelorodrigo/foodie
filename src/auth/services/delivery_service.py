@@ -44,6 +44,7 @@ class DeliveryService(Service):
         price = delivery.calculate_price()
         return price
 
+
     def get_quantity_deliverys(self):
         from src.auth.models.user_table import DeliveryUserModel
         return DeliveryUserModel.query.count()
