@@ -22,11 +22,17 @@ def add_order():
     else:
         return jsonify({'order_id': order.order_id}), 200
 
-@orders_blueprint.route('/showorders', methods=['GET'])
+@orders_blueprint.route('/orders', methods=['GET'])
 def show_orders():
     service = OrderService()
     orders = service.get_orders()
     return jsonify(orders)
+
+@orders_blueprint.route('/orders/<_id>',methods=['GET'])
+def get_order_by_id():
+    service = OrderService()
+    order = service.get_order_by_id(_id)
+    return jsonify(order), 200
 
 @orders_blueprint.route('/showproductorders', methods=['GET'])
 def show_products_orders():

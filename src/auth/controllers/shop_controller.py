@@ -30,9 +30,11 @@ def get_shop_menu(_id):
 @shops_blueprint.route('/shops/<_id>/deliveryPrice', methods=['GET'])
 def get_delivery_price(_id):
     service = ShopService()
+    client_lat = request.args.get('latitude')
+    client_long = request.args.get('longitude')
     shop = service.get_shop(_id)
     delivery_service = DeliveryService()
-    return jsonify(delivery_service.get_delivery_price(None,None,shop,50.44,100.133))
+    return jsonify(delivery_service.get_delivery_price(None,None,shop,client_lat,client_long))
 
 @shops_blueprint.route('/shops/top', methods=['GET'])
 def get_top_shops():
