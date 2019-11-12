@@ -39,4 +39,10 @@ def get_top_shops():
     N_TOPS_SHOPS = 3
     service = ShopService()
     result = service.get_N_top_shops(N_TOPS_SHOPS)
-    return jsonify(result["items"]), 200
+    return jsonify(result), 200
+
+@shops_blueprint.route('/shops/<_id>', methods=['GET'])
+def get_shop_by_id():
+    service = ShopService()
+    result = service.get_shop(_id)
+    return jsonify()

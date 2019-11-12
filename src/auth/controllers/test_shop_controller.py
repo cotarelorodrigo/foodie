@@ -18,6 +18,7 @@ class ShopTestCase(BaseTest):
         assert response._status_code == 200
 
     @patch("src.auth.services.shop_service.ShopService.get_N_top_shops")
-    def test_get_top_shops(self, get_N_top_shops):
+    def test_get_top_shops(self, top_shops_mock):
+        top_shops_mock.return_value = mock_shops
         response = self.client.head('/shops/top')
         assert response._status_code == 200
