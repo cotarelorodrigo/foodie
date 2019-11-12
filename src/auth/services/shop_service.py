@@ -30,7 +30,7 @@ class ShopService(Service):
 
     def get_products(self,shop_id):
         from src.auth.models.product_table import ProductModel
-        response = ProductModel.query.filter_by(shopId=shop_id).all()
+        response = ProductModel.query.filter_by(shop_id=shop_id).all()
         if not response:
             return []
         return self.sqlachemy_to_dict(response)
