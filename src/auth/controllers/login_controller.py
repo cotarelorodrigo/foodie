@@ -52,12 +52,12 @@ def login():
                 return jsonify({"msg": "User not found or wrong password"}), 412
             
             token = encode_data_to_jwt({"user":user_data["email"], "is_admin": False}, MINUTES_VALID_TOKEN)
-            return jsonify({"token": token,"role":user["role"]}), 200
+            return jsonify({"user_id":user["user_id"],"token": token,"role":user["role"]}), 200
     else:
         token = encode_data_to_jwt({"user":user_data["email"], "is_admin": False}, MINUTES_VALID_TOKEN)
         service = UserService()
         user = service.get_user_by_email(user_data["email"])
-        return jsonify({"token": token,"role":user["role"]}), 200
+        return jsonify({"user_id":user["user_id"],"token": token,"role":user["role"]}), 200
 
 
 @login_blueprint.route('/users/recover', methods=['POST'])
