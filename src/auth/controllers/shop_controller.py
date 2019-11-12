@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from src.auth.services.shop_service import ShopService
 from src.auth.services.delivery_service import DeliveryService
 from src.auth.schemas.schemas import ShopSchema
+import json
 
 shops_blueprint = Blueprint('shops', __name__)
 
@@ -37,13 +38,5 @@ def get_delivery_price(_id):
 def get_top_shops():
     N_TOPS_SHOPS = 3
     service = ShopService()
-    shops = service.get_N_top_shops(N_TOPS_SHOPS)
-    result = {}
-    ranking = 1
-    for u in shops:
-        result[ranking] = u.name
-        ranking += 1
-    print(result)
-    if not shops:
-        return jsonify({'401': "There are not shops"}), 401
-    return result, 200
+    result = service.get_N_top_shops(N_TOPS_SHOPS)
+    return jsonify(result["items"]), 200
