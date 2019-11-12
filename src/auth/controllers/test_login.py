@@ -8,7 +8,7 @@ class LoginTestCase(BaseTest):
 
     def test_login_without_passwd_field(self):
         response = self.client.post(
-            '/user/login',
+            '/users/login',
             data=json.dumps({
                 "email": "asd@asd.com"
             }),
@@ -19,7 +19,7 @@ class LoginTestCase(BaseTest):
 
     def test_login_with_not_register_user(self):
         response = self.client.post(
-            '/user',
+            '/users',
             data=json.dumps({
                 "name": "Rodrigo",
                 "email": "asd@asd.com",
@@ -33,7 +33,7 @@ class LoginTestCase(BaseTest):
         )
         assert response._status_code == 200
         response = self.client.post(
-            '/user/login',
+            '/users/login',
             data=json.dumps({
                 "email": "nada@nada.com",
                 "password": "123123"
@@ -44,7 +44,7 @@ class LoginTestCase(BaseTest):
 
     def test_login_wrong_passwd(self):
         response = self.client.post(
-            '/user',
+            '/users',
             data=json.dumps({
                 "name": "Rodrigo",
                 "email": "asdd@asdd.com",
@@ -58,7 +58,7 @@ class LoginTestCase(BaseTest):
         )
         assert response._status_code == 200
         response = self.client.post(
-            '/user/login',
+            '/users/login',
             data=json.dumps({
                 "email": "asdd@asdd.com",
                 "password": "123233312211221"
@@ -70,7 +70,7 @@ class LoginTestCase(BaseTest):
 
     def test_good_login(self):
         response = self.client.post(
-            '/user',
+            '/users',
             data=json.dumps({
                 "name": "Rodrigo",
                 "email": "asddd@asddd.com",
@@ -84,7 +84,7 @@ class LoginTestCase(BaseTest):
         )
         assert response._status_code == 200
         response = self.client.post(
-            '/user/login',
+            '/users/login',
             data=json.dumps({
                 "email": "asddd@asddd.com",
                 "password": "123"
@@ -95,7 +95,7 @@ class LoginTestCase(BaseTest):
     
     def test_good_login(self):
         response = self.client.post(
-            '/user',
+            '/users',
             data=json.dumps({
                 "name": "Rodrigo",
                 "email": "asddd@asddd.com",
@@ -109,7 +109,7 @@ class LoginTestCase(BaseTest):
         )
         assert response._status_code == 200
         response = self.client.post(
-            '/user/login',
+            '/users/login',
             data=json.dumps({
                 "email": "asddd@asddd.com",
                 "password": "123"
@@ -121,7 +121,7 @@ class LoginTestCase(BaseTest):
 
     def test_recover_password(self):
         response = self.client.post(
-            '/user',
+            '/users',
             data=json.dumps({
                 "name": "Rodrigo",
                 "email": "asddd@asddd.com",
@@ -136,7 +136,7 @@ class LoginTestCase(BaseTest):
         assert response._status_code == 200
 
         response = self.client.post(
-            '/user/password',
+            '/users/password',
             data=json.dumps({
                 "email": "asddd@asddd.com",
                 "password": "lalala"

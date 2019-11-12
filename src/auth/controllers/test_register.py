@@ -8,7 +8,7 @@ class RegisterTestCase(BaseTest):
 
     def test_register_user(self):
         response = self.client.post(
-            '/user',
+            '/users',
             data=json.dumps({
                 "name": "Rodrigo",
                 "email": "asd@asd.com",
@@ -25,7 +25,7 @@ class RegisterTestCase(BaseTest):
 
     def test_register_delivery(self):
         response = self.client.post(
-            '/user',
+            '/users',
             data=json.dumps({
                 "name": "Rodrigo",
                 "email": "asd@asdtk.com",

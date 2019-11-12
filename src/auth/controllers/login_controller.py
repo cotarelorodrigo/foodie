@@ -16,7 +16,7 @@ recover_schema = RecoverSchema()
 def get_user_token(user_data):
     return encode_data_to_jwt(user_data)
 
-@login_blueprint.route('/user/login', methods=['POST'])
+@login_blueprint.route('/users/login', methods=['POST'])
 def login():
     MINUTES_VALID_TOKEN = 20
     content = request.get_json()
@@ -60,7 +60,7 @@ def login():
         return jsonify({"token": token,"role":user["role"]}), 200
 
 
-@login_blueprint.route('/user/recover', methods=['POST'])
+@login_blueprint.route('/users/recover', methods=['POST'])
 def recover():
     from src.app import send_email
     try: 
@@ -83,7 +83,7 @@ def recover():
         return jsonify({'msg':'Recover email sended'}), 200
 
 
-@login_blueprint.route('/user/password', methods=['POST'])
+@login_blueprint.route('/users/password', methods=['POST'])
 def new_password():
     try: 
         token = request.headers.get('recover-password-token')

@@ -13,7 +13,7 @@ class UserTestCase(BaseTest):
 
     def test_wrong_less_fields_new_user(self):
         response = self.client.post(
-            '/user',
+            '/users',
             data=json.dumps({
                 "fullName": "realuser",
                 "email": "extra",
@@ -27,37 +27,37 @@ class UserTestCase(BaseTest):
     @patch("src.auth.services.user_service.UserService.check_email")
     def test_check_existing_email(self, check_email_mock):
         check_email_mock.return_value = True
-        response = self.client.head('/user/email/asd@asd.com')
+        response = self.client.head('/users/email/asd@asd.com')
         assert response._status_code == 200
     
     @patch("src.auth.services.user_service.UserService.get_user")
     def test_check_existing_id(self, check_id_mock):
         check_id_mock.return_value = True
-        response = self.client.head('/user/1')
+        response = self.client.head('/users/1')
         assert response._status_code == 200
 
     @patch("src.auth.services.user_service.UserService.get_user")
     def test_check_nonexisting_id(self, check_id_mock):
         check_id_mock.return_value = False
-        response = self.client.head('/user/2')
+        response = self.client.head('/users/2')
         assert response._status_code == 404
 
     @patch("src.auth.services.user_service.UserService.delete_user")
     def test_delete_existing_id(self, delete_id_mock):
         delete_id_mock.return_value = True
-        response = self.client.delete('/user/1')
+        response = self.client.delete('/users/1')
         assert response._status_code == 200
 
     @patch("src.auth.services.user_service.UserService.delete_user")
     def test_delete_nonexisting_id(self, delete_id_mock):
         delete_id_mock.return_value = False
-        response = self.client.delete('/user/2')
+        response = self.client.delete('/users/2')
         assert response._status_code == 404
 
     @patch("jwt.decode")
     def test_user_profile(self, jwt_decode):
         response = self.client.post(
-            '/user',
+            '/users',
             data=json.dumps({
                 "name": "Rodrigo",
                 "email": "asddd@asddd.com",
@@ -71,15 +71,15 @@ class UserTestCase(BaseTest):
         )
         assert response._status_code == 200
         jwt_decode.return_value = 'token_valido'
-        response = self.client.get('/user/profile/asddd@asddd.com', headers={'Authorization':'tokenfalso123'})
+        response = self.client.get('/users/profile/asddd@asddd.com', headers={'Authorization':'tokenfalso123'})
         assert response._status_code == 200
 
     def test_wrong_auth_no_header(self):
-        response = self.client.get('/user/profile/asddd@asddd.com')
+        response = self.client.get('/users/profile/asddd@asddd.com')
         assert response._status_code == 421
 
     def test_wrong_invalid_token(self):
-        response = self.client.get('/user/profile/asddd@asddd.com', headers={'Authorization':'tokenfalso123'})
+        response = self.client.get('/users/profile/asddd@asddd.com', headers={'Authorization':'tokenfalso123'})
         assert response._status_code == 422
 
 
