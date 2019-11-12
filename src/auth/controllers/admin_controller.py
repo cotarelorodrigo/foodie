@@ -27,8 +27,8 @@ def admin():
 @auth_required
 @user_is_admin
 def statics():
-    return jsonify({"users": UserService().get_quantity_users(), "deliverys": DeliveryService().get_quantity_deliverys(), 
-    "completeOrders": OrderService().get_quantity_complete_orders(), "canceledOrders": OrderService().get_quantity_cancelled_orders()}), 200
+    return jsonify({"users": UserService().get_quantity_users(), "deliveries": DeliveryService().get_quantity_deliverys(),
+    "completedOrders": OrderService().get_quantity_complete_orders(), "canceledOrders": OrderService().get_quantity_cancelled_orders()}), 200
 
 @admins_blueprint.route('/admin/statistics/users', methods=['GET'])
 @auth_required
@@ -46,7 +46,7 @@ def statics_users():
      else:
           return jsonify(result), 200
 
-@admins_blueprint.route('/admin/statistics/deliverys', methods=['GET'])
+@admins_blueprint.route('/admin/statistics/deliveries', methods=['GET'])
 @auth_required
 @user_is_admin
 def statics_deliverys():
@@ -78,7 +78,7 @@ def statics_orders_completed():
      else:
           return jsonify(result), 200
 
-@admins_blueprint.route('/admin/statistics/orders/cancelled', methods=['GET'])
+@admins_blueprint.route('/admin/statistics/orders/canceled', methods=['GET'])
 @auth_required
 @user_is_admin
 def statics_orders_cancelled():
