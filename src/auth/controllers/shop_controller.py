@@ -45,4 +45,4 @@ def get_top_shops():
 def get_shop_by_id():
     service = ShopService()
     result = service.get_shop(_id)
-    return jsonify()
+    return jsonify(result), 200
