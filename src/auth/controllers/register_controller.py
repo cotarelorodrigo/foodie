@@ -11,7 +11,7 @@ register_blueprint = Blueprint('register', __name__)
 normal_user_schema = NormalUserSchema()
 delivery_user_schema = DeliveryUserSchema()
 
-@register_blueprint.route('/user', methods=['POST'])
+@register_blueprint.route('/users', methods=['POST'])
 def add_user():
     content = request.get_json()
     service = UserService()

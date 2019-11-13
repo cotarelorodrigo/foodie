@@ -30,14 +30,17 @@ class ShopService(Service):
 
     def get_products(self,shop_id):
         from src.auth.models.product_table import ProductModel
-        response = ProductModel.query.filter_by(shopId=shop_id).all()
+        response = ProductModel.query.filter_by(shop_id=shop_id).all()
         if not response:
             return []
         return self.sqlachemy_to_dict(response)
 
     def get_N_top_shops(self, n_shops):
         from src.auth.models.shop_table import ShopModel
-        return ShopModel.query.order_by(ShopModel.rating.desc()).limit(n_shops)
+        query = ShopModel.query.order_by(ShopModel.rating.desc()).limit(n_shops)
+        response = {}
+        response['items'] = self.sqlachemy_to_dict(query.all())
+        return response
 
     def get_N_shops(self, pageNumber, pageSize):
         from src.auth.models.shop_table import ShopModel
