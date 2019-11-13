@@ -78,6 +78,7 @@ class DeliveryUserModel(UserModel):
   user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
   balance = db.Column(db.Integer, nullable=False)
   picture = db.Column(db.String(128), nullable=False)
+  state = db.Column(db.String(128), nullable=False)
 
   __mapper_args__ = {
     'polymorphic_identity':'delivery_users',
@@ -91,6 +92,7 @@ class DeliveryUserModel(UserModel):
     super(DeliveryUserModel, self).__init__(data)
     self.balance = data.get('balance')
     self.picture = data.get('picture')
+    self.state = data.get('state', 'free')
 
   @staticmethod
   def get_delivery(user_id):
