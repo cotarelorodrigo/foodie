@@ -38,9 +38,9 @@ class DeliveryService(Service):
     def refresh_delivery_is_online():
         from src.auth.models.user_table import DeliveryUserModel
         deliveries = DeliveryUserModel.query.all()
-        for d in deliveries:
-            d.state =  
-            d.save()
+        #for d in deliveries:
+            #d.state =  
+            #d.save()
 
     def get_available_deliverys():
         from src.auth.models.user_table import DeliveryUserModel
