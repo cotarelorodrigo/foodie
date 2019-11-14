@@ -24,6 +24,9 @@ class DeliveryUserSchema(UserSchema):
     role = fields.Str(required=True, validate=lambda s: s =='delivery')
     picture = fields.Str(required=True)
     balance = fields.Float(required=True)
+    reviews = fields.Float(required=False)
+    rating = fields.Float(required=False)
+
 
     class Meta:
         strict = True
