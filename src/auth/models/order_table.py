@@ -2,7 +2,7 @@ import datetime
 from src.app import db
 from src.auth.models.base_table import BaseModel
 from src.auth.models.user_table import DeliveryUserModel
-
+import time
 class OrderModel(BaseModel):
 
   # table name
@@ -66,6 +66,7 @@ class OrderOffersModel(BaseModel):
   order_id = db.Column(db.Integer, db.ForeignKey('orders.order_id', ondelete='CASCADE'), nullable=False)
   delivery_id = db.Column(db.Integer, db.ForeignKey('delivery_users.user_id', ondelete='CASCADE'), nullable=False)
   created_at = db.Column(db.DateTime)
+  created_at_seconds = db.Column(db.Integer)
   state = db.Column(db.String(128), nullable=False)
 
   # class constructor
@@ -76,6 +77,7 @@ class OrderOffersModel(BaseModel):
     self.order_id = data.get("order_id")
     self.delivery_id = data.get('delivery_id')
     self.created_at = datetime.datetime.utcnow()
+    self.created_at_seconds = int(round(time.time()))
     self.state = data.get('state')
 
   @staticmethod
