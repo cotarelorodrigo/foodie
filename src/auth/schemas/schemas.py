@@ -95,7 +95,7 @@ class OrderProductSchema(Schema):
     class Meta:
         strict = True
 
-OrderOfertState = {'oferted', 'rejected', 'cancelled'}
+OrderOfferState = {'oferted', 'rejected', 'cancelled'}
 
 class OrderOfferSchema(Schema):
     order_id = fields.Int(required=True)

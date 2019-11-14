@@ -7,8 +7,8 @@ from multiprocessing import Process
 
 class OrderOfferService(Service):
     def create_order_ofert(self, data):
-        from src.auth.models.order_table import OrderOfertsModel
-        from src.auth.schemas.schemas import OrderOfertSchema
+        from src.auth.models.order_table import OrderOffersModel
+        from src.auth.schemas.schemas import OrderOfferSchema
 
         def auto_cancel_ofert(order_ofert):
             TIME_OFERT_IS_VALID = 120
@@ -17,9 +17,9 @@ class OrderOfferService(Service):
                 order_ofert.state = 'cancelled'
                 order_ofert.save()
 
-        order_ofert_data = OrderOfertSchema().load(data)
+        order_ofert_data = OrderOfferSchema().load(data)
         order_ofert_data["state"] = 'oferted'
-        order_ofert = OrderOfertsModel(order_ofert_data)
+        order_ofert = OrderOffersModel(order_ofert_data)
         order_ofert.save()
         Process(target=auto_cancel_ofert, args=(order_ofert,)).start()
 
