@@ -71,3 +71,16 @@ def get_user_profile(email):
     service = UserService()
     response = service.get_user_profile(email)
     return jsonify(response), 200
+
+@user_blueprint.route('/users/<_id>/position', methods=['PATCH'])
+def update_user_coordinates(_id):
+    service = UserService()
+    try:
+        longitude = request.args.get('longitude')
+        latitude = request.args.get('latitude')
+        coordinates = {"longitude": longitude, "latitude": latitude}
+        service.update_coordinates(_id, coordinates)
+    except:
+        raise
+    else:
+        return jsonify({"msg": "Coordenadas actualizadas"}), 200

@@ -2,7 +2,7 @@ import datetime
 from src.app import db
 from src.auth.models.base_table import BaseModel
 from src.auth.models.user_table import DeliveryUserModel
-
+import time
 class OrderModel(BaseModel):
 
   # table name
@@ -15,6 +15,7 @@ class OrderModel(BaseModel):
   longitud = db.Column(db.Float, nullable=False)
   payWithPoints = db.Column(db.Boolean, nullable=False)
   state = db.Column(db.String(128), nullable=False)
+  price = db.Column(db.Float,nullable = False)
   user_id = db.Column(db.Integer, db.ForeignKey('normal_users.user_id'), nullable=False)
   delivery_id = db.Column(db.Integer, db.ForeignKey('delivery_users.user_id'), nullable=True)
   created_at = db.Column(db.DateTime)
@@ -32,6 +33,7 @@ class OrderModel(BaseModel):
     self.state = data.get('state')
     self.user_id = data.get('user_id')
     self.delivery_id = data.get('delivery_id', None)
+    self.price = data.get("price")
     self.created_at = datetime.datetime.utcnow()
     self.modified_at = datetime.datetime.utcnow()
 
@@ -55,7 +57,7 @@ class OrderProductsModel(BaseModel):
     self.units = data.get('units')
 
   
-class OrderOfertsModel(BaseModel):
+class OrderOffersModel(BaseModel):
 
   # table name
   __tablename__ = 'order_oferts'
@@ -64,6 +66,7 @@ class OrderOfertsModel(BaseModel):
   order_id = db.Column(db.Integer, db.ForeignKey('orders.order_id', ondelete='CASCADE'), nullable=False)
   delivery_id = db.Column(db.Integer, db.ForeignKey('delivery_users.user_id', ondelete='CASCADE'), nullable=False)
   created_at = db.Column(db.DateTime)
+  created_at_seconds = db.Column(db.Integer)
   state = db.Column(db.String(128), nullable=False)
 
   # class constructor
@@ -74,4 +77,12 @@ class OrderOfertsModel(BaseModel):
     self.order_id = data.get("order_id")
     self.delivery_id = data.get('delivery_id')
     self.created_at = datetime.datetime.utcnow()
+    self.created_at_seconds = int(round(time.time()))
     self.state = data.get('state')
+
+  @staticmethod
+  def get_offer(offer_id):
+    response = OrderOffersModel.query.get(offer_id)
+    if not response:
+        raise NotFoundException("Invalid ID")
+    return response

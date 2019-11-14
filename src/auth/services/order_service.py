@@ -26,10 +26,21 @@ class OrderService(Service):
             return []
         return self.sqlachemy_to_dict(response)
     
-    def get_order_by_id(self, order_id):
+    def get_order_by_id(self, _order_id):
         from src.auth.models.order_table import OrderModel
         order = OrderModel.query.filter_by(order_id=_order_id).one()
         return self.sqlachemy_to_dict(order)
+
+
+    def calculate_price(self,_products_info):
+        from src.auth.models.product_table import ProductModel
+        price = 0.0
+        for item in _products_info:
+            product = ProductModel.query.get(item['product_id'])
+            price += product['price'] * item['units']
+            print("Price is " + price)
+        return price
+
 
 
     def get_products_orders(self):
@@ -37,6 +48,11 @@ class OrderService(Service):
         response = OrderProductsModel.query.all()
         if not response:
             return []
+        return self.sqlachemy_to_dict(response)
+
+    def get_order_items(self,_order_id):
+        from src.auth.models.order_table import OrderProductsModel
+        response = OrderProductsModel.query.filter_by(order_id=_order_id)
         return self.sqlachemy_to_dict(response)
 
     def catch_order(self, _order_id, _delivery_id):

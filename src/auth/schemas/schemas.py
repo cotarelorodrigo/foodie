@@ -25,6 +25,9 @@ class DeliveryUserSchema(UserSchema):
     role = fields.Str(required=True, validate=lambda s: s =='delivery')
     picture = fields.Str(required=True)
     balance = fields.Float(required=True)
+    reviews = fields.Float(required=False)
+    rating = fields.Float(required=False)
+
 
     class Meta:
         strict = True
@@ -92,20 +95,24 @@ class OrderProductSchema(Schema):
     class Meta:
         strict = True
 
-OrderState = {'delivered', 'onWay', 'cancelled', 'created'}
+OrderOfferState = {'oferted', 'accepted', 'rejected', 'cancelled'}
 
-class OrderOfertSchema(Schema):
+class OrderOfferSchema(Schema):
     order_id = fields.Int(required=True)
     delivery_id = fields.Int(required=True)
 
     class Meta:
         strict = True
 
+OrderState = {'delivered', 'onWay', 'cancelled', 'created'}
+
 class OrderSchema(Schema):
     shop_id = fields.Int(required=True)
     products = fields.List(fields.Nested(OrderProductSchema), required=True)
     coordinates = fields.Nested(CoordinateSchema, required=True)
     payWithPoints = fields.Boolean(required=True)
+    favourPoints = fields.Int(required=False)
+    price = fields.Field(required=True)
     state = fields.Str(required=True, validate=lambda s: s in OrderState)
     user_id = fields.Int(required=True)
 

@@ -24,6 +24,7 @@ class OrderTestCase(BaseTest):
                 },
                 "payWithPoints": False,
                 "state": 'created',
+                'price':0.0,
                 "user_id": 8541
                 }),
             content_type='application/json'
@@ -48,6 +49,7 @@ class OrderTestCase(BaseTest):
                     "longitude": -52.52345
                 },
                 "payWithPoints": False,
+                'price':0.0,
                 "state": 'created',
                 "user_id": 8541
                 }),

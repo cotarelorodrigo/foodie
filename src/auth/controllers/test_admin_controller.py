@@ -19,7 +19,7 @@ class AdminTestCase(BaseTest):
         assert response._status_code == 200
 
     @patch("jwt.decode")
-    def test_admin_statics_deliverys(self, jwt_decode):
+    def test_admin_statics_deliveries(self, jwt_decode):
         jwt_decode.return_value = {"is_admin": True}
         response = self.client.get('/admin/statistics/deliveries?year_from=2017&month_from=5&year_to=2017&month_to=9',  headers={'Authorization':'tokenfalso123'})
         assert response._status_code == 200
