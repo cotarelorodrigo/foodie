@@ -75,3 +75,10 @@ class OrderOfertsModel(BaseModel):
     self.delivery_id = data.get('delivery_id')
     self.created_at = datetime.datetime.utcnow()
     self.state = data.get('state')
+
+  @staticmethod
+  def get_offer(offer_id):
+    response = OrderOfertsModel.query.get(offer_id)
+    if not response:
+        raise NotFoundException("Invalid ID")
+    return response

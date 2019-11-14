@@ -19,3 +19,10 @@ class OrderOfertService(Service):
         if not response:
             return []
         return self.sqlachemy_to_dict(response)
+
+    def get_offer_by_id(self,_id):
+        from src.auth.models.order_table import OrderOfertsModel
+        response = OrderOfertsModel.get_offer(_id)
+        return self.sqlachemy_to_dict(response)
+
+
