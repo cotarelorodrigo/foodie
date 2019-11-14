@@ -87,9 +87,13 @@ class OrderService(Service):
         
     def get_today_delivery_orders(self, delivery_id):
         from src.auth.models.order_table import OrderModel
+        from src.auth.models.user_table import DeliveryUserModel
+        DeliveryUserModel.get_delivery(delivery_id)
         today = datetime.date.today()
         return OrderModel.query.filter(OrderModel.delivery_id == delivery_id).filter(OrderModel.created_at >= today).filter(OrderModel.state == 'delivered').count()
 
     def get_historical_user_orders(self, user_id)
         from src.auth.models.order_table import OrderModel
+        from src.auth.models.user_table import NormalUserModel
+        NormalUserModel.get_user(user_id)
         return OrderModel.query.filter(OrderModel.delivery_id == user_id).filter(OrderModel.state == 'delivered').count()
