@@ -97,7 +97,7 @@ class OrderProductSchema(Schema):
 
 OrderState = {'delivered', 'onWay', 'cancelled', 'created'}
 
-class OrderOfertSchema(Schema):
+class OrderOfferSchema(Schema):
     order_id = fields.Int(required=True)
     delivery_id = fields.Int(required=True)
 

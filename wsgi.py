@@ -5,7 +5,7 @@ from src.config import app_config
 from src.auth.models.user_table import UserModel
 from src.auth.models.product_table import ProductModel
 from src.auth.models.shop_table import ShopModel
-from src.auth.models.order_table import OrderModel, OrderProductsModel, OrderOfertsModel
+from src.auth.models.order_table import OrderModel, OrderProductsModel, OrderOffersModel
 from src.auth.models.admin_table import AdminModel
 from src.auth.schemas.schemas import NormalUserSchema, DeliveryUserSchema
 from src.auth.services.user_service import UserService

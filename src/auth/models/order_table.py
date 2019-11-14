@@ -57,7 +57,7 @@ class OrderProductsModel(BaseModel):
     self.units = data.get('units')
 
   
-class OrderOfertsModel(BaseModel):
+class OrderOffersModel(BaseModel):
 
   # table name
   __tablename__ = 'order_oferts'
@@ -80,7 +80,7 @@ class OrderOfertsModel(BaseModel):
 
   @staticmethod
   def get_offer(offer_id):
-    response = OrderOfertsModel.query.get(offer_id)
+    response = OrderOffersModel.query.get(offer_id)
     if not response:
         raise NotFoundException("Invalid ID")
     return response
