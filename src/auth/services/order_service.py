@@ -83,3 +83,13 @@ class OrderService(Service):
             date_to_aux = date_from + relativedelta.relativedelta(months=delta_month+1)
             result.append({"year": date_to_aux.year, "month": date_to_aux.month, "amount": self.get_quantity_orders_date(date_from_aux, date_to_aux, state)})
         return result
+
+        
+    def get_today_delivery_orders(self, delivery_id):
+        from src.auth.models.order_table import OrderModel
+        today = datetime.date.today()
+        return OrderModel.query.filter(OrderModel.delivery_id == delivery_id).filter(OrderModel.created_at >= today).filter(OrderModel.state == 'delivered').count()
+
+    def get_historical_user_orders(self, user_id)
+        from src.auth.models.order_table import OrderModel
+        return OrderModel.query.filter(OrderModel.delivery_id == user_id).filter(OrderModel.state == 'delivered').count()
