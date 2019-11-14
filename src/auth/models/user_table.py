@@ -20,7 +20,7 @@ class UserModel(BaseModel):
   firebase_uid = db.Column(db.String(128), unique=True, nullable=False)
   token = db.Column(db.String(128), unique=True, nullable=False)
   created_at = db.Column(db.DateTime)
-  modified_at = db.Column(db.DateTime)
+  last_login = db.Column(db.DateTime)
 
   __mapper_args__ = {
     'polymorphic_identity':'users'
@@ -41,7 +41,7 @@ class UserModel(BaseModel):
     self.firebase_uid = data.get('firebase_uid')
     self.token = secrets.token_hex(32)
     self.created_at = datetime.datetime.utcnow()
-    self.modified_at = datetime.datetime.utcnow()
+    self.last_login = datetime.datetime.utcnow()
 
   @staticmethod
   def get_any_user(user_id):

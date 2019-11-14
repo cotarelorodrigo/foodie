@@ -20,6 +20,7 @@ def get_user_token(user_data):
 def login():
     MINUTES_VALID_TOKEN = 20
     content = request.get_json()
+    service = UserService()
     try:
         user_data = login_schema_token.load(content)
         verify_firebase_uid(user_data['firebase_uid'])
@@ -27,7 +28,6 @@ def login():
     except:
         try:
             user_data = login_schema.load(content)
-            service = UserService()
             user = service.get_user_by_email(user_data["email"])
         except ValidationError:
             return jsonify({"msg": "Informacion Incorrecta"}), 410
@@ -51,12 +51,14 @@ def login():
             if not is_valid:
                 return jsonify({"msg": "User not found or wrong password"}), 412
             
+            service.update_user_login(user['email'])
             token = encode_data_to_jwt({"user":user_data["email"], "is_admin": False}, MINUTES_VALID_TOKEN)
             return jsonify({"user_id":user["user_id"],"token": token,"role":user["role"]}), 200
     else:
         token = encode_data_to_jwt({"user":user_data["email"], "is_admin": False}, MINUTES_VALID_TOKEN)
         service = UserService()
         user = service.get_user_by_email(user_data["email"])
+        service.update_user_login(user['email'])
         return jsonify({"user_id":user["user_id"],"token": token,"role":user["role"]}), 200
 
 

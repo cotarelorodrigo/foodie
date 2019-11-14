@@ -3,6 +3,7 @@ from src.auth.services.delivery_rules import Delivery
 from src.auth.services.service import Service
 import datetime
 from dateutil import relativedelta
+from src.jwt_handler import decode_jwt_data
 
 class DeliveryService(Service):
 
@@ -34,17 +35,11 @@ class DeliveryService(Service):
         response['items'] = self.sqlachemy_to_dict(query.all())
         response['totalItems'] = query.count()
         return response
-    
-    def refresh_delivery_is_online(self):
-        from src.auth.models.user_table import DeliveryUserModel
-        deliveries = DeliveryUserModel.query.all()
-        #for d in deliveries:
-            #d.state =  
-            #d.save()
 
     def get_available_deliverys(self):
         from src.auth.models.user_table import DeliveryUserModel
-        deliverys = DeliveryUserModel.query.filter_by(state = 'free').all()
+        time = datetime.datetime.now() - datetime.timedelta(hours=2)
+        deliverys = DeliveryUserModel.query.filter_by(state = 'free').filter_by(last_login >= time).all()
         return self.sqlachemy_to_dict(deliverys)
 
     def get_distance(self,lat_1,long_1,lat_2,long_2):

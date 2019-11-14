@@ -83,3 +83,5 @@ class OrderService(Service):
             date_to_aux = date_from + relativedelta.relativedelta(months=delta_month+1)
             result.append({"year": date_to_aux.year, "month": date_to_aux.month, "amount": self.get_quantity_orders_date(date_from_aux, date_to_aux, state)})
         return result
+
+    

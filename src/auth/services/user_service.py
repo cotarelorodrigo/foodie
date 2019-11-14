@@ -125,3 +125,8 @@ class UserService(Service):
         #return self.sqlachemy_to_dict(user)
         return [dict(zip(response.keys(), row)) for row in response.fetchall()]
 
+    def update_user_login(self, email):
+        user = self._get_userModel_email(email)
+        user.last_login = datetime.datetime.utcnow()
+        user.save()
+
