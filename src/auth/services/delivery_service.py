@@ -1,6 +1,7 @@
 from geopy.distance import distance
 from src.auth.services.delivery_rules import Delivery
 from src.auth.services.service import Service
+from src.auth.services.order_service import OrderService
 import datetime
 from dateutil import relativedelta
 
@@ -40,7 +41,8 @@ class DeliveryService(Service):
 
     def get_delivery_price_and_pay(self,client,delivery,shop,client_lat,client_long):
         distance = self.get_distance(shop["latitude"],shop["longitude"],client_lat,client_long)
-        delivery = Delivery(distance,datetime.datetime.now(),1,20)
+        order_service = OrderService()
+        delivery = Delivery(distance,datetime.datetime.now(),order_service.get_historical_user_orders(client),order_service.get_today_delivery_orders(delivery))
         price = delivery.calculate_price()
         pay = delivery.calculate_delivery_pay(price)
         return price, pay
