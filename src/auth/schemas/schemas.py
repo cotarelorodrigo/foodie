@@ -95,7 +95,7 @@ class OrderProductSchema(Schema):
     class Meta:
         strict = True
 
-OrderState = {'delivered', 'onWay', 'cancelled', 'created'}
+OrderOfertState = {'oferted', 'rejected', 'cancelled'}
 
 class OrderOfferSchema(Schema):
     order_id = fields.Int(required=True)
@@ -103,6 +103,8 @@ class OrderOfferSchema(Schema):
 
     class Meta:
         strict = True
+
+OrderState = {'delivered', 'onWay', 'cancelled', 'created'}
 
 class OrderSchema(Schema):
     shop_id = fields.Int(required=True)

@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify
 from src.auth.services.order_ofert_service import OrderOfferService
+from src.auth.services.delivery_service import DeliveryService
+from src.auth.services.direc_service import DirecService
 import sqlalchemy
 import marshmallow 
 
@@ -18,9 +20,26 @@ def add_delivery_offer(_id):
     except:
         raise
     else:
-        return jsonify({'msg': 'The offer was created without problems'}), 200
+        return jsonify({'msg': 'Order ofert created'}), 200
 
-
+@delivery_blueprint.route('/deliveries', methods=['GET'])
+def get_deliveries():
+    longitude = request.args.get('longitude')
+    latitude = request.args.get('latitude')
+    cantidad = request.args.get('cantidad')
+    delivery_service = DeliveryService()
+    direc_service = DirecService()
+    try:
+        shop = {"latitude": latitude, "longitude": longitude}
+        deliverys = delivery_service.get_available_deliverys()
+        deliverys = direc_service.get_nearly_deliverys(shop,deliverys)
+    except:
+        raise
+    else:
+        if not deliverys:
+            return jsonify({'msg': 'No hay deliveries cerca'}), 431
+        return jsonify(deliverys), 200
+        
 @delivery_blueprint.route('/showoferts', methods=['GET'])
 def show_oferts():
     service = OrderOfferService()
