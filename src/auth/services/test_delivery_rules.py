@@ -15,6 +15,6 @@ class DeliveryRulesTest(TestCase):
     def test_calculate_price(self):			
         dt = datetime.datetime(2019,11,13,18)
         delivery_orders_today = 20
-        base_price = 85
+        base_price = 100
         d = Delivery(None,dt,None,delivery_orders_today)
         self.assertEqual(d.calculate_delivery_pay(base_price),89.25)
