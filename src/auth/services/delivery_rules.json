@@ -1,172 +1,202 @@
-[
-    {
-        "conditions": {
-            "any": [{
-                "name": "distance",
-                "operator": "greater_than",
-                "value": 2
-            }]
-        },
-        "actions": [{
-            "name": "extra_distance_price"
-        }]
-    },
-    {
-        "conditions": {
-            "any": [{
-                "name": "customer_previous_orders",
-                "operator": "equal_to",
-                "value": 0
-            }]
-        },
-        "actions": [{
-            "name": "set_discount",
-            "params": {"discount": 100}
-        }]
-    },
-    {
-        "conditions": {
-            "any": [{
-                "name": "customer_previous_orders",
-                "operator": "greater_than_or_equal_to",
-                "value": 4
-            }]
-        },
-        "actions": [{
-            "name": "set_discount",
-            "params": {"discount": 0.05}
-        }]
-    },
-    {
-        "conditions": {
-            "any": [{
-                "name": "distance",
-                "operator": "less_than_or_equal_to",
-                "value": 2
-            }]
-        },
-        "actions": [{
-            "name": "min_distance_price"
-        }]
-    },
-    {
-        "conditions": {
-            "all": [
-                {
-                    "name": "day_of_week",
-                    "operator": "equal_to",
-                    "value": 2
-                },
-                {
-                    "name": "hour",
-                    "operator": "less_than_or_equal_to",
-                    "value": 16
-                },
-                {
-                    "name": "hour",
-                    "operator": "greater_than_or_equal_to",
-                    "value": 15
-                }
-            ]
-                
-        },
-        "actions": [{
-            "name": "set_discount",
-            "params": {"discount": 0.05}
-        }]
-    },
-    {
-        "conditions": {
-            "all": [
-                {
-                    "name": "day_of_week",
-                    "operator": "less_than_or_equal_to",
-                    "value": 4
-                },
-                {
-                    "name": "hour",
-                    "operator": "less_than_or_equal_to",
-                    "value": 19
-                },
-                {
-                    "name": "hour",
-                    "operator": "greater_than_or_equal_to",
-                    "value": 17
-                }
-            ]
-                
-        },
-        "actions": [{
-            "name": "set_extra_charge",
-            "params": {"charge": 0.1}
-        }]
-    },
-    {
-        "conditions": {
-            "all": [
-                {
-                    "name": "day_of_week",
+{
+    "user": [
+        {
+            "conditions": {
+                "any": [{
+                    "name": "distance",
                     "operator": "greater_than",
-                    "value": 4
-                },
-                {
-                    "name": "hour",
-                    "operator": "less_than_or_equal_to",
-                    "value": 23
-                },
-                {
-                    "name": "hour",
-                    "operator": "greater_than_or_equal_to",
-                    "value": 20
-                }
-            ]
-                
+                    "value": 2
+                }]
+            },
+            "actions": [{
+                "name": "extra_distance_price"
+            }]
         },
-        "actions": [{
-            "name": "set_extra_charge",
-            "params": {"charge": 0.1}
-        }]
-    },
-    {
-        "conditions": {
-            "all": [
-                {
-                    "name": "day_of_week",
+        {
+            "conditions": {
+                "any": [{
+                    "name": "customer_previous_orders",
                     "operator": "equal_to",
-                    "value": 6
-                },
-                {
-                    "name": "hour",
+                    "value": 0
+                }]
+            },
+            "actions": [{
+                "name": "set_discount",
+                "params": {"discount": 100}
+            }]
+        },
+        {
+            "conditions": {
+                "any": [{
+                    "name": "customer_previous_orders",
+                    "operator": "greater_than_or_equal_to",
+                    "value": 4
+                }]
+            },
+            "actions": [{
+                "name": "set_discount",
+                "params": {"discount": 0.05}
+            }]
+        },
+        {
+            "conditions": {
+                "any": [{
+                    "name": "distance",
                     "operator": "less_than_or_equal_to",
-                    "value": 14
-                },
-                {
-                    "name": "hour",
-                    "operator": "greater_than_or_equal_to",
-                    "value": 10
-                }
-            ]
-                
+                    "value": 2
+                }]
+            },
+            "actions": [{
+                "name": "min_distance_price"
+            }]
         },
-        "actions": [{
-            "name": "set_discount",
-            "params": {"discount": 0.2}
-        }]
-    },
-    {
-        "conditions": {
-            "all": [
-                {
-                    "name": "delivery_orders_today",
-                    "operator": "greater_than_or_equal_to",
-                    "value": 10
-                }
-            ]
-                
+        {
+            "conditions": {
+                "all": [
+                    {
+                        "name": "day_of_week",
+                        "operator": "equal_to",
+                        "value": 2
+                    },
+                    {
+                        "name": "hour",
+                        "operator": "less_than_or_equal_to",
+                        "value": 16
+                    },
+                    {
+                        "name": "hour",
+                        "operator": "greater_than_or_equal_to",
+                        "value": 15
+                    }
+                ]
+                    
+            },
+            "actions": [{
+                "name": "set_discount",
+                "params": {"discount": 0.05}
+            }]
         },
-        "actions": [{
-            "name": "set_extra_charge",
-            "params": {"charge": 0.02}
-        }]
-    }
-]
+        {
+            "conditions": {
+                "all": [
+                    {
+                        "name": "day_of_week",
+                        "operator": "less_than_or_equal_to",
+                        "value": 4
+                    },
+                    {
+                        "name": "hour",
+                        "operator": "less_than_or_equal_to",
+                        "value": 19
+                    },
+                    {
+                        "name": "hour",
+                        "operator": "greater_than_or_equal_to",
+                        "value": 17
+                    }
+                ]
+                    
+            },
+            "actions": [{
+                "name": "set_extra_charge",
+                "params": {"charge": 0.1}
+            }]
+        }
+    ],
+    "delivery": [
+        {
+            "conditions": {
+                "all": [
+                    {
+                        "name": "day_of_week",
+                        "operator": "greater_than",
+                        "value": 4
+                    },
+                    {
+                        "name": "hour",
+                        "operator": "less_than_or_equal_to",
+                        "value": 23
+                    },
+                    {
+                        "name": "hour",
+                        "operator": "greater_than_or_equal_to",
+                        "value": 20
+                    }
+                ]
+                    
+            },
+            "actions": [{
+                "name": "set_delivery_raise",
+                "params": {"amount": 0.1}
+            }]
+        },
+        {
+            "conditions": {
+                "all": [
+                    {
+                        "name": "day_of_week",
+                        "operator": "equal_to",
+                        "value": 6
+                    },
+                    {
+                        "name": "hour",
+                        "operator": "less_than_or_equal_to",
+                        "value": 14
+                    },
+                    {
+                        "name": "hour",
+                        "operator": "greater_than_or_equal_to",
+                        "value": 10
+                    }
+                ]
+                    
+            },
+            "actions": [{
+                "name": "set_delivery_discount",
+                "params": {"discount": 0.2}
+            }]
+        },
+        {
+            "conditions": {
+                "all": [
+                    {
+                        "name": "delivery_orders_today",
+                        "operator": "greater_than_or_equal_to",
+                        "value": 10
+                    }
+                ]
+                    
+            },
+            "actions": [{
+                "name": "set_delivery_raise",
+                "params": {"amount": 0.02}
+            }]
+        },
+        {
+            "conditions": {
+                "all": [
+                    {
+                        "name": "day_of_week",
+                        "operator": "less_than_or_equal_to",
+                        "value": 4
+                    },
+                    {
+                        "name": "hour",
+                        "operator": "less_than_or_equal_to",
+                        "value": 19
+                    },
+                    {
+                        "name": "hour",
+                        "operator": "greater_than_or_equal_to",
+                        "value": 17
+                    }
+                ]
+                    
+            },
+            "actions": [{
+                "name": "set_delivery_raise",
+                "params": {"amount": 0.03}
+            }]
+        }
+    ]
+}

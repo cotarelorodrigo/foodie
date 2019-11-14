@@ -55,6 +55,14 @@ class DeliveryActions(BaseActions):
     def set_extra_charge(self,charge):
         self.delivery.set_extra_charge(charge)
 
+    @rule_action(params={"discount": FIELD_NUMERIC})
+    def set_delivery_discount(self,discount):
+        self.delivery.set_delivery_discount(discount)
+        
+    @rule_action(params={"amount": FIELD_NUMERIC})
+    def set_delivery_raise(self,amount):
+        self.delivery.set_delivery_raise(amount)
+
 class Delivery():
     
     def __init__(self,distance,datetime,customer_previous_orders,delivery_orders_today):
@@ -63,11 +71,15 @@ class Delivery():
         self.base_price = 0
         self.discounts = []
         self.extra_charges = []
+        self.delivery_discounts = []
+        self.delivery_raises = []
         self.customer_previous_orders = customer_previous_orders
         self.delivery_orders_today = delivery_orders_today
         dir_path = os.path.dirname(os.path.realpath(__file__))
         with open(os.path.join(dir_path,"delivery_rules.json")) as f:
-            self.rules = json.load(f) 
+            d = json.load(f)
+            self.user_rules = d["user"]
+            self.delivery_rules = d["delivery"]
         
     def __str__(self):
         return f"""
@@ -75,6 +87,8 @@ Delivery
 base_price: {self.base_price}
 discounts: {self.discounts}
 extra_charges: {self.extra_charges}
+delivery_discounts: {self.delivery_discounts}
+delivery_raises: {self.delivery_raises}
         """
         
     def set_discount(self,discount):
@@ -82,12 +96,25 @@ extra_charges: {self.extra_charges}
         
     def set_extra_charge(self,charge):
         self.extra_charges.append(charge)
+
+    def set_delivery_raise(self,amount):
+        self.delivery_raises.append(amount)
+
+    def set_delivery_discount(self,discount):
+        self.discounts.append(discount)
         
     def get_total_discounts(self):
         total = 0
         for d in self.discounts:
             if d > 1: total += d
             else: total += d*self.base_price
+        return total
+
+    def get_delivery_discounts(self,price):
+        total = 0
+        for d in self.delivery_discounts:
+            if d > 1: total += d
+            else: total += d*price
         return total
     
     def get_total_charges(self):
@@ -96,13 +123,30 @@ extra_charges: {self.extra_charges}
             if c > 1: total += c
             else: total += c*self.base_price
         return total
-        
+       
+    def get_delivery_raises(self,price):
+        total = 0
+        for c in self.delivery_raises:
+            if c > 1: total += c
+            else: total += c*price
+        return total
+
     def calculate_price(self):
         run_all(
-            rule_list=self.rules,
+            rule_list=self.user_rules,
             defined_actions=DeliveryActions(self),
             defined_variables=DeliveryVariables(self)
         )
         price = self.base_price - self.get_total_discounts() + self.get_total_charges()
+        if price < 0: return 0
+        return price
+
+    def calculate_delivery_pay(self,price):
+        run_all(
+            rule_list=self.delivery_rules,
+            defined_actions=DeliveryActions(self),
+            defined_variables=DeliveryVariables(self)
+        )
+        price = price - self.get_delivery_discounts(price) + self.get_delivery_raises(price)
         if price < 0: return 0
         return price

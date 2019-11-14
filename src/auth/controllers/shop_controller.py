@@ -34,7 +34,11 @@ def get_delivery_price(_id):
     client_long = request.args.get('longitude')
     shop = service.get_shop(_id)
     delivery_service = DeliveryService()
-    return jsonify({'price':delivery_service.get_delivery_price(None,None,shop,client_lat,client_long)}), 200
+    price, pay = delivery_service.get_delivery_price_and_pay(None,None,shop,client_lat,client_long)
+    return jsonify({
+            'price': price,
+            'pay': pay
+        })
 
 @shops_blueprint.route('/shops/top', methods=['GET'])
 def get_top_shops():

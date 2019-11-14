@@ -38,12 +38,12 @@ class DeliveryService(Service):
     def get_distance(self,lat_1,long_1,lat_2,long_2):
         return distance((lat_1,long_1),(lat_2,long_2)).km
 
-    def get_delivery_price(self,client,delivery,shop,client_lat,client_long):
+    def get_delivery_price_and_pay(self,client,delivery,shop,client_lat,client_long):
         distance = self.get_distance(shop["latitude"],shop["longitude"],client_lat,client_long)
         delivery = Delivery(distance,datetime.datetime.now(),1,20)
         price = delivery.calculate_price()
-        return price
-
+        pay = delivery.calculate_delivery_pay(price)
+        return price, pay
 
     def get_quantity_deliverys(self):
         from src.auth.models.user_table import DeliveryUserModel

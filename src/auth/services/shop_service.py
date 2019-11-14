@@ -26,8 +26,6 @@ class ShopService(Service):
         shop_data, products = ShopSchema().load(data)
         return ShopModel.get_shop(_id).update(shop_data)
         
-
-
     def get_products(self,shop_id):
         from src.auth.models.product_table import ProductModel
         response = ProductModel.query.filter_by(shop_id=shop_id).all()
