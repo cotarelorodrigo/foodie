@@ -60,7 +60,7 @@ def get_user_profile(email):
     response = service.get_user_profile(email)
     return jsonify(response), 200
 
-@user_blueprint.route('/user/position/<_id>', methods=['PATCH'])
+@user_blueprint.route('/users/<_id>/position', methods=['PATCH'])
 def update_user_coordinates(_id):
     service = UserService()
     try:
