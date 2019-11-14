@@ -10,9 +10,6 @@ class OrderService(Service):
         from src.auth.schemas.schemas import OrderSchema
         order_schema = OrderSchema()
         order_info, products_info = order_schema.load(order_data)
-        if (order_info["price"] is None):
-            price = self.calculate_price(products_info)
-            order_info['price'] = price
         order = OrderModel(order_info)
         products = [OrderProductsModel(product) for product in products_info]
         order.save() #Hay que guardar primero la orden orden porq es la parte unaria de la relacion

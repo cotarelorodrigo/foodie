@@ -110,7 +110,7 @@ class OrderSchema(Schema):
     coordinates = fields.Nested(CoordinateSchema, required=True)
     payWithPoints = fields.Boolean(required=True)
     favourPoints = fields.Int(required=False)
-    price = fields.Float(required=False,default=0.0,missing=0.0)
+    price = fields.Field(required=True)
     state = fields.Str(required=True, validate=lambda s: s in OrderState)
     user_id = fields.Int(required=True)
 
