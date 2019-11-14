@@ -35,4 +35,13 @@ class OrderOfferService(Service):
         response = OrderOffersModel.get_offer(_id)
         return self.sqlachemy_to_dict(response)
 
+    def get_delivery_current_offers(self,_id):
+        from src.auth.models.order_table import OrderOffersModel
+        response = OrderOffersModel.query.filter(OrderOffersModel.delivery_id == _id).filter(OrderOffersModel.state == 'oferted' ).all()
+        return self.sqlachemy_to_dict(response)
 
+    def update_offer_state(self,del_id,offer_id,state):
+        from src.auth.models.order_table import OrderOffersModel
+        offer = OrderOffersModel.query.filter(OrderOffersModel.delivery_id == del_id).filter(OrderOffersModel.id == offer_id).one()
+        offer.state = state
+        offer.save()

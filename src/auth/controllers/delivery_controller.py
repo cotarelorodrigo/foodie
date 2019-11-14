@@ -22,6 +22,27 @@ def add_delivery_offer(_id):
     else:
         return jsonify({'msg': 'Order ofert created'}), 200
 
+@delivery_blueprint.route('/delivery/<_id>/offers/<_offer_id>', methods=['PUT'])
+def put_delivery_state(_id,_offer_id):
+    service = OrderOfferService()
+    try:
+        content = request.get_json()
+        state = content['state']
+        service.update_offer_state(_id,_offer_id,state)
+    except:
+        raise
+    else:
+        return jsonify({'msg': 'Offer modified'})
+
+        
+
+
+@delivery_blueprint.route('/delivery/<_id>/offers', methods=['GET'])
+def getOffers(_id):
+    service = OrderOfferService()
+    response = service.get_delivery_current_offers(_id)
+    return jsonify(response),200
+
 @delivery_blueprint.route('/deliveries', methods=['GET'])
 def get_deliveries():
     longitude = request.args.get('longitude')
