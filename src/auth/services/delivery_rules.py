@@ -142,6 +142,7 @@ delivery_raises: {self.delivery_raises}
         return price
 
     def calculate_delivery_pay(self,price):
+        price *= 0.85
         run_all(
             rule_list=self.delivery_rules,
             defined_actions=DeliveryActions(self),
