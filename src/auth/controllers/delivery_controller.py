@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from src.auth.services.order_ofert_service import OrderOfertService
+from src.auth.services.delivery_service import DeliveryService
 from src.auth.services.direc_service import DirecService
 import sqlalchemy
 import marshmallow 
@@ -23,15 +24,15 @@ def add_delivery_ofert():
 
 @delivery_blueprint.route('/deliveries', methods=['GET'])
 def get_deliveries():
-    longitud = request.args.get('longitud')
-    latitud = request.args.get('latitud')
+    longitude = request.args.get('longitude')
+    latitude = request.args.get('latitude')
     cantidad = request.args.get('cantidad')
-    service = OrderOfertService()
+    delivery_service = DeliveryService()
     direc_service = DirecService()
     try:
-        shop = {"latitude": latitud, "longitude": longitude}
-        deliverys = service.get_available_deliverys()
-        deliverys = direc_service(shop,deliverys)
+        shop = {"latitude": latitude, "longitude": longitude}
+        deliverys = delivery_service.get_available_deliverys()
+        deliverys = direc_service.get_nearly_deliverys(shop,deliverys)
     except:
         raise
     else:

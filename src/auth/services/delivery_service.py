@@ -35,16 +35,17 @@ class DeliveryService(Service):
         response['totalItems'] = query.count()
         return response
     
-    def refresh_delivery_is_online():
+    def refresh_delivery_is_online(self):
         from src.auth.models.user_table import DeliveryUserModel
         deliveries = DeliveryUserModel.query.all()
         #for d in deliveries:
             #d.state =  
             #d.save()
 
-    def get_available_deliverys():
+    def get_available_deliverys(self):
         from src.auth.models.user_table import DeliveryUserModel
         deliverys = DeliveryUserModel.query.filter_by(state = 'free').all()
+        return self.sqlachemy_to_dict(deliverys)
 
     def get_distance(self,lat_1,long_1,lat_2,long_2):
         return distance((lat_1,long_1),(lat_2,long_2)).km
