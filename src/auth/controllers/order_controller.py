@@ -28,6 +28,13 @@ def show_orders():
     orders = service.get_orders()
     return jsonify(orders)
 
+@orders_blueprint.route('/orders/<_id>/items', methods=['GET'])
+def get_order_items(_id):
+    service = OrderService()
+    items = service.get_order_items(_id)
+    return jsonify(items)
+
+
 @orders_blueprint.route('/orders/<_id>',methods=['GET'])
 def get_order_by_id(_id):
     service = OrderService()

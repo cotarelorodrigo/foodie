@@ -39,6 +39,11 @@ class OrderService(Service):
             return []
         return self.sqlachemy_to_dict(response)
 
+    def get_order_items(self,_order_id):
+        from src.auth.models.order_table import OrderProductsModel
+        response = OrderProductsModel.query.filter_by(order_id=_order_id)
+        return self.sqlachemy_to_dict(response)
+
     def catch_order(self, _order_id, _delivery_id):
         from src.app import db
         from src.auth.models.order_table import OrderModel
