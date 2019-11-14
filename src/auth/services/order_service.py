@@ -26,7 +26,7 @@ class OrderService(Service):
             return []
         return self.sqlachemy_to_dict(response)
     
-    def get_order_by_id(self, order_id):
+    def get_order_by_id(self, _order_id):
         from src.auth.models.order_table import OrderModel
         order = OrderModel.query.filter_by(order_id=_order_id).one()
         return self.sqlachemy_to_dict(order)
