@@ -10,6 +10,9 @@ class OrderService(Service):
         from src.auth.schemas.schemas import OrderSchema
         order_schema = OrderSchema()
         order_info, products_info = order_schema.load(order_data)
+        if (order_info["price"] is None):
+            price = self.calculate_price(products_info)
+            order_info['price'] = price
         order = OrderModel(order_info)
         products = [OrderProductsModel(product) for product in products_info]
         order.save() #Hay que guardar primero la orden orden porq es la parte unaria de la relacion
@@ -30,6 +33,17 @@ class OrderService(Service):
         from src.auth.models.order_table import OrderModel
         order = OrderModel.query.filter_by(order_id=_order_id).one()
         return self.sqlachemy_to_dict(order)
+
+
+    def calculate_price(self,_products_info):
+        from src.auth.models.product_table import ProductModel
+        price = 0.0
+        for item in _products_info:
+            product = ProductModel.query.get(item['product_id'])
+            price += product['price'] * item['units']
+            print("Price is " + price)
+        return price
+
 
 
     def get_products_orders(self):

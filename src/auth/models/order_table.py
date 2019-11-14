@@ -15,6 +15,7 @@ class OrderModel(BaseModel):
   longitud = db.Column(db.Float, nullable=False)
   payWithPoints = db.Column(db.Boolean, nullable=False)
   state = db.Column(db.String(128), nullable=False)
+  price = db.Column(db.Float,nullable = False)
   user_id = db.Column(db.Integer, db.ForeignKey('normal_users.user_id'), nullable=False)
   delivery_id = db.Column(db.Integer, db.ForeignKey('delivery_users.user_id'), nullable=True)
   created_at = db.Column(db.DateTime)
@@ -32,6 +33,7 @@ class OrderModel(BaseModel):
     self.state = data.get('state')
     self.user_id = data.get('user_id')
     self.delivery_id = data.get('delivery_id', None)
+    self.price = data.get("price")
     self.created_at = datetime.datetime.utcnow()
     self.modified_at = datetime.datetime.utcnow()
 
