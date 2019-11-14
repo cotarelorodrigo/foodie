@@ -25,6 +25,16 @@ class UserService(Service):
         from src.auth.schemas.schemas import NormalUserSchema
         user_data = NormalUserSchema().load(data)
         return NormalUserModel.get_user(_id).update(user_data)
+    
+    def update_coordinates(self, _id, coordinates):
+        from src.auth.schemas.schemas import CoordinateSchema
+        from src.auth.models.user_table import UserModel
+        data = CoordinateSchema().load(coordinates)
+        user = UserModel.get_any_user(_id)
+        user.latitude = data["latitude"]
+        user.longitude = data["longitude"]
+        user.save()
+
 
     def get_N_users(self, pageNumber, pageSize):
         from src.auth.models.user_table import NormalUserModel

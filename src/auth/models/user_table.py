@@ -15,6 +15,8 @@ class UserModel(BaseModel):
   phone_number = db.Column(db.Integer, nullable=False)
   role = db.Column(db.String(128), nullable=False)
   password = db.Column(db.String(128), nullable=True)
+  latitude = db.Column(db.Float, nullable=True)
+  longitude = db.Column(db.Float, nullable=True)
   firebase_uid = db.Column(db.String(128), unique=True, nullable=False)
   token = db.Column(db.String(128), unique=True, nullable=False)
   created_at = db.Column(db.DateTime)
@@ -34,11 +36,19 @@ class UserModel(BaseModel):
     self.phone_number = data.get('phone_number')
     self.role = data.get('role')
     self.password = data.get('password')
+    self.latitude = data.get("latitude", None)
+    self.longitude = data.get("longitude", None)
     self.firebase_uid = data.get('firebase_uid')
     self.token = secrets.token_hex(32)
     self.created_at = datetime.datetime.utcnow()
     self.modified_at = datetime.datetime.utcnow()
 
+  @staticmethod
+  def get_any_user(user_id):
+    response = UserModel.query.get(user_id)
+    if not response:
+        raise NotFoundException("Invalid ID")
+    return response
 
 class NormalUserModel(UserModel):
 

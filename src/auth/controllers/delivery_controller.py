@@ -29,9 +29,16 @@ def get_deliveries():
     service = OrderOfertService()
     direc_service = DirecService()
     try:
+        shop = {"latitude": latitud, "longitude": longitude}
         deliverys = service.get_available_deliverys()
         deliverys = direc_service(shop,deliverys)
-
+    except:
+        raise
+    else:
+        if not deliverys:
+            return jsonify({'msg': 'No hay deliveries cerca'}), 431
+        return jsonify(deliverys), 200
+        
 @delivery_blueprint.route('/showoferts', methods=['GET'])
 def show_oferts():
     service = OrderOfertService()
