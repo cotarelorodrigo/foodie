@@ -1,13 +1,14 @@
 from flask import Blueprint, request, jsonify
 from sqlalchemy.exc import IntegrityError
 from src.auth.services.user_service import UserService
-from src.auth.schemas.schemas import UserSchema, LoginSchema
-from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException
+from src.auth.schemas.schemas import UserSchema, LoginSchema, CreditCardSchema
+from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException, NotFoundException
 from src.jwt_handler import encode_data_to_jwt
 from src.auth.controllers.common_functions_controllers import auth_required
 
 user_blueprint = Blueprint('users', __name__)
 users_schema = UserSchema()
+card_schema = CreditCardSchema()
 
 @user_blueprint.route('/users', methods=['GET'])
 def get_users():
@@ -52,6 +53,17 @@ def check_user_email(email):
     else:
         raise NotFoundEmail("user with that email doesnt exist")
 
+@user_blueprint.route('/user/<_id>/premium_subscription', methods=['PUT'])
+def set_premium_subscription(_id):
+    service = UserService()
+    user = service.get_user(_id)
+    if not user: 
+        raise NotFoundException("user with that id doesn't exist.")
+    content = request.get_json()
+    card = card_schema.load(content)
+    user["suscripcion"] = "premium"
+    service.update_user(_id,user)
+    return jsonify("subscription updated to premium")
 
 @user_blueprint.route('/users/profile/<email>', methods=['GET'])
 @auth_required
