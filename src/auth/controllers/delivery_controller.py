@@ -22,7 +22,7 @@ def add_delivery_offer(_id):
     else:
         return jsonify({'msg': 'Order ofert created'}), 200
 
-@delivery_blueprint.route('/delivery/<_id>/offers/<_offer_id>', methods=['PUT'])
+@delivery_blueprint.route('/delivery/<_id>/offers/<_offer_id>', methods=['PATCH'])
 def put_delivery_state(_id,_offer_id):
     service = OrderOfferService()
     try:

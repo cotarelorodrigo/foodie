@@ -75,10 +75,9 @@ def get_user_profile(email):
 @user_blueprint.route('/users/<_id>/position', methods=['PATCH'])
 def update_user_coordinates(_id):
     service = UserService()
+    content = request.get_json()
     try:
-        longitude = request.args.get('longitude')
-        latitude = request.args.get('latitude')
-        coordinates = {"longitude": longitude, "latitude": latitude}
+        coordinates = {"latitude": content['longitude'],"longitude": content['latitude'] }
         service.update_coordinates(_id, coordinates)
     except:
         raise

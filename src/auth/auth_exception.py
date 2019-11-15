@@ -22,3 +22,7 @@ class ShopNotFound(Exception):
 class InvalidInformation(Exception):
     def __init__(self, message):
         self.msg = message
+
+class InvalidStateChange(Exception):
+    def __init__(self, message):
+        self.msg = message
