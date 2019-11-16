@@ -12,9 +12,9 @@ from src.auth.services.user_service import UserService
 from src.auth.services.delivery_service import DeliveryService
 
 def set_shops():
-	shops = [{"name":"Mc Donalds", "address":"call3 falsa", "latitude": 50.45, "longitude": 100.123, "photoUrl":"wqatgayeesyws", "rating":8},
-	 		{"name":"Subway", "address":"call3 falsa", "latitude": 50.45, "longitude": 100.123, "photoUrl":"dsgw", "rating":7.3},
-			 {"name":"Mostaza", "address":"call3 falsa", "latitude": 50.45, "longitude": 100.123, "photoUrl":"dsgw", "rating":9}]
+	shops = [{"name":"Mc Donalds", "address":"call3 falsa", "latitude": -34.643899, "longitude": -58.657026, "photoUrl":"wqatgayeesyws", "rating":4},
+	 		{"name":"Subway", "address":"call3 falsa", "latitude": -34.6432, "longitude": -58.6576, "photoUrl":"dsgw", "rating":4},
+			 {"name":"Mostaza", "address":"call3 falsa", "latitude": -34.6444, "longitude": -58.6560, "photoUrl":"dsgw", "rating":3}]
 	products = [{
       "shop_id": 1,
       "name": "Hamburguesa normal",
