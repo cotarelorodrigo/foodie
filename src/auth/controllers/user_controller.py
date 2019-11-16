@@ -10,6 +10,10 @@ user_blueprint = Blueprint('users', __name__)
 users_schema = UserSchema()
 card_schema = CreditCardSchema()
 
+@user_blueprint.route('/', methods=['GET'])
+def hello_world():
+    return jsonify("Hello world"), 200
+
 @user_blueprint.route('/users', methods=['GET'])
 def get_users():
     service = UserService()

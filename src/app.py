@@ -13,7 +13,7 @@ from src.auth.controllers.register_controller import register_blueprint
 from src.auth.controllers.login_controller import login_blueprint
 from src.auth.controllers.direc_controller import direc_blueprint
 from src.auth.controllers.delivery_controller import delivery_blueprint
-from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException, NotFoundException
+import src.auth.auth_exception as auth
 from flask_mail import Message
 
 db = SQLAlchemy()
@@ -41,21 +41,25 @@ def create_app():
     app.register_blueprint(admins_blueprint)
     app.register_blueprint(delivery_blueprint)
 
-    @app.errorhandler(InvalidUserInformation)
+    @app.errorhandler(auth.InvalidUserInformation)
     def user_error_handler(e):
-        return jsonify({"error": e.msg}), 420
+        return jsonify({"msg": e.msg}), 420
 
-    @app.errorhandler(NotFoundException)
+    @app.errorhandler(auth.NotFoundException)
     def user_error_handler(e):
-        return jsonify({"error": e.msg}), 404
+        return jsonify({"msg": e.msg}), 404
 
-    @app.errorhandler(NotFoundEmail)
+    @app.errorhandler(auth.NotFoundEmail)
     def user_error_handler(e):
-        return jsonify({"error": e.msg}), 404
+        return jsonify({"msg": e.msg}), 404
 
-    @app.errorhandler(AccessDeniedException)
+    @app.errorhandler(auth.AccessDeniedException)
     def user_error_handler(e):
-        return jsonify({"error": e.msg}), 401
+        return jsonify({"msg": e.msg}), 401
+
+    @app.errorhandler(auth.InvalidQueryParameters)
+    def user_error_handler(e):
+        return jsonify({"msg": e.msg}), 400
     
     return app
 

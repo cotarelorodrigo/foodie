@@ -26,3 +26,7 @@ class InvalidInformation(Exception):
 class InvalidStateChange(Exception):
     def __init__(self, message):
         self.msg = message
+
+class InvalidQueryParameters(Exception):
+    def __init__(self, message):
+        self.msg = message
