@@ -179,6 +179,7 @@ def deliveries():
 def create_delivery():
      try:
           content = request.get_json()
+          content['role'] = 'delivery'
           DeliveryService().create_delivery_user(content)
      except ValidationError:
         return jsonify({"error": "Informacion del delivery Incorrecta"}), 420
@@ -251,6 +252,7 @@ def users():
 def create_user():
      try:
           content = request.get_json()
+          content['role'] = 'usuario'
           UserService().create_normal_user(content)
      except ValidationError:
         return jsonify({"error": "Informacion del usuario Incorrecta"}), 420
