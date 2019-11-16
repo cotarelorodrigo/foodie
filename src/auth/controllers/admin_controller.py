@@ -102,7 +102,7 @@ def statics_orders_cancelled():
 def shops():
      pageNumber = request.args.get('p')
      pageSize = request.args.get('pSize')
-     result = ShopService().get_N_shops(int(pageNumber), int(pageSize))
+     result = ShopService().get_N_shops(int(pageNumber) - 1, int(pageSize))
      return jsonify(result), 200
 
 
@@ -170,7 +170,7 @@ def update_shop():
 def deliveries():
      pageNumber = request.args.get('p')
      pageSize = request.args.get('pSize')
-     result = DeliveryService().get_N_deliverys(int(pageNumber), int(pageSize))
+     result = DeliveryService().get_N_deliverys(int(pageNumber) - 1, int(pageSize))
      return jsonify(result), 200
 
 @admins_blueprint.route('/admin/delivery', methods=['POST'])
@@ -241,7 +241,7 @@ def update_delivery():
 def users():
      pageNumber = request.args.get('p')
      pageSize = request.args.get('pSize')
-     result = UserService().get_N_users(int(pageNumber), int(pageSize))
+     result = UserService().get_N_users(int(pageNumber) - 1, int(pageSize))
      return jsonify(result), 200
 
 
