@@ -44,7 +44,7 @@ class DeliveryService(Service):
         order_service = OrderService()
         delivery = Delivery(distance,datetime.datetime.now(),order_service.get_historical_user_orders(client),order_service.get_today_delivery_orders(delivery))
         price = delivery.calculate_price()
-        pay = delivery.calculate_delivery_pay(price)
+        pay = delivery.calculate_delivery_pay()
         return price, pay
 
     def get_quantity_deliverys(self):

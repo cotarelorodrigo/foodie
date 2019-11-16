@@ -141,8 +141,9 @@ delivery_raises: {self.delivery_raises}
         if price < 0: return 0
         return price
 
-    def calculate_delivery_pay(self,price):
-        price *= 0.85
+    def calculate_delivery_pay(self):
+        if not self.base_price: self.calculate_price()
+        price = self.base_price*0.85
         run_all(
             rule_list=self.delivery_rules,
             defined_actions=DeliveryActions(self),
