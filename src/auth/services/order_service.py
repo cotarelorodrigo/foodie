@@ -18,7 +18,6 @@ class OrderService(Service):
             p.save()
         return order
 
-
     def get_orders(self):
         from src.auth.models.order_table import OrderModel
         response = OrderModel.query.all()

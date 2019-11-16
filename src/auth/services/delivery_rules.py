@@ -34,6 +34,10 @@ class DeliveryVariables(BaseVariables):
     def delivery_orders_today(self):
         return self.delivery.delivery_orders_today
 
+    @boolean_rule_variable
+    def premium_user(self):
+        return self.delivery.premium_user
+
 class DeliveryActions(BaseActions):
 
     def __init__(self, delivery):
@@ -65,7 +69,7 @@ class DeliveryActions(BaseActions):
 
 class Delivery():
     
-    def __init__(self,distance,datetime,customer_previous_orders,delivery_orders_today):
+    def __init__(self,distance,datetime,customer_previous_orders,delivery_orders_today,*,premium=True):
         self.distance = distance
         self.datetime = datetime
         self.base_price = 0
@@ -75,6 +79,7 @@ class Delivery():
         self.delivery_raises = []
         self.customer_previous_orders = customer_previous_orders
         self.delivery_orders_today = delivery_orders_today
+        self.premium_user = premium
         dir_path = os.path.dirname(os.path.realpath(__file__))
         with open(os.path.join(dir_path,"delivery_rules.json")) as f:
             d = json.load(f)

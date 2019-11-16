@@ -27,3 +27,11 @@ class DeliveryRulesTest(TestCase):
         distance = 1
         d = Delivery(distance,dt,user_previous_orders,delivery_orders_today)
         self.assertEqual(d.calculate_delivery_pay(),17.85)
+
+    def test_subscription_discount(self):
+        distance = 10
+        dt = datetime.datetime(2019,11,16,18)
+        user_previous_orders = 1
+        delivery_orders_today = 0
+        d = Delivery(distance,dt,user_previous_orders,delivery_orders_today,premium=True)
+        self.assertEqual(d.calculate_price(),105)
