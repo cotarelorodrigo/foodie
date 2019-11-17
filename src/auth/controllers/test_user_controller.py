@@ -42,6 +42,34 @@ class UserTestCase(BaseTest):
         response = self.client.head('/users/2')
         assert response._status_code == 404
 
+    def test_set_premium_subscription(self):
+        response = self.client.post(
+            '/users',
+            data=json.dumps({
+                "name": "Rodrigo",
+                "email": "asd@asd.com",
+                "phone_number": 42223333,
+                "role": "usuario",
+                "password": "password",
+                "firebase_uid": "rjrr",
+                "suscripcion": "flat"
+            }),
+            content_type='application/json'
+        )
+
+        self.assertEqual(response._status_code,200)
+        response = self.client.put(
+            '/user/1/premium_subscription',
+            data=json.dumps({
+              "number": "5678-9143-0689-4572",
+              "security_code": 123
+            }),
+            content_type='application/json'
+        )
+        self.assertEqual(response._status_code,200)
+        user = self.client.get("/users/1").json
+        self.assertEqual(user["suscripcion"],"premium")
+
     @patch("src.auth.services.user_service.UserService.delete_user")
     def test_delete_existing_id(self, delete_id_mock):
         delete_id_mock.return_value = True
