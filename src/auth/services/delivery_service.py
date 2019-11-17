@@ -40,7 +40,7 @@ class DeliveryService(Service):
     def get_distance(self,lat_1,long_1,lat_2,long_2):
         return distance((lat_1,long_1),(lat_2,long_2)).km
 
-    def get_delivery_price_and_pay(self,client,delivery,shop,client_lat,client_long,premium_subscription):
+    def get_delivery_price_and_pay(self,client,delivery,shop,client_lat,client_long):
         distance = self.get_distance(shop["latitude"],shop["longitude"],client_lat,client_long)
         order_service = OrderService()
         user_service = UserService()

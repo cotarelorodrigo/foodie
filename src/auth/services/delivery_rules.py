@@ -106,7 +106,7 @@ delivery_raises: {self.delivery_raises}
         self.delivery_raises.append(amount)
 
     def set_delivery_discount(self,discount):
-        self.discounts.append(discount)
+        self.delivery_discounts.append(discount)
         
     def get_total_discounts(self):
         total = 0
