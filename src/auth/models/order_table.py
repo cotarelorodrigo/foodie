@@ -65,6 +65,8 @@ class OrderOffersModel(BaseModel):
   id = db.Column(db.Integer, primary_key=True)
   order_id = db.Column(db.Integer, db.ForeignKey('orders.order_id', ondelete='CASCADE'), nullable=False)
   delivery_id = db.Column(db.Integer, db.ForeignKey('delivery_users.user_id', ondelete='CASCADE'), nullable=False)
+  delivery_price = db.Column(db.Float,nullable=False)
+  delivery_pay = db.Column(db.Float,nullable = False)
   created_at = db.Column(db.DateTime)
   created_at_seconds = db.Column(db.Integer)
   state = db.Column(db.String(128), nullable=False)
@@ -76,6 +78,8 @@ class OrderOffersModel(BaseModel):
     """
     self.order_id = data.get("order_id")
     self.delivery_id = data.get('delivery_id')
+    self.delivery_price = data.get('delivery_price')
+    self.delivery_pay = data.get('delivery_pay')
     self.created_at = datetime.datetime.utcnow()
     self.created_at_seconds = int(round(time.time()))
     self.state = data.get('state')

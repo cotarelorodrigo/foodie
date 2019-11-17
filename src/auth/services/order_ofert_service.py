@@ -24,6 +24,7 @@ class OrderOfferService(Service):
         order_ofert = OrderOffersModel(order_ofert_data)
         order_ofert.save()
         Process(target=auto_cancel_ofert, args=(order_ofert,)).start()
+        return order_ofert.id
 
     def get_oferts(self):
         from src.auth.models.order_table import OrderOffersModel
