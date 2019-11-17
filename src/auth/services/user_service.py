@@ -24,7 +24,7 @@ class UserService(Service):
         from src.auth.models.user_table import NormalUserModel
         from src.auth.schemas.schemas import NormalUserSchema
         # user_data = NormalUserSchema().load(data)
-        return NormalUserModel.get_user(_id).update(user_data)
+        return NormalUserModel.get_user(_id).update(data)
     
     def update_coordinates(self, _id, coordinates):
         from src.auth.schemas.schemas import CoordinateSchema
