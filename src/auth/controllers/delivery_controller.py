@@ -37,9 +37,9 @@ def put_delivery_state(_id,_offer_id):
         
 @delivery_blueprint.route('/deliveries/<_id>',methods=['GET'])
 def get_delivery(_id):
-    service = DeliveryService
+    service = DeliveryService()
     delivery = service.get_delivery(_id)
-    return jsonify(response),200
+    return jsonify(delivery),200
 
 @delivery_blueprint.route('/deliveries/<_id>/offers', methods=['GET'])
 def getOffers(_id):
