@@ -11,6 +11,11 @@ class UserService(Service):
         user = NormalUserModel(user_data)
         user.save()
 
+    def get_normal_user(self,_id):
+        from src.auth.models.user_table import NormalUserModel
+        user = NormalUserModel.get_user(_id)
+        return self.sqlachemy_to_dict(user)
+
     def get_user(self, _id):
         from src.auth.models.user_table import UserModel
         response = UserModel.get_any_user(_id)
