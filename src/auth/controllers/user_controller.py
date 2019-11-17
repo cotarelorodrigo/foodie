@@ -65,8 +65,7 @@ def set_premium_subscription(_id):
         raise NotFoundException("user with that id doesn't exist.")
     content = request.get_json()
     card = card_schema.load(content)
-    user["suscripcion"] = "premium"
-    service.update_user(_id,user)
+    service.update_user(_id,{"suscripcion": "premium"})
     return jsonify("subscription updated to premium")
 
 @user_blueprint.route('/users/profile/<email>', methods=['GET'])
