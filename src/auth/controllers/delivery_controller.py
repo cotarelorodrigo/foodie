@@ -5,9 +5,9 @@ from src.auth.services.direc_service import DirecService
 import sqlalchemy
 import marshmallow 
 
-delivery_blueprint = Blueprint('delivery', __name__)
+delivery_blueprint = Blueprint('deliveries', __name__)
 
-@delivery_blueprint.route('/delivery/<_id>/offers', methods=['POST'])
+@delivery_blueprint.route('/deliveries/<_id>/offers', methods=['POST'])
 def add_delivery_offer(_id):
     service = OrderOfferService()
     try:
@@ -22,7 +22,7 @@ def add_delivery_offer(_id):
     else:
         return jsonify({'id': offer_id }), 200
 
-@delivery_blueprint.route('/delivery/<_id>/offers/<_offer_id>', methods=['PATCH'])
+@delivery_blueprint.route('/deliveries/<_id>/offers/<_offer_id>', methods=['PATCH'])
 def put_delivery_state(_id,_offer_id):
     service = OrderOfferService()
     try:
@@ -35,9 +35,13 @@ def put_delivery_state(_id,_offer_id):
         return jsonify({'msg': 'Offer modified'})
 
         
+@delivery_blueprint.route('/deliveries/<_id>',methods=['GET'])
+def get_delivery(_id):
+    service = DeliveryService()
+    delivery = service.get_delivery(_id)
+    return jsonify(delivery),200
 
-
-@delivery_blueprint.route('/delivery/<_id>/offers', methods=['GET'])
+@delivery_blueprint.route('/deliveries/<_id>/offers', methods=['GET'])
 def getOffers(_id):
     service = OrderOfferService()
     response = service.get_delivery_current_offers(_id)

@@ -56,7 +56,7 @@ class DeliveryService(Service):
         distance = self.get_distance(shop["latitude"],shop["longitude"],client_lat,client_long)
         order_service = OrderService()
         user_service = UserService()
-        subscription = user_service.get_user(client)["suscripcion"]
+        subscription = user_service.get_normal_user(client)["suscripcion"]
         delivery = Delivery(distance,datetime.datetime.now(),order_service.get_historical_user_orders(client),order_service.get_today_delivery_orders(delivery),premium= subscription == "premium")
         price = delivery.calculate_price()
         pay = delivery.calculate_delivery_pay()
