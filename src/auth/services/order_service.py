@@ -1,5 +1,5 @@
 from sqlalchemy.orm.exc import NoResultFound
-from src.auth.auth_exception import NotFoundException
+from src.auth.auth_exception import NotFoundException, NotEnoughFavourPoints
 from src.auth.services.service import Service
 import datetime
 from dateutil import relativedelta
@@ -8,8 +8,14 @@ class OrderService(Service):
     def create_order(self, order_data):
         from src.auth.models.order_table import OrderModel, OrderProductsModel
         from src.auth.schemas.schemas import OrderSchema
+        from src.auth.services.user_service import UserService
         order_schema = OrderSchema()
         order_info, products_info = order_schema.load(order_data)
+        if order_info["payWithPoints"]:
+            user_service = UserService()
+            if not user_service.user_order_by_favour(int(order_info["user_id"]), int(order_info["favourPoints"])):
+                raise NotEnoughFavourPoints("Favour points insuficientes")
+            order_info["delivery_id"] = None
         order = OrderModel(order_info)
         products = [OrderProductsModel(product) for product in products_info]
         order.save() #Hay que guardar primero la orden orden porq es la parte unaria de la relacion

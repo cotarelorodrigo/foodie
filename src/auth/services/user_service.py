@@ -95,6 +95,11 @@ class UserService(Service):
         else:
             return user
 
+    def user_order_by_favour(self, user_id, points_for_favour):
+        from src.auth.models.user_table import NormalUserModel
+        user = NormalUserModel.get_user(user_id)
+        return (user.favourPoints >= points_for_favour)
+
     def get_user_by_email(self, email):
         return self.sqlachemy_to_dict(self._get_userModel_email(email))
 
