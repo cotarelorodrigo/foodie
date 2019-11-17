@@ -81,7 +81,7 @@ def update_user_coordinates(_id):
     service = UserService()
     content = request.get_json()
     try:
-        coordinates = {"latitude": content['longitude'],"longitude": content['latitude'] }
+        coordinates = {"latitude": content['latitude'],"longitude": content['longitude'] }
         service.update_coordinates(_id, coordinates)
     except:
         raise
