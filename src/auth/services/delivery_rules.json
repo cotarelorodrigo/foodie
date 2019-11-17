@@ -101,6 +101,27 @@
                 "name": "set_extra_charge",
                 "params": {"charge": 0.1}
             }]
+        },
+        {
+            "conditions": {
+                "all": [
+                    {
+                        "name": "day_of_week",
+                        "operator": "greater_than",
+                        "value": 4
+                    },
+                    {
+                        "name": "premium_user",
+                        "operator": "is_true",
+                        "value": ""
+                    }
+                ]
+                    
+            },
+            "actions": [{
+                "name": "set_discount",
+                "params": {"discount": 0.25}
+            }]
         }
     ],
     "delivery": [
