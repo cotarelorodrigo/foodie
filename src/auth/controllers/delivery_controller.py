@@ -12,7 +12,7 @@ def add_delivery_offer(_id):
     service = OrderOfferService()
     try:
         content = request.get_json()
-        service.create_order_ofert(content)
+        offer_id = service.create_order_ofert(content)
     except marshmallow.exceptions.ValidationError as e:
         return jsonify({'msg': 'Missing order ofert information: {}'.format(e)}), 400
     except sqlalchemy.exc.IntegrityError:
@@ -20,7 +20,7 @@ def add_delivery_offer(_id):
     except:
         raise
     else:
-        return jsonify({'msg': 'Order ofert created'}), 200
+        return jsonify({'id': offer_id }), 200
 
 @delivery_blueprint.route('/delivery/<_id>/offers/<_offer_id>', methods=['PATCH'])
 def put_delivery_state(_id,_offer_id):
@@ -48,6 +48,8 @@ def get_deliveries():
     longitude = request.args.get('longitude')
     latitude = request.args.get('latitude')
     cantidad = request.args.get('cantidad')
+    if (longitude is None) | (latitude is None) | (cantidad is None):
+        raise InvalidQueryParameters("Invalid query values")
     delivery_service = DeliveryService()
     direc_service = DirecService()
     try:
@@ -61,6 +63,12 @@ def get_deliveries():
             return jsonify({'msg': 'No hay deliveries cerca'}), 431
         return jsonify(deliverys), 200
         
+@delivery_blueprint.route("/offers/<_id>",methods=['GET'])
+def get_offer_by_id(_id):
+    service = OrderOfferService()
+    offer = service.get_offer_by_id(_id)
+    return jsonify(offer)
+
 @delivery_blueprint.route('/showoferts', methods=['GET'])
 def show_oferts():
     service = OrderOfferService()

@@ -100,6 +100,8 @@ OrderOfferState = {'offered', 'accepted', 'rejected', 'cancelled'}
 class OrderOfferSchema(Schema):
     order_id = fields.Int(required=True)
     delivery_id = fields.Int(required=True)
+    delivery_price = fields.Float(required=True)
+    delivery_pay = fields.Float(required=True)
 
     class Meta:
         strict = True
