@@ -141,7 +141,6 @@ class OrderService(Service):
             result.append({"year": date_to_aux.year, "month": date_to_aux.month, "amount": self.get_quantity_orders_date(date_from_aux, date_to_aux, state)})
         return result
 
-        
     def get_today_delivery_orders(self, delivery_id):
         from src.auth.models.order_table import OrderModel
         from src.auth.models.user_table import DeliveryUserModel
