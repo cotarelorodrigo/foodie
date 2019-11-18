@@ -10,6 +10,6 @@ products_blueprint = Blueprint('products', __name__)
 @products_blueprint.route('/products/<_id>', methods=['GET'])
 def get_product(_id):
     service = ProductService()
-    product = service.get_product(_id)
+    product = service.get_product_by_id(_id)
     return jsonify(product)
 

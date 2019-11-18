@@ -2,7 +2,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from src.auth.auth_exception import NotFoundException
 from src.auth.services.service import Service
 
-class ShopService(Service):
+class ProductService(Service):
 
     def get_product_by_id(self,id):
         from src.auth.models.product_table import ProductModel
