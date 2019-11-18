@@ -3,7 +3,6 @@ from src.auth.services.delivery_rules import Delivery
 from src.auth.services.service import Service
 import datetime
 from dateutil import relativedelta
-from src.jwt_handler import decode_jwt_data
 
 class DeliveryService(Service):
 
