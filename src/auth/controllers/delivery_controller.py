@@ -51,7 +51,7 @@ def getOffers(_id):
 def get_deliveries():
     longitude = request.args.get('longitude')
     latitude = request.args.get('latitude')
-    cantidad = request.args.get('cantidad')
+    cantidad = int(request.args.get('cantidad'))
     if (longitude is None) | (latitude is None) | (cantidad is None):
         raise InvalidQueryParameters("Invalid query values")
     delivery_service = DeliveryService()
@@ -65,7 +65,7 @@ def get_deliveries():
     else:
         if not deliverys:
             return jsonify({'msg': 'No hay deliveries cerca'}), 431
-        return jsonify(deliverys), 200
+        return jsonify(deliverys[:cantidad]), 200
         
 @delivery_blueprint.route("/offers/<_id>",methods=['GET'])
 def get_offer_by_id(_id):
