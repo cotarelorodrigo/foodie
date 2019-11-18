@@ -37,9 +37,9 @@ class DeliveryService(Service):
         return response
 
     def get_available_deliverys(self):
-        from src.auth.models.user_table import DeliveryUserModel
+        from src.auth.models.user_table import DeliveryUserModel, UserModel
         time = datetime.datetime.now() - datetime.timedelta(hours=2)
-        deliverys = DeliveryUserModel.query.filter_by(state = 'free').filter_by(last_login >= time).all()
+        deliverys = DeliveryUserModel.query.filter_by(state = 'free').filter(UserModel.last_login >= time).all()
         return self.sqlachemy_to_dict(deliverys)
 
     def get_distance(self,lat_1,long_1,lat_2,long_2):

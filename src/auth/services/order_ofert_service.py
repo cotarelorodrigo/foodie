@@ -24,6 +24,7 @@ class OrderOfferService(Service):
         order_ofert = OrderOffersModel(order_ofert_data)
         order_ofert.save()
         Process(target=auto_cancel_ofert, args=(order_ofert,)).start()
+        return order_ofert
 
     def get_oferts(self):
         from src.auth.models.order_table import OrderOffersModel
@@ -54,9 +55,9 @@ class OrderOfferService(Service):
             else:
                 message = message + "ya se encuentra aceptada"
             raise InvalidStateChange(message)
-            
-        offer.state = state
-        offer.save()
 
         if (state == "accepted"):
             OrderService().catch_order(offer.order_id, offer.delivery_id)
+
+        offer.state = state
+        offer.save()

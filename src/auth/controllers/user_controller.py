@@ -87,3 +87,24 @@ def update_user_coordinates(_id):
         raise
     else:
         return jsonify({"msg": "Coordenadas actualizadas"}), 200
+
+
+@user_blueprint.route('/users/favours', methods=['GET'])
+def get_users_favours():
+    longitude = request.args.get('longitude')
+    latitude = request.args.get('latitude')
+    cantidad = int(request.args.get('cantidad'))
+    if (longitude is None) | (latitude is None) | (cantidad is None):
+        raise InvalidQueryParameters("Invalid query values")
+    user_service = UserService()
+    direc_service = DirecService()
+    try:
+        shop = {"latitude": latitude, "longitude": longitude}
+        users = user_service.get_available_users_favours()
+        users = direc_service.get_nearly_deliverys(shop,users)
+    except:
+        raise
+    else:
+        if not users:
+            return jsonify({'msg': 'No hay users cerca'}), 431
+        return jsonify(users[:cantidad]), 200

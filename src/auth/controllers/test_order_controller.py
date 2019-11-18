@@ -3,6 +3,13 @@ from unittest.mock import patch
 import json
 from src.auth.controllers.baseTest import BaseTest
 
+user_data = {"name": "Rodrigo","email": "asd@asd.com","phone_number": 42223333,"role": "usuario","password": "password","firebase_uid": "rjrr","suscripcion": "flat"}
+user2_data = {"name": "JUan","email": "asfgd@asd.com","phone_number": 42223333,"role": "usuario","password": "password","firebase_uid": "argare","suscripcion": "flat"}
+delivery_data = {"name": "Rodrigo","email": "asd@asdtk.com","phone_number": 42223333,"role": "delivery","password": "password","firebase_uid": "ajsjfkasf","picture": "www.photo.com","balance": 100}
+order_data = {"shop_id": 125,"products": [{"product_id": 3333,"units": 14},{"product_id": 444,"units": 15}],"coordinates": {"latitude": -33.58672,"longitude": -52.52345},
+"payWithPoints": True,"favourPoints": 40,"user_id": 1,"state": "created","price": 145}
+order_ofert_data = {"order_id": 1, "delivery_id": 2}
+
 class OrderTestCase(BaseTest):
 
     def test_add_order(self):
@@ -84,9 +91,7 @@ class OrderTestCase(BaseTest):
         
         assert response._status_code == 400
 
-    @patch('src.auth.services.user_service.UserService.user_order_by_favour')
-    def test_create_favour_order_without_points(self, user_order_by_favour):
-        user_order_by_favour.return_value = False
+    def test_create_favour_order_without_points(self):
         response = self.client.post(
             '/users',
             data=json.dumps({
@@ -126,4 +131,85 @@ class OrderTestCase(BaseTest):
             content_type='application/json'
         )
         
-        assert response._status_code == 200
+        assert response._status_code == 408
+
+    def test_delivery_cant_accept_favours(self):
+        from  src.auth.models.user_table import NormalUserModel
+        from src.auth.models.user_table import DeliveryUserModel
+        from src.auth.services.order_service import OrderService
+        from src.auth.services.order_ofert_service import OrderOfferService
+        from src.auth.auth_exception import NotFoundException
+
+        CANTIDAD_FAVOUR_POINTS = 20
+        user = NormalUserModel(user_data)
+        user.save()
+        delivery = DeliveryUserModel(delivery_data)
+        delivery.save()
+        order_service = OrderService()
+        order_data["user_id"] = user.user_id
+        order_data["payWithPoints"] = True
+        order_data["favourPoints"] = CANTIDAD_FAVOUR_POINTS
+        order = order_service.create_order(order_data)
+        assert order.state == 'created'
+        order_ofert_service = OrderOfferService()
+        order_ofert = order_ofert_service.create_order_ofert(order_ofert_data)
+        with self.assertRaisesRegex(NotFoundException, "ID invalido: Solo los usuarios comunes pueden aceptar favores"):
+            order_ofert_service.update_offer_state(delivery.user_id, order.order_id, 'accepted')
+
+
+
+    def test_complete_order_gain_favour_points(self):
+        from  src.auth.models.user_table import NormalUserModel
+        from src.auth.models.user_table import DeliveryUserModel
+        from src.auth.services.order_service import OrderService
+        from src.auth.services.order_ofert_service import OrderOfferService
+        from src.auth.auth_exception import NotFoundException
+
+        CANTIDAD_FAVOUR_POINTS = 20
+        user = NormalUserModel(user_data)
+        user.save()
+        user_old_favour_points = user.favourPoints
+        user_d = NormalUserModel(user2_data)
+        user_d.save()
+        user_d_old_favour_points = user.favourPoints
+        order_service = OrderService()
+        order_data["user_id"] = user.user_id
+        order_data["payWithPoints"] = True
+        order_data["favourPoints"] = CANTIDAD_FAVOUR_POINTS
+        order = order_service.create_order(order_data)
+        assert order.state == 'created'
+        order_ofert_service = OrderOfferService()
+        order_ofert = order_ofert_service.create_order_ofert(order_ofert_data)
+        order_ofert_service.update_offer_state(user_d.user_id, order.order_id, 'accepted')
+        assert order.state == 'onWay'
+        #Orden entregada
+        order_service.order_delivered(order.order_id)
+        assert user.favourPoints == user_old_favour_points - CANTIDAD_FAVOUR_POINTS
+        assert user_d.favourPoints == user_d_old_favour_points + CANTIDAD_FAVOUR_POINTS
+
+    def test_get_users_work_favours_ordered(self):
+        from  src.auth.models.user_table import NormalUserModel
+        from src.auth.services.user_service import UserService
+        from src.auth.services.direc_service import DirecService
+        user = NormalUserModel(user_data)
+        user.latitude = -34.849859
+        user.longitude = -58.386222
+        user.save()
+        user_d = NormalUserModel(user2_data)
+        user_d.latitude = -34.859575
+        user_d.longitude = -58.380182
+        user_d.save()
+        user_service = UserService()
+        users = user_service.get_available_users_favours()
+        assert users[0]["user_id"] == 1
+        assert len(users) == 2
+        direc_service = DirecService()
+        shop = {"latitude": -34.859138, "longitude": -58.387252}
+        users = direc_service.get_nearly_deliverys(shop, users)
+        #Al ordenarlos el primer usuario tendria que ser el usuario 2
+        assert users[0]["user_id"] == 2
+
+        
+
+
+

@@ -60,6 +60,7 @@ class NormalUserModel(UserModel):
   user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
   suscripcion = db.Column(db.String(128), nullable=False)
   picture = db.Column(db.String(128), nullable=True)
+  make_favours = db.Column(db.Boolean, nullable=False)
 
   __mapper_args__ = {
     'polymorphic_identity':'normal_users',
@@ -73,6 +74,7 @@ class NormalUserModel(UserModel):
     super(NormalUserModel, self).__init__(data)
     self.suscripcion = data.get('suscripcion')
     self.picture = data.get('picture')
+    self.make_favours = data.get('make_favours', True)
 
   @staticmethod
   def get_user(user_id):

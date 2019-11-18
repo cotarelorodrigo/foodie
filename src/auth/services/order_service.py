@@ -65,7 +65,7 @@ class OrderService(Service):
         from src.app import db
         from src.auth.models.order_table import OrderModel
         from src.auth.models.user_table import NormalUserModel, DeliveryUserModel
-        order = OrderModel.get_instance(order_id)
+        order = OrderModel.get_instance(_order_id)
         if order.payWithPoints: #chequeo que el que acepto la orden sea un usuario normal, no delivery
             try:
                 NormalUserModel.get_user(_delivery_id)
@@ -77,7 +77,7 @@ class OrderService(Service):
             except:
                 raise NotFoundException("ID invalido: Delivery inexistente")    
         order.delivery_id = _delivery_id
-        self.change_order_state(order_id, "onWay")
+        self.change_order_state(_order_id, "onWay")
         return order
 
     #State: delivered
@@ -85,7 +85,7 @@ class OrderService(Service):
         from src.auth.models.order_table import OrderModel
         from src.auth.services.user_service import UserService
         order = OrderModel.get_instance(order_id)
-        order_info = []
+        order_info = {}
         user_service = UserService()
         #Pagar al delivery
         if order.payWithPoints: #chequeo que el que acepto la orden sea un usuario normal, no delivery

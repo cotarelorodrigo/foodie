@@ -108,11 +108,19 @@ class UserService(Service):
         user_who_pay = UserModel.get_any_user(user_who_pay)
         user_to_pay = UserModel.get_any_user(user_to_pay)
         if info_order['payWithPoints']:
-            user_to_pay.favourPoints -= info_order['favourPoints']
+            user_who_pay.favourPoints -= info_order['favourPoints']
             user_to_pay.favourPoints += info_order['favourPoints']
         else:
             user_to_pay.balance += info_order['price']
+        user_who_pay.save()
+        user_to_pay.save()
 
+
+    def get_available_users_favours(self):
+        from src.auth.models.user_table import NormalUserModel, UserModel
+        time = datetime.datetime.now() - datetime.timedelta(hours=2)
+        users = NormalUserModel.query.filter_by(make_favours = True).filter(UserModel.last_login >= time).all()
+        return self.sqlachemy_to_dict(users)
 
     def get_user_by_email(self, email):
         return self.sqlachemy_to_dict(self._get_userModel_email(email))
