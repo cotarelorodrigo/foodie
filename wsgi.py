@@ -101,7 +101,7 @@ def set_users():
     "balance": 0
   }
 
-    delivery_user_3 = {
+  delivery_user_3 = {
     "name" : "Flavio Delivery",
     "email" : "delivery3@gmail.com",
     "password" : "taller2",
@@ -130,7 +130,6 @@ def set_users():
   user_schema = NormalUserSchema().load(normal_user)
   user_service.create_normal_user(user_schema)
 
-  user_service.update_coordinates()
 
   del_service = DeliveryService()
   del_schema = DeliveryUserSchema().load(delivery_user)
