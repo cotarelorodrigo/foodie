@@ -73,6 +73,13 @@ def get_offer_by_id(_id):
     offer = service.get_offer_by_id(_id)
     return jsonify(offer)
 
+@delivery_blueprint.route("/offers/<_id>",methods=['PATCH'])
+def change_offer_state(_id):
+    service = OrderOfferService()
+    content = request.get_json()
+    state = content['state']
+    service.update_offer_state()
+
 @delivery_blueprint.route('/showoferts', methods=['GET'])
 def show_oferts():
     service = OrderOfferService()

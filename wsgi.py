@@ -90,17 +90,53 @@ def set_users():
     "balance": 0
   }
 
+  delivery_user_2 = {
+    "name" : "Flavio Delivery",
+    "email" : "delivery2s@gmail.com",
+    "password" : "taller2",
+    "firebase_uid" : "05FvThkGGaaDu4PW1qFde3obrjQ2",
+    "role":"delivery",
+    "phone_number":135138,
+    "picture" : "gs://foodie-taller2.appspot.com/images/61FuIoIFkLa55OvAYWODuU5SuPZ2/JPEG_20191112_200117_1526502813.jpg",
+    "balance": 0
+  }
+
+    delivery_user_3 = {
+    "name" : "Flavio Delivery",
+    "email" : "delivery3@gmail.com",
+    "password" : "taller2",
+    "firebase_uid" : "05FvThkGGaaDu4PW1qFde3obrjQ2",
+    "role":"delivery",
+    "phone_number":135138,
+    "picture" : "gs://foodie-taller2.appspot.com/images/61FuIoIFkLa55OvAYWODuU5SuPZ2/JPEG_20191112_200117_1526502813.jpg",
+    "balance": 0
+  }
+
+  delivery_user_4 = {
+    "name" : "Flavio Delivery",
+    "email" : "delivery4@gmail.com",
+    "password" : "taller2",
+    "firebase_uid" : "05FvThkGGaaDu4PW1qFde3obrjQ2",
+    "role":"delivery",
+    "phone_number":135138,
+    "picture" : "gs://foodie-taller2.appspot.com/images/61FuIoIFkLa55OvAYWODuU5SuPZ2/JPEG_20191112_200117_1526502813.jpg",
+    "balance": 0
+  }
+
+
 
   
   user_service = UserService()
   user_schema = NormalUserSchema().load(normal_user)
   user_service.create_normal_user(user_schema)
 
+  user_service.update_coordinates()
+
   del_service = DeliveryService()
   del_schema = DeliveryUserSchema().load(delivery_user)
   del_service.create_delivery_user(del_schema)
 
-
+  
 
 app = create_app()
 with app.app_context():
