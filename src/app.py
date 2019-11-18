@@ -53,7 +53,7 @@ def create_app():
 
     @app.errorhandler(auth.NotFoundEmail)
     def user_error_handler(e):
-        return jsonify({"msg": e.msg}), 404
+        return jsonify({"msg": e.msg}), 405
 
     @app.errorhandler(auth.AccessDeniedException)
     def user_error_handler(e):
@@ -62,6 +62,10 @@ def create_app():
     @app.errorhandler(auth.InvalidQueryParameters)
     def user_error_handler(e):
         return jsonify({"msg": e.msg}), 400
+
+    @app.errorhandler(auth.NotEnoughFavourPoints)
+    def user_error_handler(e):
+        return jsonify({"msg": e.msg}), 408
     
     return app
 

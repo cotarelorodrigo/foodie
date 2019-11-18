@@ -101,6 +101,33 @@ class UserService(Service):
         else:
             return user
 
+    def user_order_by_favour(self, user_id, points_for_favour):
+        from src.auth.models.user_table import NormalUserModel
+        try:
+            user = NormalUserModel.get_user(user_id)
+        except NotFoundException:
+            raise NotFoundException("ID invalido: Solo los usuarios comunes pueden solicitar favores")
+        return (user.favourPoints >= points_for_favour)
+
+    def pay_order(self, user_who_pay, user_to_pay, info_order):
+        from src.auth.models.user_table import UserModel
+        user_who_pay = UserModel.get_any_user(user_who_pay)
+        user_to_pay = UserModel.get_any_user(user_to_pay)
+        if info_order['payWithPoints']:
+            user_who_pay.favourPoints -= info_order['favourPoints']
+            user_to_pay.favourPoints += info_order['favourPoints']
+        else:
+            user_to_pay.balance += info_order['price']
+        user_who_pay.save()
+        user_to_pay.save()
+
+
+    def get_available_users_favours(self):
+        from src.auth.models.user_table import NormalUserModel, UserModel
+        time = datetime.datetime.now() - datetime.timedelta(hours=2)
+        users = NormalUserModel.query.filter_by(make_favours = True).filter(UserModel.last_login >= time).all()
+        return self.sqlachemy_to_dict(users)
+
     def get_user_by_email(self, email):
         return self.sqlachemy_to_dict(self._get_userModel_email(email))
 
@@ -129,4 +156,9 @@ class UserService(Service):
                                     WHERE u.email = '{}'""".format(email_d))
         #return self.sqlachemy_to_dict(user)
         return [dict(zip(response.keys(), row)) for row in response.fetchall()]
+
+    def update_user_login(self, email):
+        user = self._get_userModel_email(email)
+        user.last_login = datetime.datetime.utcnow()
+        user.save()
 

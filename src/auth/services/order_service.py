@@ -1,5 +1,5 @@
 from sqlalchemy.orm.exc import NoResultFound
-from src.auth.auth_exception import NotFoundException
+from src.auth.auth_exception import NotFoundException, NotEnoughFavourPoints
 from src.auth.services.service import Service
 import datetime
 from dateutil import relativedelta
@@ -8,14 +8,20 @@ class OrderService(Service):
     def create_order(self, order_data):
         from src.auth.models.order_table import OrderModel, OrderProductsModel
         from src.auth.schemas.schemas import OrderSchema
+        from src.auth.services.user_service import UserService
         order_schema = OrderSchema()
         order_info, products_info = order_schema.load(order_data)
+        if order_info["payWithPoints"]:
+            user_service = UserService()
+            if not user_service.user_order_by_favour(int(order_info["user_id"]), int(order_info["favourPoints"])):
+                raise NotEnoughFavourPoints("Favour points insuficientes")
         order = OrderModel(order_info)
         products = [OrderProductsModel(product) for product in products_info]
         order.save() #Hay que guardar primero la orden orden porq es la parte unaria de la relacion
         for p in products:
             order.products.append(p)
             p.save()
+        self.order_created(order.order_id)
         return order
 
     def get_orders(self):
@@ -40,8 +46,6 @@ class OrderService(Service):
             print("Price is " + price)
         return price
 
-
-
     def get_products_orders(self):
         from src.auth.models.order_table import OrderProductsModel
         response = OrderProductsModel.query.all()
@@ -54,24 +58,61 @@ class OrderService(Service):
         response = OrderProductsModel.query.filter_by(order_id=_order_id)
         return self.sqlachemy_to_dict(response)
 
+    ##Order states {'delivered', 'onWay', 'cancelled', 'created'}
+    #State: On way
     def catch_order(self, _order_id, _delivery_id):
         from src.app import db
         from src.auth.models.order_table import OrderModel
-        order = OrderModel.query.filter_by(order_id=_order_id).one()
+        from src.auth.models.user_table import NormalUserModel, DeliveryUserModel
+        order = OrderModel.get_instance(_order_id)
+        if order.payWithPoints: #chequeo que el que acepto la orden sea un usuario normal, no delivery
+            try:
+                NormalUserModel.get_user(_delivery_id)
+            except:
+                raise NotFoundException("ID invalido: Solo los usuarios comunes pueden aceptar favores")
+        else:
+            try:
+                DeliveryUserModel.get_delivery(delivery_id)
+            except:
+                raise NotFoundException("ID invalido: Delivery inexistente")    
         order.delivery_id = _delivery_id
-        order.state = "onWay"
-        
+        self.change_order_state(_order_id, "onWay")
         return order
 
+    #State: delivered
+    def order_delivered(self, order_id):
+        from src.auth.models.order_table import OrderModel
+        from src.auth.services.user_service import UserService
+        order = OrderModel.get_instance(order_id)
+        order_info = {}
+        user_service = UserService()
+        #Pagar al delivery
+        if order.payWithPoints: #chequeo que el que acepto la orden sea un usuario normal, no delivery
+            order_info["payWithPoints"] = True
+            order_info['favourPoints'] = order.favourPoints
+        else:
+            order_info["payWithPoints"] = False
+            order_info["price"] = order.price
+        user_service.pay_order(order.user_id, order.delivery_id, order_info)
+        self.change_order_state(order_id, "delivered")
+
+    #State: cancelled
+    def order_cancelled(self, order_id):
+        self.change_order_state(order_id, "cancelled")
+
+    #State: created
+    def order_created(self, order_id):
+        self.change_order_state(order_id, "created")
+
+
     def change_order_state(self, _order_id, _state):
-        from src.app import db
         from src.auth.models.order_table import OrderModel
         from src.auth.schemas.schemas import OrderState
         from src.auth.auth_exception import InvalidInformation
         order = OrderModel.query.filter_by(order_id=_order_id).one()
         if _state in OrderState:
             order.state = _state
-            db.session.commit()
+            order.save()
         else:
             raise InvalidInformation('Estado de orden invalido')
         return order
@@ -99,7 +140,6 @@ class OrderService(Service):
             result.append({"year": date_to_aux.year, "month": date_to_aux.month, "amount": self.get_quantity_orders_date(date_from_aux, date_to_aux, state)})
         return result
 
-        
     def get_today_delivery_orders(self, delivery_id):
         from src.auth.models.order_table import OrderModel
         from src.auth.models.user_table import DeliveryUserModel

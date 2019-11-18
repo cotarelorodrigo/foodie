@@ -18,3 +18,9 @@ class BaseModel(db.Model):
         db.session.commit()
         return True
 
+    @classmethod 
+    def get_instance(cls, id):
+        response = cls.query.get(id)
+        if not response:
+            raise NotFoundException("Invalid ID")
+        return response
