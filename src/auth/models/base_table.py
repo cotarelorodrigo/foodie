@@ -18,3 +18,9 @@ class BaseModel(db.Model):
         db.session.commit()
         return True
 
+    @staticmethod
+    def get_instance(id):
+        response = UserModel.query.get(id)
+        if not response:
+            raise NotFoundException("Invalid ID")
+        return response

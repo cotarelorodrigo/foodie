@@ -97,8 +97,22 @@ class UserService(Service):
 
     def user_order_by_favour(self, user_id, points_for_favour):
         from src.auth.models.user_table import NormalUserModel
-        user = NormalUserModel.get_user(user_id)
+        try:
+            user = NormalUserModel.get_user(user_id)
+        except NotFoundException:
+            raise NotFoundException("ID invalido: Solo los usuarios comunes pueden solicitar favores")
         return (user.favourPoints >= points_for_favour)
+
+    def pay_order(self, user_who_pay, user_to_pay, info_order):
+        from src.auth.models.user_table import UserModel
+        user_who_pay = UserModel.get_any_user(user_who_pay)
+        user_to_pay = UserModel.get_any_user(user_to_pay)
+        if info_order['payWithPoints']:
+            user_to_pay.favourPoints -= info_order['favourPoints']
+            user_to_pay.favourPoints += info_order['favourPoints']
+        else:
+            user_to_pay.balance += info_order['price']
+
 
     def get_user_by_email(self, email):
         return self.sqlachemy_to_dict(self._get_userModel_email(email))

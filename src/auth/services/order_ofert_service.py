@@ -59,4 +59,4 @@ class OrderOfferService(Service):
         offer.save()
 
         if (state == "accepted"):
-            OrderService().change_order_state(offer.order_id,"onWay")
+            OrderService().catch_order(offer.order_id, offer.delivery_id)
