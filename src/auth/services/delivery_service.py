@@ -26,7 +26,8 @@ class DeliveryService(Service):
     def update_delivery(self, _id, data):
         from src.auth.models.user_table import DeliveryUserModel
         from src.auth.schemas.schemas import DeliveryUserSchema
-        delivery_data = DeliveryUserSchema().load(data)
+        delivery_data = self.sqlachemy_to_dict(DeliveryUserModel.get_delivery(_id))
+        delivery_data.update(data)
         return DeliveryUserModel.get_delivery(_id).update(delivery_data)
 
     def get_N_deliverys(self, pageNumber, pageSize):
