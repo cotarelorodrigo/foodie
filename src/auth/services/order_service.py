@@ -159,3 +159,10 @@ class OrderService(Service):
         from src.auth.models.user_table import NormalUserModel
         NormalUserModel.get_user(user_id)
         return OrderModel.query.filter(OrderModel.delivery_id == user_id).filter(OrderModel.state == 'delivered').count()
+
+    def get_N_orders_filtered(self, pageNumber, pageSize, filters):
+        from src.auth.models.order_table import OrderModel
+        response = OrderModel.query.filter_by(**filters).offset(pageNumber*pageSize).limit(pageSize)
+        if not response:
+            return []
+        return self.sqlachemy_to_dict(response)

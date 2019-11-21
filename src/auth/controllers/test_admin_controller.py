@@ -226,3 +226,28 @@ class AdminTestCase(BaseTest):
             content_type='application/json'
         )
         assert response._status_code == 200
+
+    ###################### ORDERS ######################
+    @patch("jwt.decode")
+    @patch("src.auth.services.order_service.OrderService.get_N_orders_filtered")
+    def test_admin_orders_only_user(self, get_N_orders_filtered, jwt_decode):
+        jwt_decode.return_value = {"is_admin": True}
+        get_N_orders_filtered.return_value = True
+        response = self.client.get('/admin/orders?user_id=1&p=1&pSize=5', headers={'Authorization': 'tokenfalso123'})
+        assert response._status_code == 200
+
+    @patch("jwt.decode")
+    @patch("src.auth.services.order_service.OrderService.get_N_orders_filtered")
+    def test_admin_orders_only_delivery(self, get_N_orders_filtered, jwt_decode):
+        jwt_decode.return_value = {"is_admin": True}
+        get_N_orders_filtered.return_value = True
+        response = self.client.get('/admin/orders?delivery_id=5&p=1&pSize=5', headers={'Authorization': 'tokenfalso123'})
+        assert response._status_code == 200
+
+    @patch("jwt.decode")
+    @patch("src.auth.services.order_service.OrderService.get_N_orders_filtered")
+    def test_admin_orders_only_shop(self, get_N_orders_filtered, jwt_decode):
+        jwt_decode.return_value = {"is_admin": True}
+        get_N_orders_filtered.return_value = True
+        response = self.client.get('/admin/orders?shop_id=5&p=1&pSize=5', headers={'Authorization': 'tokenfalso123'})
+        assert response._status_code == 200
