@@ -35,7 +35,7 @@ def get_delivery_users():
 @user_blueprint.route('/users/<_id>', methods=['GET'])
 def get_user(_id):
     service = UserService()
-    user = service.get_user(_id)
+    user = service.get_normal_user(_id)
     if not user: 
         return jsonify({'404': "user with that id doesn't exist."}), 404
     return jsonify(user), 200
@@ -60,7 +60,7 @@ def check_user_email(email):
 @user_blueprint.route('/user/<_id>/premium_subscription', methods=['PUT'])
 def set_premium_subscription(_id):
     service = UserService()
-    user = service.get_user(_id)
+    user = service.get_normal_user(_id)
     if not user: 
         raise NotFoundException("user with that id doesn't exist.")
     content = request.get_json()
@@ -107,3 +107,14 @@ def get_users_favours():
         if not users:
             return jsonify({'msg': 'No hay users cerca'}), 431
         return jsonify(users[:cantidad]), 200
+
+@user_blueprint.route('/users/<_id>/password', methods=['PUT'])
+def change_user_password(_id):
+    service = UserService()
+    user = service.get_user(_id)
+    content = request.get_json()
+    new_pass = content["password"] 
+    service.change_password(user["email"], new_pass)
+    return jsonify({"msg":"Password changed"}),200
+
+

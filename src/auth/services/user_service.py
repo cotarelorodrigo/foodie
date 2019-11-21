@@ -20,8 +20,8 @@ class UserService(Service):
         return self.sqlachemy_to_dict(user)
 
     def get_user(self, _id):
-        from src.auth.models.user_table import NormalUserModel
-        response = NormalUserModel.get_user(_id)
+        from src.auth.models.user_table import UserModel
+        response = UserModel.get_any_user(_id)
         return self.sqlachemy_to_dict(response)
 
     def delete_user(self, _id):
