@@ -95,7 +95,7 @@ class DeliveryUserModel(UserModel):
   rating = db.Column(db.Float,nullable=False)
   reviews = db.Column(db.Integer,nullable=False)
   state = db.Column(db.String(128), nullable=False)
-
+  current_order = db.Column(db.Integer,nullable=True)
   __mapper_args__ = {
     'polymorphic_identity':'delivery_users',
   }
@@ -111,6 +111,7 @@ class DeliveryUserModel(UserModel):
     self.rating = 0.0
     self.reviews = 0
     self.state = data.get('state', 'free')
+    self.current_order = None
 
 
   @staticmethod

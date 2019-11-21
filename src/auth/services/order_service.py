@@ -74,6 +74,7 @@ class OrderService(Service):
             try:
                 delivery = DeliveryUserModel.get_delivery(_delivery_id)
                 delivery.state = "working"
+                delivery.current_order = _order_id
                 delivery.save()
             except:
                 raise NotFoundException("ID invalido: Delivery inexistente")    

@@ -68,6 +68,15 @@ def set_premium_subscription(_id):
     service.update_user(_id,{"suscripcion": "premium"})
     return jsonify("subscription updated to premium")
 
+@user_blueprint.route('/users/<_id>/picture',methods=["PUT"])
+def change_picture(_id):
+    content = request.get_json()
+    picture = content["picture"]
+    service = UserService()
+    service.update_user(_id,content)
+    return jsonify({"msg": "Profile picture changed"}),200
+
+
 @user_blueprint.route('/users/profile/<email>', methods=['GET'])
 @auth_required
 def get_user_profile(email):
@@ -87,6 +96,19 @@ def update_user_coordinates(_id):
     else:
         return jsonify({"msg": "Coordenadas actualizadas"}), 200
 
+
+@user_blueprint.route('/users/<_id>', methods=['PATCH'])
+def update_user_info(_id):
+    service = UserService()
+    content = request.get_json()
+    try:
+        response = UserService().update_user(_id, content)
+    except NotFoundException as e:
+        return jsonify({'404': "user {}".format(e.msg)}), 404
+    except:
+        raise
+    else:
+        return jsonify({"OK": "user actualizado con exito!"}), 200
 
 @user_blueprint.route('/users/favours', methods=['GET'])
 def get_users_favours():
