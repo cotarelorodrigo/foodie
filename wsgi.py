@@ -12,55 +12,213 @@ from src.auth.services.user_service import UserService
 from src.auth.services.delivery_service import DeliveryService
 
 def set_shops():
-	shops = [{"name":"Mc Donalds", "address":"call3 falsa", "latitude": -34.753899, "longitude": -58.657026, "photoUrl":"wqatgayeesyws", "rating":4},
-	 		{"name":"Subway", "address":"call3 falsa", "latitude": -34.7832, "longitude": -58.6576, "photoUrl":"dsgw", "rating":4},
-			 {"name":"Mostaza", "address":"call3 falsa", "latitude": -34.8444, "longitude": -58.6560, "photoUrl":"dsgw", "rating":3}]
-	products = [{
-      "shop_id": 1,
-      "name": "Hamburguesa normal",
-      "description": "Hamburguesa sin queso. Lechuga y tomate opcionales.",
-      "price": 75
-    },
-    {
-      "shop_id": 1,
-      "name": "Hamburguesa con queso",
-      "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
-      "price": 90
-    },
-    {
-      "shop_id": 2,
-      "name": "Hamburguesa normal",
-      "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
-      "price": 90
-    },
-    {
-      "shop_id": 2,
-      "name": "Hamburguesa con queso",
-      "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
-      "price": 90
-    },
-    {
-      "shop_id": 3,
-      "name": "Hamburguesa normal",
-      "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
-      "price": 90
-    },
-    {
-      "shop_id": 3,
-      "name": "Hamburguesa con queso",
-      "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
-      "price": 90
-    }]
-
-
-
-	for shop_data in shops:
-		shop = ShopModel(shop_data)
-		shop.save()
-	for product_data in products:
-		product = ProductModel(product_data)
-		product.save()
+  shops = [{"name":"Mc Donalds", "address":"Av. Corrientes 124", "latitude": -34.607711, "longitude": -58.387439, "photoUrl":"https://logosmarcas.com/wp-content/uploads/2018/05/McDonalds-Logo.png", "rating":4},
+  {"name":"Subway", "address":"Sarmiento 440", "latitude": -34.600699, "longitude": -58.392317, "photoUrl":"https://logosmarcas.com/wp-content/uploads/2018/05/McDonalds-Logo.png", "rating":4},
+  {"name":"Mostaza", "address":"Chile 8810", "latitude": -34.601054, "longitude": -58.377459, "photoUrl":"https://logosmarcas.com/wp-content/uploads/2018/05/McDonalds-Logo.png", "rating":2.8},
+  {"name":"El bar de Taller", "address":"Av Paseo Colon 100", "latitude": -34.614830, "longitude": -58.378095, "photoUrl":"https://logosmarcas.com/wp-content/uploads/2018/05/McDonalds-Logo.png", "rating":1.9},
+  {"name":"Lo de Flavio", "address":"Av Independencia 701", "latitude": -34.617232, "longitude": -58.373459, "photoUrl":"https://logosmarcas.com/wp-content/uploads/2018/05/McDonalds-Logo.png", "rating":3.6},
+  {"name":"El lugar", "address":"Moreno 247", "latitude": -34.617136, "longitude": -58.377459, "photoUrl":"https://logosmarcas.com/wp-content/uploads/2018/05/McDonalds-Logo.png", "rating":4.025},
+  {"name":"Parrilla de Moron", "address":"25 de Mayo 116", "latitude": -34.654223, "longitude": -58.635571, "photoUrl":"https://logosmarcas.com/wp-content/uploads/2018/05/McDonalds-Logo.png", "rating":0.8},
+  {"name":"Castelar01", "address":"Leandro N Alem 5581", "latitude": -34.641302, "longitude": -58.645781, "photoUrl":"https://logosmarcas.com/wp-content/uploads/2018/05/McDonalds-Logo.png", "rating":4.99},
+  {"name":"Castelar02", "address":"Machado 719", "latitude": -34.646054, "longitude": -58.631571, "photoUrl":"https://logosmarcas.com/wp-content/uploads/2018/05/McDonalds-Logo.png", "rating":3.2}]
   
+  
+  products = [{"shop_id": 1,"name": "Hamburguesa normal","description": "Hamburguesa sin queso. Lechuga y tomate opcionales.","price": 75},
+  {
+  "shop_id": 1,
+  "name": "Hamburguesa con queso",
+  "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
+  "price": 90
+  },
+  {
+    "shop_id": 2,
+    "name": "Hamburguesa normal",
+    "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
+    "price": 90
+  },
+  {
+  "shop_id": 2,
+  "name": "Hamburguesa con queso",
+  "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
+  "price": 90
+  },
+  {
+  "shop_id": 3,
+  "name": "Hamburguesa normal",
+  "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
+  "price": 90
+  },
+  {
+  "shop_id": 3,
+  "name": "Hamburguesa con queso",
+  "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
+  "price": 90
+  },
+  {
+  "shop_id": 3,
+  "name": "Hamburguesa Copmleta",
+  "description": "Hamburguesa con queso, jamón, huevo. Lechuga y tomate opcionales",
+  "price": 120
+  },
+  {
+  "shop_id": 3,
+  "name": "Sandwich de Lomo",
+  "description":"Una descripcion bastante larga para ver como queda esta descripcion en la app al mostrar el menú",
+  "price": 100
+  },
+  {
+  "shop_id": 3,
+  "name": "Porción de papas fritas",
+  "description": "Porción mediana de papas fritas.",
+  "price": 90.0
+  },
+  {
+  "shop_id": 3,
+  "name": "Lo que sea",
+  "description": "Cualquier cosa",
+  "price": 150
+  },
+  {
+  "shop_id": 4,
+  "name": "Hamburguesa con queso",
+  "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
+  "price": 90
+  },
+  {
+  "shop_id": 4,
+  "name": "Sandwich de Lomo",
+  "description":"Una descripcion bastante larga para ver como queda esta descripcion en la app al mostrar el menú",
+  "price": 100
+  },
+  {
+  "shop_id": 4,
+  "name": "Porción de papas fritas",
+  "description": "Porción mediana de papas fritas.",
+  "price": 90.0
+  },
+  {
+  "shop_id": 5,
+  "name": "Lo que sea",
+  "description": "Cualquier cosa",
+  "price": 150
+  },
+  {
+  "shop_id": 6,
+  "name": "Hamburguesa normal",
+  "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
+  "price": 90
+  },
+  {
+  "shop_id": 6,
+  "name": "Hamburguesa con queso",
+  "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
+  "price": 90
+  },
+  {
+  "shop_id": 6,
+  "name": "Hamburguesa Copmleta",
+  "description": "Hamburguesa con queso, jamón, huevo. Lechuga y tomate opcionales",
+  "price": 120
+  },
+  {
+  "shop_id": 6,
+  "name": "Sandwich de Lomo",
+  "description":"Una descripcion bastante larga para ver como queda esta descripcion en la app al mostrar el menú",
+  "price": 100
+  },
+  {
+  "shop_id": 6,
+  "name": "Porción de papas fritas",
+  "description": "Porción mediana de papas fritas.",
+  "price": 90.0
+  },
+  {
+  "shop_id": 7,
+  "name": "Hamburguesa normal",
+  "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
+  "price": 90
+  },
+  {
+  "shop_id": 7,
+  "name": "Hamburguesa con queso",
+  "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
+  "price": 90
+  },
+  {
+  "shop_id": 7,
+  "name": "Hamburguesa Copmleta",
+  "description": "Hamburguesa con queso, jamón, huevo. Lechuga y tomate opcionales",
+  "price": 120
+  },
+  {
+  "shop_id": 7,
+  "name": "Sandwich de Lomo",
+  "description":"Una descripcion bastante larga para ver como queda esta descripcion en la app al mostrar el menú",
+  "price": 100
+  },
+  {
+  "shop_id": 8,
+  "name": "Porción de papas fritas",
+  "description": "Porción mediana de papas fritas.",
+  "price": 90.0
+  },
+  {
+  "shop_id": 8,
+  "name": "Lo que sea",
+  "description": "Cualquier cosa",
+  "price": 150
+  },
+  {
+  "shop_id": 8,
+  "name": "Hamburguesa con queso",
+  "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
+  "price": 90
+  },
+  {
+  "shop_id": 9,
+  "name": "Sandwich de Lomo",
+  "description":"Una descripcion bastante larga para ver como queda esta descripcion en la app al mostrar el menú",
+  "price": 100
+  },
+  {
+  "shop_id": 9,
+  "name": "Porción de papas fritas",
+  "description": "Porción mediana de papas fritas.",
+  "price": 90.0
+  }
+  # ,
+  # {
+  # "shop_id": 10,
+  # "name": "Hamburguesa normal",
+  # "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
+  # "price": 90
+  # },
+  # {
+  # "shop_id": 10,
+  # "name": "Hamburguesa con queso",
+  # "description": "Hamburguesa con queso. Lechuga y tomate opcionales",
+  # "price": 90
+  # }
+  # {
+  # "shop_id": 10,
+  # "name": "Hamburguesa Copmleta",
+  # "description": "Hamburguesa con queso, jamón, huevo. Lechuga y tomate opcionales",
+  # "price": 120
+  # },
+  # {
+  # "shop_id": 10,
+  # "name": "Sandwich de Lomo",
+  # "description":"Una descripcion bastante larga para ver como queda esta descripcion en la app al mostrar el menú",
+  # "price": 100
+  # }
+  ]
+
+  for shop_data in shops:
+    shop = ShopModel(shop_data)
+    shop.save()
+  for product_data in products:
+  	product = ProductModel(product_data)
+  	product.save()
 
 def set_admin():
   admin = {"email": "admin@foodie.com", "password": "admin"}
@@ -164,6 +322,44 @@ def set_users():
   del_service.create_delivery_user(del_schema)
 
 
+  coord1={
+    "latitude": -34.601054,
+    "longitude": -58.392317
+  }
+  coord2={
+    "latitude": -34.611054,
+    "longitude": -58.492317
+  }
+  coord3={
+    "latitude": -34.616054,
+    "longitude": -58.652317
+  }
+  coord4={
+    "latitude": -34.606054,
+    "longitude": -58.282317
+  }
+  coord5={
+    "latitude": -34.654223,
+    "longitude": -58.692317
+  }
+  coord6={
+    "latitude": -34.651054,
+    "longitude": -58.402317
+  }
+  coord7={
+    "latitude": -34.611054,
+    "longitude": -58.352317
+  }
+
+  
+
+  user_service.update_coordinates(1,coord1)
+  user_service.update_coordinates(2,coord2)
+  user_service.update_coordinates(3,coord3)
+  user_service.update_coordinates(4,coord4)
+  user_service.update_coordinates(5,coord5)
+  user_service.update_coordinates(6,coord6)
+  user_service.update_coordinates(7,coord7)
 
   
 

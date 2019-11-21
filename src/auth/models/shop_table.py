@@ -14,6 +14,7 @@ class ShopModel(BaseModel):
   description = db.Column(db.String(128), nullable=True)
   photoUrl = db.Column(db.String(128), nullable=False)
   rating = db.Column(db.Integer, nullable=False)
+  reviews = db.Column(db.Integer, nullable = False)
   latitude = db.Column(db.Float, nullable=False)
   longitude = db.Column(db.Float, nullable=False)
   menu = db.relationship('ProductModel', backref='order', lazy=True)
@@ -31,6 +32,7 @@ class ShopModel(BaseModel):
     self.longitude = data.get('longitude')
     self.photoUrl = data.get('photoUrl')
     self.rating = data.get('rating')
+    self.reviews = 0
 
 
   @staticmethod

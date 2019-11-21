@@ -47,3 +47,13 @@ class ShopService(Service):
         response['items'] = self.sqlachemy_to_dict(query.all())
         response['totalItems'] = query.count()
         return response
+
+    def add_review(self,id,review):
+        from src.auth.models.shop_table import ShopModel
+        shop = ShopModel.get_shop(id)
+        old_rating = shop.rating
+        reviews = shop.reviews
+        new_rating = (reviews * old_rating + review) / (reviews + 1)
+        shop.reviews = (reviews + 1)
+        shop.rating = new_rating
+        shop.save()
