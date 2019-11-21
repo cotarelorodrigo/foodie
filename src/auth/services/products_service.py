@@ -27,7 +27,8 @@ class ProductService(Service):
 
     def get_N_products(self, shop_id, pageNumber, pageSize):
         from src.auth.models.product_table import ProductModel
-        response = ProductModel.query.filter_by(shop_id=shop_id).offset(pageNumber*pageSize).limit(pageSize)
-        if not response:
-            return []
-        return self.sqlachemy_to_dict(response)
+        result = ProductModel.query.filter_by(shop_id=shop_id).offset(pageNumber*pageSize).limit(pageSize)
+        response = {}
+        response['items'] = self.sqlachemy_to_dict(result.all())
+        response['totalItems'] = result.count()
+        return response

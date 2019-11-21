@@ -162,7 +162,8 @@ class OrderService(Service):
 
     def get_N_orders_filtered(self, pageNumber, pageSize, filters):
         from src.auth.models.order_table import OrderModel
-        response = OrderModel.query.filter_by(**filters).offset(pageNumber*pageSize).limit(pageSize)
-        if not response:
-            return []
-        return self.sqlachemy_to_dict(response)
+        result = OrderModel.query.filter_by(**filters).offset(pageNumber*pageSize).limit(pageSize)
+        response = {}
+        response['items'] = self.sqlachemy_to_dict(result.all())
+        response['totalItems'] = result.count()
+        return response
