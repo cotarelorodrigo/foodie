@@ -113,13 +113,14 @@ class UserService(Service):
         return (user.favourPoints >= points_for_favour)
 
     def pay_order(self, user_who_pay, user_to_pay, info_order):
-        from src.auth.models.user_table import UserModel
+        from src.auth.models.user_table import UserModel,NormalUserModel,DeliveryUserModel
         user_who_pay = UserModel.get_any_user(user_who_pay)
-        user_to_pay = UserModel.get_any_user(user_to_pay)
         if info_order['payWithPoints']:
+            user_to_pay = NormalUserModel.get_user(user_to_pay)
             user_who_pay.favourPoints -= info_order['favourPoints']
             user_to_pay.favourPoints += info_order['favourPoints']
         else:
+            user_to_pay = DeliveryUserModel.get_delivery(user_to_pay)
             user_to_pay.balance += info_order['price']
         user_who_pay.save()
         user_to_pay.save()

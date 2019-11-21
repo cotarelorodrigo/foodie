@@ -72,7 +72,9 @@ class OrderService(Service):
                 raise NotFoundException("ID invalido: Solo los usuarios comunes pueden aceptar favores")
         else:
             try:
-                DeliveryUserModel.get_delivery(delivery_id)
+                delivery = DeliveryUserModel.get_delivery(_delivery_id)
+                delivery.state = "working"
+                delivery.save()
             except:
                 raise NotFoundException("ID invalido: Delivery inexistente")    
         order.delivery_id = _delivery_id
@@ -83,17 +85,21 @@ class OrderService(Service):
     def order_delivered(self, order_id):
         from src.auth.models.order_table import OrderModel
         from src.auth.services.user_service import UserService
+        from src.auth.services.delivery_service import DeliveryService
         order = OrderModel.get_instance(order_id)
         order_info = {}
         user_service = UserService()
+        del_service = DeliveryService()
         #Pagar al delivery
         if order.payWithPoints: #chequeo que el que acepto la orden sea un usuario normal, no delivery
             order_info["payWithPoints"] = True
             order_info['favourPoints'] = order.favourPoints
         else:
+            del_service.free_delivery(order.delivery_id)
             order_info["payWithPoints"] = False
             order_info["price"] = order.price
         user_service.pay_order(order.user_id, order.delivery_id, order_info)
+
         self.change_order_state(order_id, "delivered")
 
     #State: cancelled
