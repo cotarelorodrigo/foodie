@@ -10,6 +10,12 @@ class ProductService(Service):
         product = ProductModel(data)
         return product.save()
 
+    def get_product(self, _id):
+        from src.auth.models.product_table import ProductModel
+        product = ProductModel.query.get(_id)
+        return self.sqlachemy_to_dict(product)
+
+    #TODO: dunno if someone is using this one, remove it if not. Should use get_product
     def get_product_by_id(self, _id):
         from src.auth.models.product_table import ProductModel
         product = ProductModel.query.get(_id)
@@ -18,12 +24,12 @@ class ProductService(Service):
     def update_product(self, _id, data):
         from src.auth.models.product_table import ProductModel
         from src.auth.schemas.schemas import ProductSchema
-        shop_data, products = ProductSchema().load(data)
-        return ProductModel.get_shop(_id).update(shop_data)
+        product_data = ProductSchema().load(data)
+        return ProductModel.get_product(_id).update(product_data)
 
     def delete_product(self, _id):
         from src.auth.models.product_table import ProductModel
-        return ProductModel.get_shop(_id).delete()
+        return ProductModel.get_product(_id).delete()
 
     def get_N_products(self, shop_id, pageNumber, pageSize):
         from src.auth.models.product_table import ProductModel
