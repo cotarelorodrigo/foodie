@@ -1,4 +1,5 @@
 from src.app import db
+from src.auth.auth_exception import NotFoundException
 from src.auth.models.base_table import BaseModel
 
 class ProductModel(BaseModel):
@@ -21,3 +22,10 @@ class ProductModel(BaseModel):
     self.name = data.get('name')
     self.description = data.get('description')
     self.price = data.get('price')
+
+  @staticmethod
+  def product(product_id):
+    response = ProductModel.query.get(product_id)
+    if not response:
+      raise NotFoundException("Invalid ID")
+    return response

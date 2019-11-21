@@ -251,3 +251,53 @@ class AdminTestCase(BaseTest):
         get_N_orders_filtered.return_value = True
         response = self.client.get('/admin/orders?shop_id=5&p=1&pSize=5', headers={'Authorization': 'tokenfalso123'})
         assert response._status_code == 200
+
+    ###################### MENU ######################
+
+    @patch("jwt.decode")
+    def test_admin_menu(self, jwt_decode):
+        jwt_decode.return_value = {"is_admin": True}
+        response = self.client.get('/admin/menu?shop_id=1&p=0&pSize=2', headers={'Authorization': 'tokenfalso123'})
+        assert response._status_code == 200
+
+    @patch("jwt.decode")
+    def test_admin_product_create(self, jwt_decode):
+        jwt_decode.return_value = {"is_admin": True}
+        response = self.client.post(
+            '/admin/menu',
+            headers={'Authorization': 'tokenfalso123'},
+            data=json.dumps({
+                "name": "Rodrigo",
+                "shop_id": 1,
+                "description": "ieieiei",
+                "price": 45,
+
+            }),
+            content_type='application/json'
+        )
+        assert response._status_code == 200
+
+    @patch("jwt.decode")
+    @patch("src.auth.services.products_service.ProductService.delete_product")
+    def test_admin_product_delete(self, delete_product, jwt_decode):
+        jwt_decode.return_value = {"is_admin": True}
+        delete_product.return_value = True
+        response = self.client.delete('/admin/menu?id=1', headers={'Authorization': 'tokenfalso123'})
+        assert response._status_code == 200
+
+    @patch("jwt.decode")
+    @patch("src.auth.services.products_service.ProductService.update_product")
+    def test_admin_product_update(self, update_product, jwt_decode):
+        jwt_decode.return_value = {"is_admin": True}
+        update_product.return_value = True
+        response = self.client.put(
+            '/admin/menu?id=1',
+            headers={'Authorization': 'tokenfalso123'},
+            data=json.dumps({
+                "name": "Rodrigo",
+                "description": "ieieiei",
+                "price": 45,
+            }),
+            content_type='application/json'
+        )
+        assert response._status_code == 200
