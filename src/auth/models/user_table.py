@@ -59,7 +59,7 @@ class NormalUserModel(UserModel):
 
   user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
   suscripcion = db.Column(db.String(128), nullable=False)
-  picture = db.Column(db.String(128), nullable=True)
+  picture = db.Column(db.String(256), nullable=True)
   make_favours = db.Column(db.Boolean, nullable=False)
 
   __mapper_args__ = {

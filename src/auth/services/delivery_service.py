@@ -95,4 +95,5 @@ class DeliveryService(Service):
         from src.auth.models.user_table import DeliveryUserModel
         delivery = DeliveryUserModel.get_delivery(delivery_id)
         delivery.state = "free"
+        delivery.current_order = None
         delivery.save()
