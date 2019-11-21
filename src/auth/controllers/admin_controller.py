@@ -303,3 +303,23 @@ def update_user():
           raise
      else:
           return jsonify({"OK": "user actualizado con exito!"}), 200
+
+
+###################### ORDERS ######################
+
+@admins_blueprint.route('/admin/orders', methods=['GET'])
+@auth_required
+@user_is_admin
+def users():
+     pageNumber = request.args.get('p')
+     pageSize = request.args.get('pSize')
+     filters = {'user_id': request.args.get('user_id'), 'delivery_id': request.args.get('delivery_id'),
+                'shop_id':request.args.get('shop_id')}
+     try:
+          result = OrderService().get_N_orders_filtered(int(pageNumber) - 1, int(pageSize), filters)
+     except NotFoundException as e:
+          return jsonify({'404': "{}".format(e.msg)}), 404
+     except:
+          raise
+     else:
+          return jsonify(result), 200
