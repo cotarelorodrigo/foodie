@@ -8,6 +8,7 @@ from src.jwt_handler import encode_data_to_jwt
 from src.auth.controllers.common_functions_controllers import verify_firebase_uid
 import logging
 from firebase_admin._auth_utils import InvalidIdTokenError
+from sqlalchemy.orm.exc import NoResultFound
 
 login_blueprint = Blueprint('login', __name__)
 login_schema = LoginSchema()
@@ -31,7 +32,9 @@ def login():
         service.update_user_login(user['email'])
         return jsonify({"user_id":user["user_id"],"token": token,"role":user["role"]}), 200
     except InvalidIdTokenError:
-        return jsonify({"msg":"idToken invalido"}), 410
+        return jsonify({"msg":"idToken invalido"}), 404
+    except NoResultFound:
+        return jsonify({"msg":"El "+uid+"idToken no corresponde a un usuario de Foodie"})
     except:
         try:
             user_data = login_schema.load(content)

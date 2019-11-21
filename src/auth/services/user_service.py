@@ -11,9 +11,8 @@ class UserService(Service):
             user_data["password"] = self._encrypt_password(user_data["password"])
         except KeyError:
             pass
-        else:
-            user = NormalUserModel(user_data)
-            user.save()
+        user = NormalUserModel(user_data)
+        user.save()
 
     def get_normal_user(self,_id):
         from src.auth.models.user_table import NormalUserModel

@@ -102,7 +102,7 @@ def set_users():
   }
 
   normal_user4 = {
-    "name" : "Flavio Normal",
+    "name" : "Flavio Perez",
     "email" : "perezflavio94@gmail.com",
     "firebase_uid" : "z5B7CMytC9YJ11LAcvREY4F5Dvg2",
     "role": "usuario",
