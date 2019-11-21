@@ -355,7 +355,7 @@ def get_menu():
     return jsonify(result), 200
 
 
-@admins_blueprint.route('/admin/menu', methods=['POST'])
+@admins_blueprint.route('/admin/product', methods=['POST'])
 @auth_required
 @user_is_admin
 def create_product():
@@ -371,7 +371,7 @@ def create_product():
 
 
 
-@admins_blueprint.route('/admin/menu', methods=['DELETE'])
+@admins_blueprint.route('/admin/product', methods=['DELETE'])
 @auth_required
 @user_is_admin
 def delete_product():
@@ -386,7 +386,7 @@ def delete_product():
         return jsonify({'OK': "product deleted"}), 200
 
 
-@admins_blueprint.route('/admin/menu', methods=['PUT'])
+@admins_blueprint.route('/admin/product', methods=['PUT'])
 @auth_required
 @user_is_admin
 def update_product():
@@ -400,3 +400,18 @@ def update_product():
         raise
     else:
         return jsonify({"OK": "product actualizado con exito!"}), 200
+
+
+@admins_blueprint.route('/admin/product', methods=['GET'])
+@auth_required
+@user_is_admin
+def get_product():
+    product_id = request.args.get('id')
+    try:
+        response = ProductService().get_product(product_id)
+    except NotFoundException as e:
+        return jsonify({'404': "product {}".format(e.msg)}), 404
+    except:
+        raise
+    else:
+        return jsonify(response), 200

@@ -264,7 +264,7 @@ class AdminTestCase(BaseTest):
     def test_admin_product_create(self, jwt_decode):
         jwt_decode.return_value = {"is_admin": True}
         response = self.client.post(
-            '/admin/menu',
+            '/admin/product',
             headers={'Authorization': 'tokenfalso123'},
             data=json.dumps({
                 "name": "Rodrigo",
@@ -282,7 +282,7 @@ class AdminTestCase(BaseTest):
     def test_admin_product_delete(self, delete_product, jwt_decode):
         jwt_decode.return_value = {"is_admin": True}
         delete_product.return_value = True
-        response = self.client.delete('/admin/menu?id=1', headers={'Authorization': 'tokenfalso123'})
+        response = self.client.delete('/admin/product?id=1', headers={'Authorization': 'tokenfalso123'})
         assert response._status_code == 200
 
     @patch("jwt.decode")
@@ -291,7 +291,7 @@ class AdminTestCase(BaseTest):
         jwt_decode.return_value = {"is_admin": True}
         update_product.return_value = True
         response = self.client.put(
-            '/admin/menu?id=1',
+            '/admin/product?id=1',
             headers={'Authorization': 'tokenfalso123'},
             data=json.dumps({
                 "name": "Rodrigo",
