@@ -10,12 +10,6 @@ class ProductService(Service):
         product = ProductModel(data)
         return product.save()
 
-    def get_product(self, _id):
-        from src.auth.models.product_table import ProductModel
-        product = ProductModel.query.get(_id)
-        return self.sqlachemy_to_dict(product)
-
-    #TODO: dunno if someone is using this one, remove it if not. Should use get_product
     def get_product_by_id(self, _id):
         from src.auth.models.product_table import ProductModel
         product = ProductModel.query.get(_id)
