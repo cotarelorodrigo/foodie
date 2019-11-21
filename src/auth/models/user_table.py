@@ -91,7 +91,7 @@ class DeliveryUserModel(UserModel):
 
   user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
   balance = db.Column(db.Integer, nullable=False)
-  picture = db.Column(db.String(128), nullable=False)
+  picture = db.Column(db.String(256), nullable=False)
   rating = db.Column(db.Float,nullable=False)
   reviews = db.Column(db.Integer,nullable=False)
   state = db.Column(db.String(128), nullable=False)
