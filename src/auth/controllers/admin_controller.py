@@ -310,7 +310,7 @@ def update_user():
 @admins_blueprint.route('/admin/orders', methods=['GET'])
 @auth_required
 @user_is_admin
-def users():
+def orders():
      pageNumber = request.args.get('p')
      pageSize = request.args.get('pSize')
      filters = {'user_id': request.args.get('user_id'), 'delivery_id': request.args.get('delivery_id'),
