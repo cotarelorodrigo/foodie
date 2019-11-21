@@ -231,17 +231,17 @@ class AdminTestCase(BaseTest):
     @patch("jwt.decode")
     def test_admin_orders_only_user(self, jwt_decode):
         jwt_decode.return_value = {"is_admin": True}
-        response = self.client.get('/orders?user_id=1&p=1&pSize=5', headers={'Authorization': 'tokenfalso123'})
+        response = self.client.get('/admin/orders?user_id=1&p=1&pSize=5', headers={'Authorization': 'tokenfalso123'})
         assert response._status_code == 200
 
     @patch("jwt.decode")
     def test_admin_orders_only_delivery(self, jwt_decode):
         jwt_decode.return_value = {"is_admin": True}
-        response = self.client.get('/orders?delivery_id=5&p=1&pSize=5', headers={'Authorization': 'tokenfalso123'})
+        response = self.client.get('/admin//orders?delivery_id=5&p=1&pSize=5', headers={'Authorization': 'tokenfalso123'})
         assert response._status_code == 200
 
     @patch("jwt.decode")
     def test_admin_orders_only_shop(self, jwt_decode):
         jwt_decode.return_value = {"is_admin": True}
-        response = self.client.get('/orders?shop_id=5&p=1&pSize=5', headers={'Authorization': 'tokenfalso123'})
+        response = self.client.get('/admin/orders?shop_id=5&p=1&pSize=5', headers={'Authorization': 'tokenfalso123'})
         assert response._status_code == 200
