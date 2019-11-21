@@ -29,6 +29,18 @@ class DeliveryService(Service):
         delivery_data = DeliveryUserSchema().load(data)
         return DeliveryUserModel.get_delivery(_id).update(delivery_data)
 
+
+    def add_review(self,id,review):
+        from src.auth.models.user_table import DeliveryUserModel
+        delivery = DeliveryUserModel.get_delivery(id)
+        old_rating = delivery.rating
+        reviews = delivery.reviews
+        new_rating = (reviews * old_rating + review) / (reviews + 1)
+        delivery.reviews = (reviews + 1)
+        delivery.rating = new_rating
+        delivery.save()
+
+        
     def get_N_deliverys(self, pageNumber, pageSize):
         from src.auth.models.user_table import DeliveryUserModel
         query = DeliveryUserModel.query.offset(pageNumber*pageSize).limit(pageSize)

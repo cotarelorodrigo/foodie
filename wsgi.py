@@ -78,6 +78,38 @@ def set_users():
     "suscripcion" : "flat",
     "picture" : "gs://foodie-taller2.appspot.com/images/61FuIoIFkLa55OvAYWODuU5SuPZ2/JPEG_20191112_200117_1526502813.jpg"
   }
+  
+  normal_user2 = {
+    "name" : "Flavio Normal",
+    "email" : "normal2@gmail.com",
+    "password" : "taller2",
+    "firebase_uid" : "2yxGFRvkA3TLg1GMKjYDNzHfu6k1",
+    "role": "usuario",
+    "phone_number": 135138,
+    "suscripcion" : "flat",
+    "picture" : "gs://foodie-taller2.appspot.com/images/61FuIoIFkLa55OvAYWODuU5SuPZ2/JPEG_20191112_200117_1526502813.jpg"
+  }
+  
+  normal_user3 = {
+    "name" : "Flavio Normal",
+    "email" : "normal3@gmail.com",
+    "password" : "taller2",
+    "firebase_uid" : "PKCPkcLExuh8ewLbL2dPDuVuKcY2",
+    "role": "usuario",
+    "phone_number": 135138,
+    "suscripcion" : "flat",
+    "picture" : "gs://foodie-taller2.appspot.com/images/61FuIoIFkLa55OvAYWODuU5SuPZ2/JPEG_20191112_200117_1526502813.jpg"
+  }
+
+  normal_user4 = {
+    "name" : "Flavio Normal",
+    "email" : "perezflavio94@gmail.com",
+    "firebase_uid" : "z5B7CMytC9YJ11LAcvREY4F5Dvg2",
+    "role": "usuario",
+    "phone_number": 135138,
+    "suscripcion" : "flat",
+    "picture" : "gs://foodie-taller2.appspot.com/images/61FuIoIFkLa55OvAYWODuU5SuPZ2/JPEG_20191112_200117_1526502813.jpg"
+  }
 
   delivery_user = {
     "name" : "Flavio Delivery",
@@ -90,50 +122,48 @@ def set_users():
     "balance": 0
   }
 
-  delivery_user_2 = {
+  delivery_user2 = {
     "name" : "Flavio Delivery",
     "email" : "delivery2s@gmail.com",
     "password" : "taller2",
-    "firebase_uid" : "05FvThkGGaaDu4PW1qFde3obrjQ2",
+    "firebase_uid" : "U5OMU4hcyJdejlEmJ1Mv73lnAnv2",
     "role":"delivery",
     "phone_number":135138,
     "picture" : "gs://foodie-taller2.appspot.com/images/61FuIoIFkLa55OvAYWODuU5SuPZ2/JPEG_20191112_200117_1526502813.jpg",
     "balance": 0
   }
 
-  delivery_user_3 = {
+  delivery_user3 = {
     "name" : "Flavio Delivery",
     "email" : "delivery3@gmail.com",
     "password" : "taller2",
-    "firebase_uid" : "05FvThkGGaaDu4PW1qFde3obrjQ2",
+    "firebase_uid" : "9RmRydK0t1QcuYGSaVgcnAl1ewq1",
     "role":"delivery",
     "phone_number":135138,
     "picture" : "gs://foodie-taller2.appspot.com/images/61FuIoIFkLa55OvAYWODuU5SuPZ2/JPEG_20191112_200117_1526502813.jpg",
     "balance": 0
   }
-
-  delivery_user_4 = {
-    "name" : "Flavio Delivery",
-    "email" : "delivery4@gmail.com",
-    "password" : "taller2",
-    "firebase_uid" : "05FvThkGGaaDu4PW1qFde3obrjQ2",
-    "role":"delivery",
-    "phone_number":135138,
-    "picture" : "gs://foodie-taller2.appspot.com/images/61FuIoIFkLa55OvAYWODuU5SuPZ2/JPEG_20191112_200117_1526502813.jpg",
-    "balance": 0
-  }
-
-
-
   
   user_service = UserService()
   user_schema = NormalUserSchema().load(normal_user)
+  user_service.create_normal_user(user_schema)
+  user_schema = NormalUserSchema().load(normal_user2)
+  user_service.create_normal_user(user_schema)
+  user_schema = NormalUserSchema().load(normal_user3)
+  user_service.create_normal_user(user_schema)
+  user_schema = NormalUserSchema().load(normal_user4)
   user_service.create_normal_user(user_schema)
 
 
   del_service = DeliveryService()
   del_schema = DeliveryUserSchema().load(delivery_user)
+  del_service.create_delivery_user(del_schema)  
+  del_schema = DeliveryUserSchema().load(delivery_user2)
+  del_service.create_delivery_user(del_schema)  
+  del_schema = DeliveryUserSchema().load(delivery_user3)
   del_service.create_delivery_user(del_schema)
+
+
 
   
 

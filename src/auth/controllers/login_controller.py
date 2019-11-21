@@ -5,8 +5,9 @@ from src.auth.services.admin_service import AdminService
 from src.auth.schemas.schemas import LoginSchema, RecoverSchema, LoginSchemaToken
 from src.auth.auth_exception import NotFoundException
 from src.jwt_handler import encode_data_to_jwt
-#from src.auth.controllers.common_functions_controllers import verify_firebase_uid
-
+from src.auth.controllers.common_functions_controllers import verify_firebase_uid
+import logging
+from firebase_admin._auth_utils import InvalidIdTokenError
 
 login_blueprint = Blueprint('login', __name__)
 login_schema = LoginSchema()
@@ -22,9 +23,15 @@ def login():
     content = request.get_json()
     service = UserService()
     try:
-        user_data = login_schema_token.load(content)
-        verify_firebase_uid(user_data['firebase_uid'])
-
+        token = content["idToken"]
+        uid = verify_firebase_uid(token)
+        service = UserService()
+        user = service.get_user_by_uid(uid)
+        foodie_token = encode_data_to_jwt({"user":user["email"], "is_admin": False}, MINUTES_VALID_TOKEN)
+        service.update_user_login(user['email'])
+        return jsonify({"user_id":user["user_id"],"token": token,"role":user["role"]}), 200
+    except InvalidIdTokenError:
+        return jsonify({"msg":"idToken invalido"}), 410
     except:
         try:
             user_data = login_schema.load(content)

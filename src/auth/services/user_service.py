@@ -7,9 +7,13 @@ from dateutil import relativedelta
 class UserService(Service):
     def create_normal_user(self, user_data):
         from src.auth.models.user_table import NormalUserModel
-        user_data["password"] = self._encrypt_password(user_data["password"])
-        user = NormalUserModel(user_data)
-        user.save()
+        try:
+            user_data["password"] = self._encrypt_password(user_data["password"])
+        except KeyError:
+            pass
+        else:
+            user = NormalUserModel(user_data)
+            user.save()
 
     def get_normal_user(self,_id):
         from src.auth.models.user_table import NormalUserModel
@@ -130,6 +134,10 @@ class UserService(Service):
 
     def get_user_by_email(self, email):
         return self.sqlachemy_to_dict(self._get_userModel_email(email))
+
+    def get_user_by_uid(self,email):
+        user = UserModel.query.filter_by(firebase_uid=uid).one()
+        return self.sqlachemy_to_dict(user)
 
     def check_email(self, user_email):
         from src.auth import db

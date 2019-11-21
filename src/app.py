@@ -14,13 +14,38 @@ from src.auth.controllers.login_controller import login_blueprint
 from src.auth.controllers.direc_controller import direc_blueprint
 from src.auth.controllers.delivery_controller import delivery_blueprint
 from src.auth.controllers.products_controller import products_blueprint
-import src.auth.auth_exception as auth
+import src.auth.auth_exception as auth_exception
 from flask_mail import Message
+import firebase_admin
+from firebase_admin import credentials
+import logging
 
 db = SQLAlchemy()
 mail = Mail()
 app = Flask('foodie-app')
 CORS(app)
+
+fb_config = {
+    "type":os.environ.get("FIREBASE_ADMIN_TYPE"),
+    "project_id":os.environ.get("FIREBASE_PROJECT_ID"),
+    "private_key":os.environ.get("FIREBASE_PRIVATE_KEY"),
+    "client_email":os.environ.get("FIREBASE_CLIENT_EMAIL")
+}
+try:
+    default_app = firebase_admin.initialize_app(credentials.Certificate({
+        "project_id":os.environ.get("FIREBASE_PROJECT_ID"),
+        "type":os.environ.get("FIREBASE_ADMIN_TYPE"),
+        "private_key": os.environ.get("FIREBASE_PRIVATE_KEY").replace('\\n', '\n'),
+        "client_email": os.environ.get("FIREBASE_CLIENT_EMAIL"),
+        "token_uri": "https://oauth2.googleapis.com/token"
+
+    }))
+    logging.info("Connected to firebase app")
+except ValueError as err:
+    logging.error("Unable to connect")
+    logging.error("Client email:"+fb_config["client_email"])
+    logging.error("Private key"+fb_config["private_key"])
+    logging.error(err)
 
 def send_email(msg_info):
     with app.app_context():
@@ -43,27 +68,27 @@ def create_app():
     app.register_blueprint(delivery_blueprint)
     app.register_blueprint(products_blueprint)
 
-    @app.errorhandler(auth.InvalidUserInformation)
+    @app.errorhandler(auth_exception.InvalidUserInformation)
     def user_error_handler(e):
         return jsonify({"msg": e.msg}), 420
 
-    @app.errorhandler(auth.NotFoundException)
+    @app.errorhandler(auth_exception.NotFoundException)
     def user_error_handler(e):
         return jsonify({"msg": e.msg}), 404
 
-    @app.errorhandler(auth.NotFoundEmail)
+    @app.errorhandler(auth_exception.NotFoundEmail)
     def user_error_handler(e):
         return jsonify({"msg": e.msg}), 405
 
-    @app.errorhandler(auth.AccessDeniedException)
+    @app.errorhandler(auth_exception.AccessDeniedException)
     def user_error_handler(e):
         return jsonify({"msg": e.msg}), 401
 
-    @app.errorhandler(auth.InvalidQueryParameters)
+    @app.errorhandler(auth_exception.InvalidQueryParameters)
     def user_error_handler(e):
         return jsonify({"msg": e.msg}), 400
 
-    @app.errorhandler(auth.NotEnoughFavourPoints)
+    @app.errorhandler(auth_exception.NotEnoughFavourPoints)
     def user_error_handler(e):
         return jsonify({"msg": e.msg}), 408
     
