@@ -135,7 +135,8 @@ class UserService(Service):
     def get_user_by_email(self, email):
         return self.sqlachemy_to_dict(self._get_userModel_email(email))
 
-    def get_user_by_uid(self,email):
+    def get_user_by_uid(self,uid):
+        from src.auth.models.user_table import UserModel
         user = UserModel.query.filter_by(firebase_uid=uid).one()
         return self.sqlachemy_to_dict(user)
 
