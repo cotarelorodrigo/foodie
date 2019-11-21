@@ -57,3 +57,5 @@ class ShopService(Service):
         shop.reviews = (reviews + 1)
         shop.rating = new_rating
         shop.save()
+
+
