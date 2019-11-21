@@ -278,7 +278,7 @@ class AdminTestCase(BaseTest):
         assert response._status_code == 200
 
     @patch("jwt.decode")
-    @patch("src.auth.services.user_service.UserService.delete_user")
+    @patch("src.auth.services.product_service.UserService.delete_user")
     def test_admin_product_delete(self, delete_product, jwt_decode):
         jwt_decode.return_value = {"is_admin": True}
         delete_product.return_value = True
@@ -286,7 +286,7 @@ class AdminTestCase(BaseTest):
         assert response._status_code == 200
 
     @patch("jwt.decode")
-    @patch("src.auth.services.user_service.ProductService.update_user")
+    @patch("src.auth.services.product_service.ProductService.update_user")
     def test_admin_product_update(self, update_product, jwt_decode):
         jwt_decode.return_value = {"is_admin": True}
         update_product.return_value = True
