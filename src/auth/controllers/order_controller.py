@@ -54,3 +54,14 @@ def cancel_order(_id):
     if not order: 
         return jsonify({'msg': "order with that id doesn't exist."}), 404
     return jsonify({'msg': "order with that id was cancelled."}), 200
+
+@orders_blueprint.route('/orders/<_id>/state',methods=['PUT'])
+def change_order_state(_id):
+    service = OrderService()
+    content = request.get_json()
+    new_state = content["state"]
+    if new_state == "delivered":
+        service.order_delivered(_id)
+    if new_state == "cancelled":
+        service.order_cancelled(_id)
+    return jsonify({"msg":"El estado fue cambiado"}), 200

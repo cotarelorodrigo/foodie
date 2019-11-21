@@ -7,7 +7,10 @@ from dateutil import relativedelta
 class UserService(Service):
     def create_normal_user(self, user_data):
         from src.auth.models.user_table import NormalUserModel
-        user_data["password"] = self._encrypt_password(user_data["password"])
+        try:
+            user_data["password"] = self._encrypt_password(user_data["password"])
+        except KeyError:
+            pass
         user = NormalUserModel(user_data)
         user.save()
 
@@ -17,8 +20,8 @@ class UserService(Service):
         return self.sqlachemy_to_dict(user)
 
     def get_user(self, _id):
-        from src.auth.models.user_table import NormalUserModel
-        response = NormalUserModel.get_user(_id)
+        from src.auth.models.user_table import UserModel
+        response = UserModel.get_any_user(_id)
         return self.sqlachemy_to_dict(response)
 
     def delete_user(self, _id):
@@ -110,13 +113,14 @@ class UserService(Service):
         return (user.favourPoints >= points_for_favour)
 
     def pay_order(self, user_who_pay, user_to_pay, info_order):
-        from src.auth.models.user_table import UserModel
+        from src.auth.models.user_table import UserModel,NormalUserModel,DeliveryUserModel
         user_who_pay = UserModel.get_any_user(user_who_pay)
-        user_to_pay = UserModel.get_any_user(user_to_pay)
         if info_order['payWithPoints']:
+            user_to_pay = NormalUserModel.get_user(user_to_pay)
             user_who_pay.favourPoints -= info_order['favourPoints']
             user_to_pay.favourPoints += info_order['favourPoints']
         else:
+            user_to_pay = DeliveryUserModel.get_delivery(user_to_pay)
             user_to_pay.balance += info_order['price']
         user_who_pay.save()
         user_to_pay.save()
@@ -130,6 +134,11 @@ class UserService(Service):
 
     def get_user_by_email(self, email):
         return self.sqlachemy_to_dict(self._get_userModel_email(email))
+
+    def get_user_by_uid(self,uid):
+        from src.auth.models.user_table import UserModel
+        user = UserModel.query.filter_by(firebase_uid=uid).one()
+        return self.sqlachemy_to_dict(user)
 
     def check_email(self, user_email):
         from src.auth import db

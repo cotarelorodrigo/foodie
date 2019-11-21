@@ -10,7 +10,10 @@ class DeliveryService(Service):
 
     def create_delivery_user(self, user_data):
         from src.auth.models.user_table import DeliveryUserModel
-        user_data["password"] = self._encrypt_password(user_data["password"])
+        try:
+            user_data["password"] = self._encrypt_password(user_data["password"])
+        except KeyError:
+            pass
         user = DeliveryUserModel(user_data)
         user.save()
 
@@ -30,6 +33,18 @@ class DeliveryService(Service):
         delivery_data.update(data)
         return DeliveryUserModel.get_delivery(_id).update(delivery_data)
 
+
+    def add_review(self,id,review):
+        from src.auth.models.user_table import DeliveryUserModel
+        delivery = DeliveryUserModel.get_delivery(id)
+        old_rating = delivery.rating
+        reviews = delivery.reviews
+        new_rating = (reviews * old_rating + review) / (reviews + 1)
+        delivery.reviews = (reviews + 1)
+        delivery.rating = new_rating
+        delivery.save()
+
+        
     def get_N_deliverys(self, pageNumber, pageSize):
         from src.auth.models.user_table import DeliveryUserModel
         query = DeliveryUserModel.query.offset(pageNumber*pageSize).limit(pageSize)
@@ -75,3 +90,9 @@ class DeliveryService(Service):
             date_to_aux = date_from + relativedelta.relativedelta(months=delta_month+1)
             result.append({"year": date_to_aux.year, "month": date_to_aux.month, "amount": self.get_quantity_deliverys_date(date_from_aux, date_to_aux)})
         return result
+
+    def free_delivery(self,delivery_id):
+        from src.auth.models.user_table import DeliveryUserModel
+        delivery = DeliveryUserModel.get_delivery(delivery_id)
+        delivery.state = "free"
+        delivery.save()

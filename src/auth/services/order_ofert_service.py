@@ -57,9 +57,7 @@ class OrderOfferService(Service):
             else:
                 message = message + "ya se encuentra aceptada"
             raise InvalidStateChange(message)
-
         if (state == "accepted"):
             OrderService().catch_order(offer.order_id, offer.delivery_id)
-
         offer.state = state
         offer.save()

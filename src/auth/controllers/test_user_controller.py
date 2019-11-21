@@ -31,12 +31,6 @@ class UserTestCase(BaseTest):
         assert response._status_code == 200
     
     @patch("src.auth.services.user_service.UserService.get_user")
-    def test_check_existing_id(self, check_id_mock):
-        check_id_mock.return_value = True
-        response = self.client.head('/users/1')
-        assert response._status_code == 200
-
-    @patch("src.auth.services.user_service.UserService.get_user")
     def test_check_nonexisting_id(self, check_id_mock):
         check_id_mock.return_value = False
         response = self.client.head('/users/2')
