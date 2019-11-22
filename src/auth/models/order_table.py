@@ -21,6 +21,8 @@ class OrderModel(BaseModel):
   delivery_id = db.Column(db.Integer, db.ForeignKey('delivery_users.user_id'), nullable=True)
   created_at = db.Column(db.DateTime)
   modified_at = db.Column(db.DateTime)
+  delivery_review = db.Column(db.Float, nullable = True)
+  shop_review = db.Column(db.Float, nullable = True)
 
   # class constructor
   def __init__(self, data):
@@ -38,7 +40,8 @@ class OrderModel(BaseModel):
     self.price = data.get("price")
     self.created_at = datetime.datetime.utcnow()
     self.modified_at = datetime.datetime.utcnow()
-
+    self.delivery_review = 0.0
+    self.shop_review = 0.0
 
 class OrderProductsModel(BaseModel):
 
