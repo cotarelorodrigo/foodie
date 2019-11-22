@@ -70,7 +70,19 @@ def post_shop_review(_id):
     except KeyError:
         return jsonify({"msg": "Falta el campo review en el request"}), 412
     else:
-        return jsonify({"msg":"calificación procesada sin problemas"}), 200
+        return jsonify({"msg":"calificacion procesada sin problemas"}), 200
+
+@orders_blueprint.route('/orders/<_id>/delivery_review', methods=['POST'])
+def post_delivery_review(_id):
+    service = OrderService()
+    content = request.get_json()
+    try:
+        review = content["review"]
+        service.review_delivery(_id,review)
+    except KeyError:
+        return jsonify({"msg": "Falta el campo review en el request"}), 412
+    else:
+        return jsonify({"msg":"calificacion procesada sin problemas"}), 200
 
 
 @orders_blueprint.route('/orders/cancel/<_id>', methods=['DELETE'])
