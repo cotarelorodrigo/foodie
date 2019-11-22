@@ -185,7 +185,7 @@ class OrderService(Service):
 
         order = OrderModel.query.filter_by(order_id=_order_id).one()
         del_service = DeliveryService()
-        delivery_id = order._delivery_id
+        delivery_id = order.delivery_id
         del_service.add_review(delivery_id,review)
         order.delivery_review = review
         order.save()
