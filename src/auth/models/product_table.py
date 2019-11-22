@@ -24,7 +24,7 @@ class ProductModel(BaseModel):
     self.price = data.get('price')
 
   @staticmethod
-  def product(product_id):
+  def get_product(product_id):
     response = ProductModel.query.get(product_id)
     if not response:
       raise NotFoundException("Invalid ID")
