@@ -53,7 +53,7 @@ class ShopService(Service):
         shop = ShopModel.get_shop(id)
         old_rating = shop.rating
         reviews = shop.reviews
-        new_rating = (reviews * old_rating + review) / (reviews + 1)
+        new_rating = (reviews * old_rating + review) / (reviews + 1.0)
         shop.reviews = (reviews + 1)
         shop.rating = new_rating
         shop.save()

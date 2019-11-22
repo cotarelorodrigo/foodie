@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from src.auth.services.order_service import OrderService
 from src.auth.schemas.schemas import OrderSchema
+from src.auth.services.service import Service
 import sqlalchemy
 import marshmallow 
 
@@ -24,8 +25,20 @@ def add_order():
 
 @orders_blueprint.route('/orders', methods=['GET'])
 def show_orders():
-    service = OrderService()
-    orders = service.get_orders()
+    from src.auth.models.order_table import OrderModel
+    orders = OrderModel.query
+    user_id = request.args.get("user_id")
+    if not user_id is None:
+        orders = orders.filter_by(user_id=user_id)
+    delivery_id = request.args.get("delivery_id")
+    if not delivery_id is None:
+        orders = orders.filter_by(delivery_id=delivery_id)
+    state = request.args.get("state")
+    if not state is None:
+        orders = orders.filter_by(state=state)
+
+    orders = Service().sqlachemy_to_dict(orders.all())
+
     return jsonify(orders)
 
 @orders_blueprint.route('/orders/<_id>/items', methods=['GET'])
@@ -46,6 +59,19 @@ def show_products_orders():
     service = OrderService()
     orders = service.get_products_orders()
     return jsonify(orders)
+
+@orders_blueprint.route('/orders/<_id>/shop_review', methods=['POST'])
+def post_shop_review(_id):
+    service = OrderService()
+    content = request.get_json()
+    try:
+        review = content["review"]
+        service.review_shop(_id,review)
+    except KeyError:
+        return jsonify({"msg": "Falta el campo review en el request"}), 412
+    else:
+        return jsonify({"msg":"calificación procesada sin problemas"}), 200
+
 
 @orders_blueprint.route('/orders/cancel/<_id>', methods=['DELETE'])
 def cancel_order(_id):
