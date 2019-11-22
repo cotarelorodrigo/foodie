@@ -23,8 +23,7 @@ class ShopService(Service):
     def update_shop(self, _id, data):
         from src.auth.models.shop_table import ShopModel
         from src.auth.schemas.schemas import ShopSchema
-        shop_data, products = ShopSchema().load(data)
-        return ShopModel.get_shop(_id).update(shop_data)
+        return ShopModel.get_shop(_id).update(data)
         
     def get_products(self,shop_id):
         from src.auth.models.product_table import ProductModel

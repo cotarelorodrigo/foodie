@@ -23,8 +23,7 @@ class ProductService(Service):
     def update_product(self, _id, data):
         from src.auth.models.product_table import ProductModel
         from src.auth.schemas.schemas import ProductSchema
-        product_data = ProductSchema().load(data)
-        return ProductModel.get_product(_id).update(product_data)
+        return ProductModel.get_product(_id).update(data)
 
     def delete_product(self, _id):
         from src.auth.models.product_table import ProductModel
