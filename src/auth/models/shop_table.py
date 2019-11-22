@@ -13,7 +13,7 @@ class ShopModel(BaseModel):
   address = db.Column(db.String(128), nullable=False)
   description = db.Column(db.String(128), nullable=True)
   photoUrl = db.Column(db.String(128), nullable=False)
-  rating = db.Column(db.Integer, nullable=False)
+  rating = db.Column(db.Float, nullable=False)
   reviews = db.Column(db.Integer, nullable = False)
   latitude = db.Column(db.Float, nullable=False)
   longitude = db.Column(db.Float, nullable=False)

@@ -1,6 +1,7 @@
 from sqlalchemy.orm.exc import NoResultFound
 from src.auth.auth_exception import NotFoundException, NotEnoughFavourPoints
 from src.auth.services.service import Service
+from src.auth.services.shop_service import ShopService
 import datetime
 from dateutil import relativedelta
 
@@ -167,3 +168,25 @@ class OrderService(Service):
         response['items'] = self.sqlachemy_to_dict(result.all())
         response['totalItems'] = result.count()
         return response
+
+    def review_shop(self,_order_id,review):
+        from src.auth.models.order_table import OrderModel
+        order = OrderModel.query.filter_by(order_id=_order_id).one()
+        shop_service = ShopService()
+        shop_id = order.shop_id
+        shop_service.add_review(shop_id,review)
+        order.shop_review = review
+        order.save()
+        return self.sqlachemy_to_dict(order)
+
+    def review_delivery(self,_order_id,review):
+        from src.auth.models.order_table import OrderModel
+        from src.auth.services.delivery_service import DeliveryService
+
+        order = OrderModel.query.filter_by(order_id=_order_id).one()
+        del_service = DeliveryService()
+        delivery_id = order._delivery_id
+        del_service.add_review(delivery_id,review)
+        order.delivery_review = review
+        order.save()
+        return self.sqlachemy_to_dict(order)

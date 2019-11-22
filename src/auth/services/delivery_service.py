@@ -39,7 +39,7 @@ class DeliveryService(Service):
         delivery = DeliveryUserModel.get_delivery(id)
         old_rating = delivery.rating
         reviews = delivery.reviews
-        new_rating = (reviews * old_rating + review) / (reviews + 1)
+        new_rating = (reviews * old_rating + review) / (reviews + 1.0)
         delivery.reviews = (reviews + 1)
         delivery.rating = new_rating
         delivery.save()
