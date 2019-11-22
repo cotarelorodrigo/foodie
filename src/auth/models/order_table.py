@@ -41,8 +41,7 @@ class OrderModel(BaseModel):
     self.created_at = datetime.datetime.utcnow()
     self.modified_at = datetime.datetime.utcnow()
     self.delivery_review = 0.0
-    self.shop_review = 0.0
-
+    self.shop_review = 0.0 
 class OrderProductsModel(BaseModel):
 
   # table name
