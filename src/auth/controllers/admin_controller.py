@@ -3,6 +3,7 @@ from src.auth.services.user_service import UserService
 from src.auth.services.delivery_service import DeliveryService
 from src.auth.services.order_service import OrderService
 from src.auth.services.shop_service import ShopService
+from src.auth.services.direc_service import DirecService
 from src.auth.services.products_service import ProductService
 from src.auth.schemas.schemas import StaticsDatetimeRangeSchema
 from src.auth.controllers.common_functions_controllers import auth_required, user_is_admin
@@ -126,6 +127,20 @@ def create_shop():
     try:
         content = request.get_json()
         ShopService().create_shop(content)
+    except ValidationError:
+        return jsonify({"error": "Informacion del shop Incorrecta"}), 420
+    except:
+        raise
+    else:
+        return jsonify({"OK": "Shop creado con exito!"}), 200
+
+@admins_blueprint.route('/admin/shop/zone', methods=['POST'])
+@auth_required
+@user_is_admin
+def create_shops_from_zone():
+    try:
+        content = request.get_json()
+        shops = DirecService().get_shops_info({content["latitude"], content["longitude"]}, content["radius"])
     except ValidationError:
         return jsonify({"error": "Informacion del shop Incorrecta"}), 420
     except:

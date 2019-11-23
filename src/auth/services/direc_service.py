@@ -35,3 +35,12 @@ class DirecService(Service):
             else:
                 distancias.append(math.inf)
         return sorted(deliverys, key = lambda d: distancias[deliverys.index(d)])
+
+    def get_shops_info(self, _coordinates, _radius):
+        shops = self.gmaps_client.places(query='restaurant', location=_coordinates, radius=_radius, language='es')
+        shops_list = []
+        for shop in shops['results']:
+            d = {"name": shop['name'], "address": shop['formatted_address'], "latitude": shop['geometry']['location']['lat'],
+            "longitude": shop['geometry']['location']['lng'], "rating": shop["rating"], "photo": shop['icon']}
+            shops_list.append(d)
+        return shops_list
