@@ -1,0 +1,105 @@
+
+{ "products": [{
+                    "name": "Milanesa",
+                    "description": "",
+                    "price": 100
+                },          
+                {
+                    "name": "Papas fritas",
+                    "description": "",
+                    "price": 100
+                },     
+                {
+                    "name": "Coca-Cola",
+                    "description": "",
+                    "price": 100
+                },
+                {
+                    "name": "Sprite",
+                    "description": "",
+                    "price": 100
+                },   
+                {
+                    "name": "Empanada",
+                    "description": "",
+                    "price": 100
+                },   
+                {
+                    "name": "Fideos",
+                    "description": "",
+                    "price": 100
+                },
+                {
+                    "name": "Pancho",
+                    "description": "",
+                    "price": 100
+                },
+                {
+                    "name": "Pure",
+                    "description": "",
+                    "price": 100
+                },   
+                {
+                    "name": "Ensalada",
+                    "description": "",
+                    "price": 100
+                },   
+                {
+                    "name": "Pastel de papa",
+                    "description": "",
+                    "price": 100
+                },   
+                {
+                    "name": "Hamburguesa",
+                    "description": "",
+                    "price": 100
+                },   
+                {
+                    "name": "Agua",
+                    "description": "",
+                    "price": 100
+                },   
+                {
+                    "name": "Aros de cebolla",
+                    "description": "",
+                    "price": 100
+                },   
+                {
+                    "name": "Sandwich jamon y queso",
+                    "description": "",
+                    "price": 100
+                },   
+                {
+                    "name": "Pasta Frola",
+                    "description": "",
+                    "price": 100
+                },
+                {
+                    "name": "Tostado",
+                    "description": "",
+                    "price": 100
+                },   
+                {
+                    "name": "Medialunas",
+                    "description": "",
+                    "price": 100
+                },   
+                {
+                    "name": "Cafe",
+                    "description": "",
+                    "price": 100
+                },   
+                {
+                    "name": "Flan",
+                    "description": "",
+                    "price": 100
+                },   
+                {
+                    "name": "Risotto",
+                    "description": "",
+                    "price": 100
+                }                                                                                                                                                                                                               
+            ]
+}
+
+

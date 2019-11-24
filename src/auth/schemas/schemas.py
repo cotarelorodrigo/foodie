@@ -40,7 +40,6 @@ class CoordinateSchema(Schema):
         strict = True
 
 class ProductSchema(Schema):
-    shop_id = fields.Int(required=True) 
     name = fields.Str(required=True)
     description = fields.Str(required=True)
     price = fields.Int(required=True)

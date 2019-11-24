@@ -40,7 +40,7 @@ class DirecService(Service):
         shops = self.gmaps_client.places(query='restaurant', location=_coordinates, radius=_radius, language='es')
         shops_list = []
         for shop in shops['results']:
-            d = {"name": shop['name'], "address": shop['formatted_address'], "latitude": shop['geometry']['location']['lat'],
-            "longitude": shop['geometry']['location']['lng'], "rating": shop["rating"], "photo": shop['icon']}
+            d = {"name": shop['name'], "address": shop['formatted_address'], "coordinates": {"latitude": shop['geometry']['location']['lat'],
+            "longitude": shop['geometry']['location']['lng']}, "rating": shop["rating"], "photoUrl": shop['icon']}
             shops_list.append(d)
         return shops_list

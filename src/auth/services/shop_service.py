@@ -6,10 +6,16 @@ class ShopService(Service):
 
     def create_shop(self, shop_data):
         from src.auth.models.shop_table import ShopModel
+        from src.auth.models.product_table import ProductModel
         from src.auth.schemas.schemas import ShopSchema
-        shop_data, products = ShopSchema().load(shop_data)
+        shop_data, products_data = ShopSchema().load(shop_data)
         shop = ShopModel(shop_data)
-        return shop.save()
+        products = [ProductModel(product) for product in products_data]
+        shop.save()
+        for p in products:
+            shop.menu.append(p)
+            p.save()
+        return shop
 
     def get_shop(self, _id):
         from src.auth.models.shop_table import ShopModel

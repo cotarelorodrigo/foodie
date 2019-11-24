@@ -140,13 +140,18 @@ def create_shop():
 def create_shops_from_zone():
     try:
         content = request.get_json()
-        shops = DirecService().get_shops_info({content["latitude"], content["longitude"]}, content["radius"])
+        shops = DirecService().get_shops_info({"latitude": content["latitude"], "longitude": content["longitude"]}, content["radius"])
+        for shop in shops:
+            shop["menu"] = ProductService().get_sample_products(5)
+            ShopService().create_shop(shop)
     except ValidationError:
         return jsonify({"error": "Informacion del shop Incorrecta"}), 420
     except:
         raise
     else:
-        return jsonify({"OK": "Shop creado con exito!"}), 200
+        if not shops:
+            return jsonify({"error": "No hay shops en esa zona"}), 420
+        return jsonify({"OK": "Shops creados con exito!"}), 200
 
 
 @admins_blueprint.route('/admin/shop', methods=['GET'])

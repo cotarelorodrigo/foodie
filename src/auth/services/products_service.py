@@ -1,6 +1,8 @@
 from sqlalchemy.orm.exc import NoResultFound
 from src.auth.auth_exception import NotFoundException
 from src.auth.services.service import Service
+import random
+import json
 
 class ProductService(Service):
 
@@ -36,3 +38,14 @@ class ProductService(Service):
         response['items'] = self.sqlachemy_to_dict(result.all())
         response['totalItems'] = result.count()
         return response
+
+    def get_sample_products(self, quantity):
+        filename = 'src/auth/services/default_products.json'
+        try:
+            with open(filename, 'r') as f:
+                datastore = json.load(f)
+                products = random.sample(datastore["products"], quantity)
+        except:
+            raise NotFoundException("Error con el archivo '{}'".format(filename))
+        else:
+            return products
