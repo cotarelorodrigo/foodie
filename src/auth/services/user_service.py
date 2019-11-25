@@ -13,27 +13,46 @@ class UserService(Service):
             pass
         user = NormalUserModel(user_data)
         user.save()
+        return user
 
-    def get_normal_user(self,_id):
+    def get_normal_user(self, _id, dict_format=False):
         from src.auth.models.user_table import NormalUserModel
-        user = NormalUserModel.get_user(_id)
-        return self.sqlachemy_to_dict(user)
+        user = NormalUserModel.get_instance(_id)
+        if dict_format:
+            return self.sqlachemy_to_dict(user)
+        return user
 
-    def get_user(self, _id):
+    def get_delivery_user(self,_id, dict_format=False):
+        from src.auth.models.user_table import DeliveryUserModel
+        user = DeliveryUserModel.get_instance(_id)
+        if dict_format:
+            return self.sqlachemy_to_dict(user)
+        return user
+
+    def get_user(self, _id, dict_format=False):
         from src.auth.models.user_table import UserModel
-        response = UserModel.get_any_user(_id)
-        return self.sqlachemy_to_dict(response)
+        user = UserModel.get_instance(_id)
+        if dict_format:
+            return self.sqlachemy_to_dict(user)
+        return user
 
     def delete_user(self, _id):
         from src.auth.models.user_table import NormalUserModel
         return NormalUserModel.get_user(_id).delete()
 
     def update_user(self, _id, data):
-        from src.auth.models.user_table import NormalUserModel
-        from src.auth.schemas.schemas import NormalUserSchema
-        user_data = self.sqlachemy_to_dict(NormalUserModel.get_user(_id))
-        user_data.update(data)
-        return NormalUserModel.get_user(_id).update(user_data)
+        try:
+            user = self.get_normal_user(_id)
+        except Exception:
+            user = self.get_delivery_user(_id)
+        except Exception:
+            user = None
+        finally:
+            if not user:
+                raise NotFoundException("El user id que se quiere actualziar es invalido")
+            user_data = self.get_user(_id, dict_format=True)
+            user_data.update(data)
+            assert user.update(user_data) == True
     
     def update_coordinates(self, _id, coordinates):
         from src.auth.schemas.schemas import CoordinateSchema
@@ -107,20 +126,20 @@ class UserService(Service):
     def user_order_by_favour(self, user_id, points_for_favour):
         from src.auth.models.user_table import NormalUserModel
         try:
-            user = NormalUserModel.get_user(user_id)
+            user = self.get_user(user_id)
         except NotFoundException:
             raise NotFoundException("ID invalido: Solo los usuarios comunes pueden solicitar favores")
         return (user.favourPoints >= points_for_favour)
 
     def pay_order(self, user_who_pay, user_to_pay, info_order):
         from src.auth.models.user_table import UserModel,NormalUserModel,DeliveryUserModel
-        user_who_pay = UserModel.get_any_user(user_who_pay)
+        user_who_pay = self.get_user(user_who_pay)
         if info_order['payWithPoints']:
-            user_to_pay = NormalUserModel.get_user(user_to_pay)
+            user_to_pay = self.get_normal_user(user_to_pay)
             user_who_pay.favourPoints -= info_order['favourPoints']
             user_to_pay.favourPoints += info_order['favourPoints']
         else:
-            user_to_pay = DeliveryUserModel.get_delivery(user_to_pay)
+            user_to_pay = self.get_delivery_user(user_to_pay)
             user_to_pay.balance += info_order['price']
         user_who_pay.save()
         user_to_pay.save()
@@ -169,5 +188,18 @@ class UserService(Service):
     def update_user_login(self, email):
         user = self._get_userModel_email(email)
         user.last_login = datetime.datetime.utcnow()
+        user.save()
+
+    def user_start_working(self, id, _order_id):
+        from src.auth.models.user_table import UserModel
+        user = UserModel.get_instance(id)
+        user.state = "working"
+        user.current_order = _order_id
+        user.save()
+
+    def user_finish_working(self, id):
+        from src.auth.models.user_table import UserModel
+        user = UserModel.get_instance(id)
+        user.state = "free"
         user.save()
 

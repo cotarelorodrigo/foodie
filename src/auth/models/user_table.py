@@ -1,6 +1,5 @@
 import datetime
 import secrets
-from src.auth.auth_exception import NotFoundException
 from src.app import db
 from src.auth.models.base_table import BaseModel
 
@@ -20,6 +19,8 @@ class UserModel(BaseModel):
   firebase_uid = db.Column(db.String(128), unique=True, nullable=False)
   favourPoints = db.Column(db.Integer, nullable=False)
   token = db.Column(db.String(128), unique=True, nullable=False)
+  state = db.Column(db.String(128), nullable=False)
+  current_order = db.Column(db.Integer,nullable=True)
   created_at = db.Column(db.DateTime)
   last_login = db.Column(db.DateTime)
 
@@ -42,15 +43,11 @@ class UserModel(BaseModel):
     self.firebase_uid = data.get('firebase_uid')
     self.favourPoints = data.get("favourPoints", 30)
     self.token = secrets.token_hex(32)
+    self.state = data.get('state', 'free')
+    self.current_order = None
     self.created_at = datetime.datetime.utcnow()
     self.last_login = datetime.datetime.utcnow()
 
-  @staticmethod
-  def get_any_user(user_id):
-    response = UserModel.query.get(user_id)
-    if not response:
-        raise NotFoundException("Invalid ID")
-    return response
 
 class NormalUserModel(UserModel):
 
@@ -76,13 +73,6 @@ class NormalUserModel(UserModel):
     self.picture = data.get('picture')
     self.make_favours = data.get('make_favours', True)
 
-  @staticmethod
-  def get_user(user_id):
-    response = NormalUserModel.query.get(user_id)
-    if not response:
-        raise NotFoundException("Invalid ID")
-    return response
-
 
 class DeliveryUserModel(UserModel):
 
@@ -94,8 +84,6 @@ class DeliveryUserModel(UserModel):
   picture = db.Column(db.String(256), nullable=False)
   rating = db.Column(db.Float,nullable=False)
   reviews = db.Column(db.Integer,nullable=False)
-  state = db.Column(db.String(128), nullable=False)
-  current_order = db.Column(db.Integer,nullable=True)
   __mapper_args__ = {
     'polymorphic_identity':'delivery_users',
   }
@@ -110,13 +98,4 @@ class DeliveryUserModel(UserModel):
     self.picture = data.get('picture')
     self.rating = 0.0
     self.reviews = 0
-    self.state = data.get('state', 'free')
-    self.current_order = None
 
-
-  @staticmethod
-  def get_delivery(user_id):
-    response = DeliveryUserModel.query.get(user_id)
-    if not response:
-        raise NotFoundException("Invalid ID")
-    return response

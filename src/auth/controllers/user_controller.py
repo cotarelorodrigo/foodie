@@ -35,7 +35,7 @@ def get_delivery_users():
 @user_blueprint.route('/users/<_id>', methods=['GET'])
 def get_user(_id):
     service = UserService()
-    user = service.get_normal_user(_id)
+    user = service.get_normal_user(_id, dict_format=True)
     if not user: 
         return jsonify({'404': "user with that id doesn't exist."}), 404
     return jsonify(user), 200
@@ -65,7 +65,7 @@ def set_premium_subscription(_id):
         raise NotFoundException("user with that id doesn't exist.")
     content = request.get_json()
     card = card_schema.load(content)
-    service.update_user(_id,{"suscripcion": "premium"})
+    service.update_user(int(_id),{"suscripcion": "premium"})
     return jsonify("subscription updated to premium")
 
 @user_blueprint.route('/users/<_id>/picture',methods=["PUT"])

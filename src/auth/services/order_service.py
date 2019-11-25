@@ -64,23 +64,24 @@ class OrderService(Service):
     def catch_order(self, _order_id, _delivery_id):
         from src.app import db
         from src.auth.models.order_table import OrderModel
+        from src.auth.services.user_service import UserService
         from src.auth.models.user_table import NormalUserModel, DeliveryUserModel
         order = OrderModel.get_instance(_order_id)
+        user_service = UserService()
         if order.payWithPoints: #chequeo que el que acepto la orden sea un usuario normal, no delivery
             try:
-                NormalUserModel.get_user(_delivery_id)
+                user_service.get_normal_user(_delivery_id)
             except:
                 raise NotFoundException("ID invalido: Solo los usuarios comunes pueden aceptar favores")
         else:
             try:
-                delivery = DeliveryUserModel.get_delivery(_delivery_id)
-                delivery.state = "working"
-                delivery.current_order = _order_id
-                delivery.save()
+                user_service.get_delivery_user(_delivery_id)
             except:
-                raise NotFoundException("ID invalido: Delivery inexistente")    
+                raise NotFoundException("ID invalido: Delivery inexistente")  
+        user_service.user_start_working(_delivery_id, _order_id)
         order.delivery_id = _delivery_id
         self.change_order_state(_order_id, "onWay")
+        order.save()
         return order
 
     #State: delivered

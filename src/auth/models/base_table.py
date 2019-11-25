@@ -1,4 +1,5 @@
 from src.app import db
+from src.auth.auth_exception import NotFoundException
 
 class BaseModel(db.Model):
     __abstract__ = True #Which means SQLAlchemy will not create a table for that model (BaseModel)
@@ -14,7 +15,8 @@ class BaseModel(db.Model):
         return True
 
     def update(self, data):
-        self.__init__(data)
+        for key, value in data.items():
+            setattr(self, key, value)
         db.session.commit()
         return True
 

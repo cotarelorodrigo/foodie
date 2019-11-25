@@ -104,4 +104,13 @@ class UserTestCase(BaseTest):
         response = self.client.get('/users/profile/asddd@asddd.com', headers={'Authorization':'tokenfalso123'})
         assert response._status_code == 422
 
+    def test_user_change_state(self):
+        from src.auth.services.user_service import UserService
+        content_user = {"name":"Rodrigo","email":"asd@asd.com","phone_number":42223333,"role":"usuario","password": "password","firebase_uid": "ajsjfkasf","suscripcion":"flat"}
+        user = UserService().create_normal_user(content_user)
+        assert user.state == 'free'
+        UserService().user_start_working(user.user_id, None)
+        assert user.state == 'working'
+        UserService().user_finish_working(user.user_id)
+        assert user.state == 'free'
 
