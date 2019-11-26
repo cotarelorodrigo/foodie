@@ -172,3 +172,15 @@ class UserTestCase(BaseTest):
         assert user.state == 'free'
         assert user_delivery.state == 'free'
 
+    def test_update_user_coordinates(self):
+        from src.auth.services.user_service import UserService
+        user_service = UserService()
+        #Creo usuario normal
+        content_user = {"name":"Rodrigo","email":"asd@asd.com","phone_number":42223333,"role":"usuario","password": "password","firebase_uid": "ajsjfkasf","suscripcion":"flat"}
+        user = user_service.create_normal_user(content_user)
+        assert user.latitude == None
+        assert user.longitude == None
+        coordinates = {"latitude": 20.00, "longitude": 14.5}
+        user_service.update_coordinates(user.user_id, coordinates)
+        assert user.latitude == 20.00
+        assert user.longitude == 14.5

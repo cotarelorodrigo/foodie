@@ -56,9 +56,8 @@ class UserService(Service):
     
     def update_coordinates(self, _id, coordinates):
         from src.auth.schemas.schemas import CoordinateSchema
-        from src.auth.models.user_table import UserModel
         data = CoordinateSchema().load(coordinates)
-        user = UserModel.get_any_user(_id)
+        user = self.get_user(_id)
         user.latitude = data["latitude"]
         user.longitude = data["longitude"]
         user.save()
