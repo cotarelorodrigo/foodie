@@ -16,6 +16,7 @@ class DeliveryService(Service):
             pass
         user = DeliveryUserModel(user_data)
         user.save()
+        return user
 
     def get_delivery(self, _id):
         from src.auth.models.user_table import DeliveryUserModel
@@ -90,10 +91,3 @@ class DeliveryService(Service):
             date_to_aux = date_from + relativedelta.relativedelta(months=delta_month+1)
             result.append({"year": date_to_aux.year, "month": date_to_aux.month, "amount": self.get_quantity_deliverys_date(date_from_aux, date_to_aux)})
         return result
-
-    def free_delivery(self,delivery_id):
-        from src.auth.models.user_table import DeliveryUserModel
-        delivery = DeliveryUserModel.get_delivery(delivery_id)
-        delivery.state = "free"
-        delivery.current_order = None
-        delivery.save()

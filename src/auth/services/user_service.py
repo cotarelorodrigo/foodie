@@ -131,20 +131,6 @@ class UserService(Service):
             raise NotFoundException("ID invalido: Solo los usuarios comunes pueden solicitar favores")
         return (user.favourPoints >= points_for_favour)
 
-    def pay_order(self, user_who_pay, user_to_pay, info_order):
-        from src.auth.models.user_table import UserModel,NormalUserModel,DeliveryUserModel
-        user_who_pay = self.get_user(user_who_pay)
-        if info_order['payWithPoints']:
-            user_to_pay = self.get_normal_user(user_to_pay)
-            user_who_pay.favourPoints -= info_order['favourPoints']
-            user_to_pay.favourPoints += info_order['favourPoints']
-        else:
-            user_to_pay = self.get_delivery_user(user_to_pay)
-            user_to_pay.balance += info_order['price']
-        user_who_pay.save()
-        user_to_pay.save()
-
-
     def get_available_users_favours(self):
         from src.auth.models.user_table import NormalUserModel, UserModel
         time = datetime.datetime.now() - datetime.timedelta(hours=2)
@@ -191,15 +177,36 @@ class UserService(Service):
         user.save()
 
     def user_start_working(self, id, _order_id):
-        from src.auth.models.user_table import UserModel
-        user = UserModel.get_instance(id)
+        user = self.get_user(id)
         user.state = "working"
         user.current_order = _order_id
         user.save()
 
     def user_finish_working(self, id):
-        from src.auth.models.user_table import UserModel
-        user = UserModel.get_instance(id)
+        user = self.get_user(id)
         user.state = "free"
+        user.current_order = None
         user.save()
 
+    def pay_order(self, user_who_pay, user_to_pay, info_order):
+        from src.auth.models.user_table import UserModel,NormalUserModel,DeliveryUserModel
+        user_who_pay = self.get_user(user_who_pay)
+        if info_order['payWithPoints']:
+            user_to_pay = self.get_normal_user(user_to_pay)
+            user_who_pay.favourPoints -= info_order['favourPoints']
+            user_to_pay.favourPoints += info_order['favourPoints']
+        else:
+            user_to_pay = self.get_delivery_user(user_to_pay)
+            user_to_pay.balance += info_order['price']
+        user_who_pay.save()
+        user_to_pay.save()
+
+    def wait_order(self, id):
+        normal_user = self.get_normal_user(id)
+        normal_user.state = 'waiting'
+        normal_user.save()
+
+    def receive_order(self, id):
+        normal_user = self.get_normal_user(id)
+        normal_user.state = 'free'
+        normal_user.save()

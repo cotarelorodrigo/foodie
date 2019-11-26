@@ -113,4 +113,62 @@ class UserTestCase(BaseTest):
         assert user.state == 'working'
         UserService().user_finish_working(user.user_id)
         assert user.state == 'free'
+    
+    def test_user_catch_favour_change_state(self):
+        from src.auth.models.order_table import OrderModel
+        from src.auth.services.user_service import UserService
+        from src.auth.services.order_service import OrderService
+        order_service = OrderService()
+        user_service = UserService()
+        #Creo usuario 1
+        content_user = {"name":"Rodrigo","email":"asd@asd.com","phone_number":42223333,"role":"usuario","password": "password","firebase_uid": "ajsjfkasf","suscripcion":"flat"}
+        user = user_service.create_normal_user(content_user)
+        assert user.state == 'free'
+        #Creo usuario 2
+        content_user = {"name":"Juan","email":"asd@asde.com","phone_number":42223333,"role":"usuario","password": "password","firebase_uid": "ajsjfkasefef","suscripcion":"flat"}
+        user_delivery = user_service.create_normal_user(content_user)
+        assert user_delivery.state == 'free'
+        #Creo orden
+        order_info = {"shop_id": 8572833,"products": [{"product_id": 248524,"units": 2},{"product_id": 1414488,"units": 1}], "latitude": -33.58672,"longitude": -52.52345,
+        "payWithPoints": True,"state": 'created', 'user_id':1, "price":200, "favourPoints":20}
+        order = OrderModel(order_info)
+        order.save()
+        #Agarro la orden
+        order_service.catch_order(order.order_id, user_delivery.user_id)
+        assert user.state == 'waiting'
+        assert user_delivery.state == 'working'
+        #Entro la orden
+        order_service.order_delivered(order.order_id)
+        assert user.state == 'free'
+        assert user_delivery.state == 'free'
+
+    def test_user_catch_order_change_state(self):
+        from src.auth.models.order_table import OrderModel
+        from src.auth.services.user_service import UserService
+        from src.auth.services.delivery_service import DeliveryService
+        from src.auth.services.order_service import OrderService
+        order_service = OrderService()
+        user_service = UserService()
+        delivery_service = DeliveryService()
+        #Creo usuario normal
+        content_user = {"name":"Rodrigo","email":"asd@asd.com","phone_number":42223333,"role":"usuario","password": "password","firebase_uid": "ajsjfkasf","suscripcion":"flat"}
+        user = user_service.create_normal_user(content_user)
+        assert user.state == 'free'
+        #Creo usuario delivery
+        content_user =  {"name": "JUan","email": "asd@adaasd.com","phone_number": 42223333,"role": "usuario","password": "password", "firebase_uid": "ajsjadasfkasf","picture": "www.photo.com","balance": 100}
+        user_delivery = delivery_service.create_delivery_user(content_user)
+        assert user_delivery.state == 'free'
+        #Creo orden
+        order_info = {"shop_id": 8572833,"products": [{"product_id": 248524,"units": 2},{"product_id": 1414488,"units": 1}], "latitude": -33.58672,"longitude": -52.52345,
+        "payWithPoints": False,"state": 'created', 'user_id':1, "price":200}
+        order = OrderModel(order_info)
+        order.save()
+        #Agarro la orden
+        order_service.catch_order(order.order_id, user_delivery.user_id)
+        assert user.state == 'waiting'
+        assert user_delivery.state == 'working'
+        #Entro la orden
+        order_service.order_delivered(order.order_id)
+        assert user.state == 'free'
+        assert user_delivery.state == 'free'
 

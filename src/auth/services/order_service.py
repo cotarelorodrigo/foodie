@@ -79,6 +79,7 @@ class OrderService(Service):
             except:
                 raise NotFoundException("ID invalido: Delivery inexistente")  
         user_service.user_start_working(_delivery_id, _order_id)
+        user_service.wait_order(order.user_id)
         order.delivery_id = _delivery_id
         self.change_order_state(_order_id, "onWay")
         order.save()
@@ -98,11 +99,12 @@ class OrderService(Service):
             order_info["payWithPoints"] = True
             order_info['favourPoints'] = order.favourPoints
         else:
-            del_service.free_delivery(order.delivery_id)
             order_info["payWithPoints"] = False
             order_info["price"] = order.price
-        user_service.pay_order(order.user_id, order.delivery_id, order_info)
 
+        user_service.pay_order(order.user_id, order.delivery_id, order_info)
+        user_service.user_finish_working(order.delivery_id)
+        user_service.receive_order(order.user_id)
         self.change_order_state(order_id, "delivered")
 
     #State: cancelled
