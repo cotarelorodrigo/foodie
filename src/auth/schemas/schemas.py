@@ -107,6 +107,12 @@ class OrderOfferSchema(Schema):
 
 OrderState = {'delivered', 'onWay', 'cancelled', 'created'}
 
+class FavourOfferSchema(Schema):
+    order_id = fields.Int(required=True)
+    user_id = fields.Int(required=True)
+    points = fields.Int(required=True)
+
+
 class OrderSchema(Schema):
     shop_id = fields.Int(required=True)
     products = fields.List(fields.Nested(OrderProductSchema), required=True)

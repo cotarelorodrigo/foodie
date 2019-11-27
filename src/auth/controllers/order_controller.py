@@ -100,6 +100,8 @@ def change_order_state(_id):
     new_state = content["state"]
     if new_state == "delivered":
         service.order_delivered(_id)
-    if new_state == "cancelled":
+    elif new_state == "cancelled":
         service.order_cancelled(_id)
+    else :
+        return jsonify({"msg": "Estado inválido" }), 409
     return jsonify({"msg":"El estado fue cambiado"}), 200

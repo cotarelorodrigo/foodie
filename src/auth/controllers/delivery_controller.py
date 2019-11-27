@@ -71,7 +71,7 @@ def get_deliveries():
 def get_offer_by_id(_id):
     service = OrderOfferService()
     offer = service.get_offer_by_id(_id)
-    return jsonify(offer)
+    return jsonify(offer),200
 
 @delivery_blueprint.route("/offers/<_id>",methods=['PATCH'])
 def change_offer_state(_id):

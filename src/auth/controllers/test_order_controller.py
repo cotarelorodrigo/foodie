@@ -9,6 +9,8 @@ delivery_data = {"name": "Rodrigo","email": "asd@asdtk.com","phone_number": 4222
 order_data = {"shop_id": 125,"products": [{"product_id": 3333,"units": 14},{"product_id": 444,"units": 15}],"coordinates": {"latitude": -33.58672,"longitude": -52.52345},
 "payWithPoints": True,"favourPoints": 40,"user_id": 1,"state": "created","price": 145}
 order_ofert_data = {"order_id": 1, "delivery_id": 2, "delivery_pay": 0, 'delivery_price': 0}
+favour_offer_data={"order_id":1,"user_id":2,"points":20}
+
 
 class OrderTestCase(BaseTest):
 
@@ -106,7 +108,8 @@ class OrderTestCase(BaseTest):
             content_type='application/json'
         )
         assert response._status_code == 200
-        response = self.client.post(
+        
+        order_response = self.client.post(
             '/orders',
             data=json.dumps({
                 "shop_id": 125,
@@ -123,14 +126,21 @@ class OrderTestCase(BaseTest):
                     "longitude": -52.52345
                 },
                 "payWithPoints": True,
-                "favourPoints": 40,
+                #"favourPoints": 40,
                 "user_id": 1,
                 "state": "created",
                 "price": 145
                 }),
             content_type='application/json'
         )
-        
+        response = self.client.post('users/2/favour_offers',
+            data=json.dumps({
+                'order_id':1,
+                'user_id':2,
+                'points': 1000
+                }),
+            content_type='application/json'
+        )
         assert response._status_code == 408
 
     def test_delivery_cant_accept_favours(self):
@@ -179,8 +189,8 @@ class OrderTestCase(BaseTest):
         order = order_service.create_order(order_data)
         assert order.state == 'created'
         order_ofert_service = OrderOfferService()
-        order_ofert = order_ofert_service.create_order_ofert(order_ofert_data)
-        order_ofert_service.update_offer_state(user_d.user_id, order.order_id, 'accepted')
+        order_ofert_id = order_ofert_service.create_favour_offer(favour_offer_data)
+        order_ofert_service.update_favour_offer_state(user_d.user_id, order_ofert_id, 'accepted')
         assert order.state == 'onWay'
         #Orden entregada
         order_service.order_delivered(order.order_id)

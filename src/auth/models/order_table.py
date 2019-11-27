@@ -1,5 +1,6 @@
 import datetime
 from src.app import db
+from src.auth.auth_exception import NotFoundException
 from src.auth.models.base_table import BaseModel
 from src.auth.models.user_table import DeliveryUserModel
 import time
@@ -17,8 +18,9 @@ class OrderModel(BaseModel):
   favourPoints = db.Column(db.Integer, nullable=False)
   state = db.Column(db.String(128), nullable=False)
   price = db.Column(db.Float,nullable = False)
+  deliver_price = db.Column(db.Float)
   user_id = db.Column(db.Integer, db.ForeignKey('normal_users.user_id'), nullable=False)
-  delivery_id = db.Column(db.Integer, db.ForeignKey('delivery_users.user_id'), nullable=True)
+  delivery_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)
   created_at = db.Column(db.DateTime)
   modified_at = db.Column(db.DateTime)
   delivery_review = db.Column(db.Float, nullable = True)
@@ -92,6 +94,37 @@ class OrderOffersModel(BaseModel):
   @staticmethod
   def get_offer(offer_id):
     response = OrderOffersModel.query.get(offer_id)
+    if not response:
+        raise NotFoundException("Invalid ID")
+    return response
+
+class FavourOfferModel(BaseModel):
+  __tablename__='favour_offers'
+
+  id = db.Column(db.Integer, primary_key=True)
+  order_id = db.Column(db.Integer, db.ForeignKey('orders.order_id', ondelete='CASCADE'), nullable=False)
+  # usuario que entrega el pedido
+  user_id = db.Column(db.Integer, db.ForeignKey('normal_users.user_id', ondelete='CASCADE'), nullable=False)
+  points = db.Column(db.Integer,nullable = False)
+  created_at = db.Column(db.DateTime)
+  created_at_seconds = db.Column(db.Integer)
+  state = db.Column(db.String(128), nullable=False)
+
+    # class constructor
+  def __init__(self, data):
+    """
+    Class constructor
+    """
+    self.order_id = data.get("order_id")
+    self.user_id = data.get('user_id')
+    self.points = data.get('points')
+    self.created_at = datetime.datetime.utcnow()
+    self.created_at_seconds = int(round(time.time()))
+    self.state = data.get('state')
+
+  @staticmethod
+  def get_offer(offer_id):
+    response = FavourOfferModel.query.get(offer_id)
     if not response:
         raise NotFoundException("Invalid ID")
     return response

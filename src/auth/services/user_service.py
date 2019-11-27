@@ -192,11 +192,13 @@ class UserService(Service):
         user_who_pay = self.get_user(user_who_pay)
         if info_order['payWithPoints']:
             user_to_pay = self.get_normal_user(user_to_pay)
-            user_who_pay.favourPoints -= info_order['favourPoints']
+            # la quita de puntos debe hacerse cuando se acepta la orden, si no podría ofrecer 
+            # simultaneamente mas puntos de los que tiene
+            # user_who_pay.favourPoints -= info_order['favourPoints']
             user_to_pay.favourPoints += info_order['favourPoints']
         else:
             user_to_pay = self.get_delivery_user(user_to_pay)
-            user_to_pay.balance += info_order['price']
+            user_to_pay.balance += info_order['delivery_price']
         user_who_pay.save()
         user_to_pay.save()
 
@@ -209,3 +211,8 @@ class UserService(Service):
         normal_user = self.get_normal_user(id)
         normal_user.state = 'free'
         normal_user.save()
+
+    def get_user_favour_offers(self,_id):
+        from src.auth.models.order_table import FavourOfferModel
+        response = FavourOfferModel.query.filter(FavourOfferModel.user_id == _id).filter(FavourOfferModel.state == 'offered' ).all()
+        return self.sqlachemy_to_dict(response)

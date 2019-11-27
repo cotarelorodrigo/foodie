@@ -1,10 +1,14 @@
 from flask import Blueprint, request, jsonify
 from sqlalchemy.exc import IntegrityError
 from src.auth.services.user_service import UserService
+from src.auth.services.order_ofert_service import OrderOfferService
 from src.auth.schemas.schemas import UserSchema, LoginSchema, CreditCardSchema
-from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException, NotFoundException
+from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException, NotFoundException, NotEnoughFavourPoints
 from src.jwt_handler import encode_data_to_jwt
 from src.auth.controllers.common_functions_controllers import auth_required
+from src.auth.services.direc_service import DirecService
+import marshmallow 
+import sqlalchemy
 
 user_blueprint = Blueprint('users', __name__)
 users_schema = UserSchema()
@@ -139,4 +143,44 @@ def change_user_password(_id):
     service.change_password(user["email"], new_pass)
     return jsonify({"msg":"Password changed"}),200
 
+@user_blueprint.route('/users/<_id>/favour_offers',methods=['GET'])
+def get_current_offers(_id):
+    service = UserService()
+    response = service.get_user_favour_offers(_id)
+    return jsonify(response),200
 
+@user_blueprint.route('/users/<_id>/favour_offers',methods=['POST'])
+def offer_a_favour(_id):
+    service = OrderOfferService()
+    try:
+        content = request.get_json()
+        offer_id = service.create_favour_offer(content)
+    except marshmallow.exceptions.ValidationError as e:
+        return jsonify({'msg': 'Missing order ofert information: {}'.format(e)}), 400
+    except sqlalchemy.exc.IntegrityError:
+        return jsonify({'msg': 'order_id or delivery_id invalid'}), 430
+    except NotEnoughFavourPoints:
+        return jsonify({"msg": "No tienes suficientes puntos"}), 408
+
+    except:
+        raise
+    else:
+        return jsonify({'id': offer_id }), 200
+
+@user_blueprint.route('/users/<_id>/favour_offers/<_offer_id>', methods=['PATCH'])
+def put_delivery_state(_id,_offer_id):
+    service = OrderOfferService()
+    try:
+        content = request.get_json()
+        state = content['state']
+        service.update_favour_offer_state(_id,_offer_id,state)
+    except:
+        raise
+    else:
+        return jsonify({'msg': 'Offer modified'}),200
+
+@user_blueprint.route('/users/<_id>/favour_offers/<_offer_id>',methods=['GET'])
+def get_favour_offer_by_id(_id,_offer_id):
+    service = OrderOfferService()
+    offer = service.get_favour_offer_by_id(_offer_id)
+    return jsonify(offer),200

@@ -133,8 +133,10 @@ class UserTestCase(BaseTest):
         "payWithPoints": True,"state": 'created', 'user_id':1, "price":200, "favourPoints":20}
         order = OrderModel(order_info)
         order.save()
+        offer_info={}
+        offer_info["points"] = 20
         #Agarro la orden
-        order_service.catch_order(order.order_id, user_delivery.user_id)
+        order_service.catch_order(order.order_id, user_delivery.user_id,offer_info)
         assert user.state == 'waiting'
         assert user_delivery.state == 'working'
         #Entro la orden
@@ -164,7 +166,9 @@ class UserTestCase(BaseTest):
         order = OrderModel(order_info)
         order.save()
         #Agarro la orden
-        order_service.catch_order(order.order_id, user_delivery.user_id)
+        offer_info={}
+        offer_info["delivery_price"] = 200
+        order_service.catch_order(order.order_id, user_delivery.user_id,offer_info)
         assert user.state == 'waiting'
         assert user_delivery.state == 'working'
         #Entro la orden

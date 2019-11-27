@@ -12,10 +12,10 @@ class OrderService(Service):
         from src.auth.services.user_service import UserService
         order_schema = OrderSchema()
         order_info, products_info = order_schema.load(order_data)
-        if order_info["payWithPoints"]:
-            user_service = UserService()
-            if not user_service.user_order_by_favour(int(order_info["user_id"]), int(order_info["favourPoints"])):
-                raise NotEnoughFavourPoints("Favour points insuficientes")
+        # if order_info["payWithPoints"]:
+        #     user_service = UserService()
+        #     if not user_service.user_order_by_favour(int(order_info["user_id"]), int(order_info["favourPoints"])):
+        #         raise NotEnoughFavourPoints("Favour points insuficientes")
         order = OrderModel(order_info)
         products = [OrderProductsModel(product) for product in products_info]
         order.save() #Hay que guardar primero la orden orden porq es la parte unaria de la relacion
@@ -61,7 +61,7 @@ class OrderService(Service):
 
     ##Order states {'delivered', 'onWay', 'cancelled', 'created'}
     #State: On way
-    def catch_order(self, _order_id, _delivery_id):
+    def catch_order(self, _order_id, _delivery_id, offer_info):
         from src.app import db
         from src.auth.models.order_table import OrderModel
         from src.auth.services.user_service import UserService
@@ -70,11 +70,15 @@ class OrderService(Service):
         user_service = UserService()
         if order.payWithPoints: #chequeo que el que acepto la orden sea un usuario normal, no delivery
             try:
-                user_service.get_normal_user(_delivery_id)
+                delivery_user = user_service.get_normal_user(_delivery_id)
+                user = user_service.get_normal_user(order.user_id)
+                user.favourPoints -= offer_info["points"]
+                order.favourPoints = offer_info["points"]
             except:
                 raise NotFoundException("ID invalido: Solo los usuarios comunes pueden aceptar favores")
         else:
             try:
+                order.delivery_price = offer_info["delivery_price"]
                 user_service.get_delivery_user(_delivery_id)
             except:
                 raise NotFoundException("ID invalido: Delivery inexistente")  
@@ -100,7 +104,7 @@ class OrderService(Service):
             order_info['favourPoints'] = order.favourPoints
         else:
             order_info["payWithPoints"] = False
-            order_info["price"] = order.price
+            order_info["delivery_price"] = order.delivery_price
 
         user_service.pay_order(order.user_id, order.delivery_id, order_info)
         user_service.user_finish_working(order.delivery_id)
