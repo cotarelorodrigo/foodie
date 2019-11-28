@@ -338,7 +338,7 @@ def update_user():
     user_id = request.args.get('id')
     content = request.get_json()
     try:
-        response = UserService().update_user(user_id, content)
+        response = UserService().update_normal_user(user_id, content)
     except NotFoundException as e:
         return jsonify({'404': "user {}".format(e.msg)}), 404
     except:
