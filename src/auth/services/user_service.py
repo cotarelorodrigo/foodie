@@ -53,6 +53,35 @@ class UserService(Service):
             user_data = self.get_user(_id, dict_format=True)
             user_data.update(data)
             assert user.update(user_data) == True
+
+    def cancel_user_subscription(self, _id):
+        try:
+            user = self.get_normal_user(_id)
+        except Exception:
+            user = self.get_delivery_user(_id)
+        except Exception:
+            user = None
+        finally:
+            if not user:
+                raise NotFoundException("El user id que se quiere actualziar es invalido")
+            user_data = self.get_user(_id, dict_format=True)
+            user_data['suscripcion'] = 'flat'
+            assert user.update(user_data) == True
+
+    def upgrade_user_subscription(self, _id):
+        try:
+            user = self.get_normal_user(_id)
+        except Exception:
+            user = self.get_delivery_user(_id)
+        except Exception:
+            user = None
+        finally:
+            if not user:
+                raise NotFoundException("El user id que se quiere actualziar es invalido")
+            user_data = self.get_user(_id, dict_format=True)
+            user_data['suscripcion'] = 'premium'
+            assert user.update(user_data) == True
+
     
     def update_coordinates(self, _id, coordinates):
         from src.auth.schemas.schemas import CoordinateSchema
