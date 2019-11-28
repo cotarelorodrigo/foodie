@@ -17,7 +17,7 @@ class UserService(Service):
 
     def get_normal_user(self, _id, dict_format=False):
         from src.auth.models.user_table import NormalUserModel
-        user = NormalUserModel.get_instance(_id)
+        user = NormalUserModel.get_user(_id)
         if dict_format:
             return self.sqlachemy_to_dict(user)
         return user

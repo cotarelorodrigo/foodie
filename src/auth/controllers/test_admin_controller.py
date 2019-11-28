@@ -191,10 +191,10 @@ class AdminTestCase(BaseTest):
         assert response._status_code == 200
 
     @patch("jwt.decode")
-    @patch("src.auth.services.user_service.UserService.get_user")
-    def test_admin_user_get(self, get_user, jwt_decode):
+    @patch("src.auth.services.user_service.UserService.get_normal_user")
+    def test_admin_user_get(self, get_normal_user, jwt_decode):
         jwt_decode.return_value = {"is_admin": True}
-        get_user.return_value = True
+        get_normal_user.return_value = True
         response = self.client.get('/admin/user?id=1',  headers={'Authorization':'tokenfalso123'})
         assert response._status_code == 200
 
