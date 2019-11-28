@@ -114,3 +114,10 @@ class DeliveryUserModel(UserModel):
         if not response:
             raise NotFoundException("Invalid ID")
         return response
+
+    @staticmethod
+    def get_delivery(user_id):
+        response = DeliveryUserModel.query.get(user_id)
+        if not response:
+            raise NotFoundException("Invalid ID")
+        return response

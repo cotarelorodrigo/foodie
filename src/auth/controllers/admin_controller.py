@@ -307,7 +307,7 @@ def create_user():
 def get_user():
     user_id = request.args.get('id')
     try:
-        response = UserService().get_normal_user(user_id)
+        response = UserService().get_normal_user(user_id, dict_format=True)
     except NotFoundException as e:
         return jsonify({'404': "user {}".format(e.msg)}), 404
     except:
