@@ -47,10 +47,10 @@ class ShopService(Service):
 
     def get_N_shops(self, pageNumber, pageSize):
         from src.auth.models.shop_table import ShopModel
-        query = ShopModel.query.offset(pageNumber*pageSize).limit(pageSize)
+        result = ShopModel.query.offset(pageNumber*pageSize).limit(pageSize)
         response = {}
-        response['items'] = self.sqlachemy_to_dict(query.all())
-        response['totalItems'] = query.count()
+        response['items'] = self.sqlachemy_to_dict(result.all())
+        response['totalItems'] = ShopModel.query.count()
         return response
 
     def add_review(self,id,review):
