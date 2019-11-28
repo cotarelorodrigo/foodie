@@ -184,3 +184,13 @@ def get_favour_offer_by_id(_id,_offer_id):
     service = OrderOfferService()
     offer = service.get_favour_offer_by_id(_offer_id)
     return jsonify(offer),200
+
+@user_blueprint.route('/users/<_id>/make_favours',methods=['PUT'])
+def put_make_favours_indicator(_id):
+    service = UserService()
+    content = request.get_json()
+    make_favours = content['make_favours']
+    if make_favours is None:
+        return jsonify({'msg': 'Contenido del request es inválido'}), 409
+    user = service.put_making_favours(_id,make_favours)
+    return jsonify({'msg':'Usuario modificado con exito'}), 200

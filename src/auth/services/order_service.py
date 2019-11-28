@@ -119,6 +119,8 @@ class OrderService(Service):
     def order_created(self, order_id):
         self.change_order_state(order_id, "created")
 
+    def order_picked_up(self,order_id):
+        self.change_order_state(order_id,"pickedUp")
 
     def change_order_state(self, _order_id, _state):
         from src.auth.models.order_table import OrderModel

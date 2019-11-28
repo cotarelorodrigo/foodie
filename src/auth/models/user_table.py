@@ -21,6 +21,9 @@ class UserModel(BaseModel):
   token = db.Column(db.String(128), unique=True, nullable=False)
   state = db.Column(db.String(128), nullable=False)
   current_order = db.Column(db.Integer,nullable=True)
+  rating = db.Column(db.Float,nullable=False)
+  reviews = db.Column(db.Integer,nullable=False)
+
   created_at = db.Column(db.DateTime)
   last_login = db.Column(db.DateTime)
 
@@ -45,6 +48,9 @@ class UserModel(BaseModel):
     self.token = secrets.token_hex(32)
     self.state = data.get('state', 'free')
     self.current_order = None
+    self.rating = 0.0
+    self.reviews = 0
+
     self.created_at = datetime.datetime.utcnow()
     self.last_login = datetime.datetime.utcnow()
 
@@ -82,8 +88,7 @@ class DeliveryUserModel(UserModel):
   user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), primary_key=True)
   balance = db.Column(db.Integer, nullable=False)
   picture = db.Column(db.String(256), nullable=False)
-  rating = db.Column(db.Float,nullable=False)
-  reviews = db.Column(db.Integer,nullable=False)
+  
   __mapper_args__ = {
     'polymorphic_identity':'delivery_users',
   }
@@ -96,6 +101,3 @@ class DeliveryUserModel(UserModel):
     super(DeliveryUserModel, self).__init__(data)
     self.balance = data.get('balance')
     self.picture = data.get('picture')
-    self.rating = 0.0
-    self.reviews = 0
-

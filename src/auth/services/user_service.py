@@ -216,3 +216,10 @@ class UserService(Service):
         from src.auth.models.order_table import FavourOfferModel
         response = FavourOfferModel.query.filter(FavourOfferModel.user_id == _id).filter(FavourOfferModel.state == 'offered' ).all()
         return self.sqlachemy_to_dict(response)
+
+    def put_making_favours(self,id,make_favours):
+        from src.auth.models.user_table import NormalUserModel
+        user =  NormalUserModel.get_instance(id)
+        user.make_favours = make_favours
+        user.save()
+        return user
