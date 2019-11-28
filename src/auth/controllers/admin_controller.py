@@ -390,7 +390,6 @@ def create_product():
         return jsonify({"OK": "Producto creado con exito!"}), 200
 
 
-
 @admins_blueprint.route('/admin/product', methods=['DELETE'])
 @auth_required
 @user_is_admin
@@ -404,7 +403,6 @@ def delete_product():
         raise
     else:
         return jsonify({'OK': "product deleted"}), 200
-
 
 @admins_blueprint.route('/admin/product', methods=['PUT'])
 @auth_required
