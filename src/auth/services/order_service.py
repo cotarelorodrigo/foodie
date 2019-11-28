@@ -175,7 +175,7 @@ class OrderService(Service):
         result = OrderModel.query.filter_by(**filters).offset(pageNumber*pageSize).limit(pageSize)
         response = {}
         response['items'] = self.sqlachemy_to_dict(result.all())
-        response['totalItems'] = result.count()
+        response['totalItems'] = OrderModel.query.filter_by(**filters).count()
         return response
 
     def review_shop(self,_order_id,review):

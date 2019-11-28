@@ -48,10 +48,10 @@ class DeliveryService(Service):
         
     def get_N_deliverys(self, pageNumber, pageSize):
         from src.auth.models.user_table import DeliveryUserModel
-        query = DeliveryUserModel.query.offset(pageNumber*pageSize).limit(pageSize)
+        result = DeliveryUserModel.query.offset(pageNumber * pageSize).limit(pageSize)
         response = {}
-        response['items'] = self.sqlachemy_to_dict(query.all())
-        response['totalItems'] = query.count()
+        response['items'] = self.sqlachemy_to_dict(result.all())
+        response['totalItems'] = DeliveryUserModel.query.count()
         return response
 
     def get_available_deliverys(self):

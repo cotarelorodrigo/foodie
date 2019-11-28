@@ -64,10 +64,10 @@ class UserService(Service):
 
     def get_N_users(self, pageNumber, pageSize):
         from src.auth.models.user_table import NormalUserModel
-        query = NormalUserModel.query.offset(pageNumber*pageSize).limit(pageSize)
+        result = NormalUserModel.query.offset(pageNumber*pageSize).limit(pageSize)
         response = {}
-        response['items'] = self.sqlachemy_to_dict(query.all())
-        response['totalItems'] = query.count()
+        response['items'] = self.sqlachemy_to_dict(result.all())
+        response['totalItems'] = NormalUserModel.query.count()
         return response    
 
     def get_users(self):
