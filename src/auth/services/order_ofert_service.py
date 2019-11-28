@@ -88,7 +88,11 @@ class OrderOfferService(Service):
                 message = message + "ya se encuentra aceptada"
             raise InvalidStateChange(message)
         if (state == "accepted"):
-            OrderService().catch_order(offer.order_id, offer.delivery_id, offer_info)
+            now = int(round(time.time()))
+            if ( now >= (offer_info["created_at_seconds"] + 120)):
+                raise InvalidStateChange("Error: el tiempo de validez de la oferta ha terminado")
+            else:
+                OrderService().catch_order(offer.order_id, offer.delivery_id, offer_info)
         offer.state = state
         offer.save()
 
@@ -106,6 +110,10 @@ class OrderOfferService(Service):
                 message = message + "ya se encuentra aceptada"
             raise InvalidStateChange(message)
         if (state == "accepted" ):
-            OrderService().catch_order(offer.order_id, offer.user_id, offer_info)
+            now = int(round(time.time()))
+            if ( now >= (offer_info["created_at_seconds"] + 120)):
+                raise InvalidStateChange("Error: el tiempo de validez de la oferta ha terminado")
+            else:
+                OrderService().catch_order(offer.order_id, offer.user_id, offer_info)
         offer.state = state
         offer.save()

@@ -175,7 +175,7 @@ def put_delivery_state(_id,_offer_id):
         state = content['state']
         service.update_favour_offer_state(_id,_offer_id,state)
     except:
-        raise
+        return jsonify({"msg": "Error: oferta inválida o cancelada"}), 409
     else:
         return jsonify({'msg': 'Offer modified'}),200
 

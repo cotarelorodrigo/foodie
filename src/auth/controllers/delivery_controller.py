@@ -30,9 +30,9 @@ def put_delivery_state(_id,_offer_id):
         state = content['state']
         service.update_offer_state(_id,_offer_id,state)
     except:
-        raise
+        return jsonify({'msg': 'Error: la oferta fue cancelada o el id de oferta es invalido'}),409
     else:
-        return jsonify({'msg': 'Offer modified'})
+        return jsonify({'msg': 'Offer modified'}), 200
 
         
 @delivery_blueprint.route('/deliveries/<_id>',methods=['GET'])
