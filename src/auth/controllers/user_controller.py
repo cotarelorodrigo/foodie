@@ -180,7 +180,7 @@ def put_delivery_state(_id,_offer_id):
         return jsonify({'msg': 'Offer modified'}),200
 
 @user_blueprint.route('/users/<_id>/favour_offers/<_offer_id>',methods=['GET'])
-def get_favour_offer_by_id(_id,_offer_id):
+def get_favour_offer_by_user_and_id(_id,_offer_id):
     service = OrderOfferService()
     offer = service.get_favour_offer_by_id(_offer_id)
     return jsonify(offer),200
@@ -194,3 +194,20 @@ def put_make_favours_indicator(_id):
         return jsonify({'msg': 'Contenido del request es inválido'}), 409
     user = service.put_making_favours(_id,make_favours)
     return jsonify({'msg':'Usuario modificado con exito'}), 200
+
+@user_blueprint.route("/favour_offers/<_id>",methods=['GET'])
+def get_favour_offer_by_id(_id):
+    service = OrderOfferService()
+    offer = get_favour_offer_by_id(_id)
+    return jsonify(offer), 200
+ 
+@user_blueprint.route("/favour_offers/<_id>",methods=['PATCH'])
+def update_favour_offer_state(_id):
+    service = OrderOfferService()
+    content = request.get_json()
+    state = content['state']
+    try:
+        service.update_favour_offer_state()
+    except:
+        return jsonify({'msg': 'Error: la oferta fue cancelada o el id de oferta es invalido'}),409
+    return jsonify({'msg': 'Offer modified'}), 200

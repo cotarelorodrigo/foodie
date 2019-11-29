@@ -79,6 +79,7 @@ class OrderService(Service):
         else:
             try:
                 order.delivery_price = offer_info["delivery_price"]
+                order.delivery_pay = offer_info["delivery_pay"]
                 user_service.get_delivery_user(_delivery_id)
             except:
                 raise NotFoundException("ID invalido: Delivery inexistente")  

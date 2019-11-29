@@ -78,7 +78,11 @@ def change_offer_state(_id):
     service = OrderOfferService()
     content = request.get_json()
     state = content['state']
-    service.update_offer_state()
+    try:
+        service.update_offer_state()
+    except:
+        return jsonify({'msg': 'Error: la oferta fue cancelada o el id de oferta es invalido'}),409
+    return jsonify({'msg': 'Offer modified'}), 200
 
 @delivery_blueprint.route('/showoferts', methods=['GET'])
 def show_oferts():
