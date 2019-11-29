@@ -90,6 +90,8 @@ class OrderOfferService(Service):
         if (state == "accepted"):
             now = int(round(time.time()))
             if ( now >= (offer_info["created_at_seconds"] + 120)):
+                offer.state = "cancelled"
+                offer.save()
                 raise InvalidStateChange("Error: el tiempo de validez de la oferta ha terminado")
             else:
                 OrderService().catch_order(offer.order_id, offer.delivery_id, offer_info)
@@ -112,6 +114,8 @@ class OrderOfferService(Service):
         if (state == "accepted" ):
             now = int(round(time.time()))
             if ( now >= (offer_info["created_at_seconds"] + 120)):
+                offer.state = "cancelled"
+                offer.save()
                 raise InvalidStateChange("Error: el tiempo de validez de la oferta ha terminado")
             else:
                 OrderService().catch_order(offer.order_id, offer.user_id, offer_info)
