@@ -168,6 +168,7 @@ class UserTestCase(BaseTest):
         #Agarro la orden
         offer_info={}
         offer_info["delivery_price"] = 200
+        offer_info["delivery_pay"] = 100
         order_service.catch_order(order.order_id, user_delivery.user_id,offer_info)
         assert user.state == 'waiting'
         assert user_delivery.state == 'working'
