@@ -17,7 +17,7 @@ class UserService(Service):
 
     def get_normal_user(self, _id, dict_format=False):
         from src.auth.models.user_table import NormalUserModel
-        user = NormalUserModel.get_instance(_id)
+        user = NormalUserModel.get_user(_id)
         if dict_format:
             return self.sqlachemy_to_dict(user)
         return user
@@ -53,6 +53,25 @@ class UserService(Service):
             user_data = self.get_user(_id, dict_format=True)
             user_data.update(data)
             assert user.update(user_data) == True
+
+    def update_normal_user(self, _id, data):
+        from src.auth.models.user_table import NormalUserModel
+        user_data = self.sqlachemy_to_dict(NormalUserModel.get_user(_id))
+        user_data.update(data)
+        return NormalUserModel.get_user(_id).update(user_data)
+
+    def cancel_user_subscription(self, _id):
+        from src.auth.models.user_table import NormalUserModel
+        user_data = self.sqlachemy_to_dict(NormalUserModel.get_user(_id))
+        user_data['suscripcion'] = 'flat'
+        return NormalUserModel.get_user(_id).update(user_data)
+
+    def upgrade_user_subscription(self, _id):
+        from src.auth.models.user_table import NormalUserModel
+        user_data = self.sqlachemy_to_dict(NormalUserModel.get_user(_id))
+        user_data['suscripcion'] = 'premium'
+        return NormalUserModel.get_user(_id).update(user_data)
+
     
     def update_coordinates(self, _id, coordinates):
         from src.auth.schemas.schemas import CoordinateSchema
@@ -64,10 +83,10 @@ class UserService(Service):
 
     def get_N_users(self, pageNumber, pageSize):
         from src.auth.models.user_table import NormalUserModel
-        query = NormalUserModel.query.offset(pageNumber*pageSize).limit(pageSize)
+        result = NormalUserModel.query.offset(pageNumber*pageSize).limit(pageSize)
         response = {}
-        response['items'] = self.sqlachemy_to_dict(query.all())
-        response['totalItems'] = query.count()
+        response['items'] = self.sqlachemy_to_dict(result.all())
+        response['totalItems'] = NormalUserModel.query.count()
         return response    
 
     def get_users(self):
@@ -90,10 +109,10 @@ class UserService(Service):
         date_to = datetime.date(year=year_to,month=month_to, day=1)
         result = []
         delta = relativedelta.relativedelta(date_from, date_to)
-        for delta_month in range(abs(delta.months)):
+        for delta_month in range(abs(delta.months)+1):
             date_from_aux = date_from + relativedelta.relativedelta(months=delta_month)
             date_to_aux = date_from + relativedelta.relativedelta(months=delta_month+1)
-            result.append({"year": date_to_aux.year, "month": date_to_aux.month, "amount": self.get_quantity_users_date(date_from_aux, date_to_aux)})
+            result.append({"year": date_from_aux.year, "month": date_from_aux.month, "amount": self.get_quantity_users_date(date_from_aux, date_to_aux)})
         return result
 
 

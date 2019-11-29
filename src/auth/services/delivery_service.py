@@ -48,10 +48,10 @@ class DeliveryService(Service):
         
     def get_N_deliverys(self, pageNumber, pageSize):
         from src.auth.models.user_table import DeliveryUserModel
-        query = DeliveryUserModel.query.offset(pageNumber*pageSize).limit(pageSize)
+        result = DeliveryUserModel.query.offset(pageNumber * pageSize).limit(pageSize)
         response = {}
-        response['items'] = self.sqlachemy_to_dict(query.all())
-        response['totalItems'] = query.count()
+        response['items'] = self.sqlachemy_to_dict(result.all())
+        response['totalItems'] = DeliveryUserModel.query.count()
         return response
 
     def get_available_deliverys(self):
@@ -86,8 +86,8 @@ class DeliveryService(Service):
         date_to = datetime.date(year=year_to,month=month_to, day=1)
         result = []
         delta = relativedelta.relativedelta(date_from, date_to)
-        for delta_month in range(abs(delta.months)):
+        for delta_month in range(abs(delta.months)+1):
             date_from_aux = date_from + relativedelta.relativedelta(months=delta_month)
             date_to_aux = date_from + relativedelta.relativedelta(months=delta_month+1)
-            result.append({"year": date_to_aux.year, "month": date_to_aux.month, "amount": self.get_quantity_deliverys_date(date_from_aux, date_to_aux)})
+            result.append({"year": date_from_aux.year, "month": date_from_aux.month, "amount": self.get_quantity_deliverys_date(date_from_aux, date_to_aux)})
         return result

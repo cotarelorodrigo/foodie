@@ -33,10 +33,10 @@ class ProductService(Service):
 
     def get_N_products(self, shop_id, pageNumber, pageSize):
         from src.auth.models.product_table import ProductModel
-        result = ProductModel.query.filter_by(shop_id=shop_id).offset(pageNumber*pageSize).limit(pageSize)
+        result = ProductModel.query.filter_by(shop_id=shop_id).offset(pageNumber * pageSize).limit(pageSize)
         response = {}
         response['items'] = self.sqlachemy_to_dict(result.all())
-        response['totalItems'] = result.count()
+        response['totalItems'] = ProductModel.query.filter_by(shop_id=shop_id).count()
         return response
 
     def get_sample_products(self, quantity):

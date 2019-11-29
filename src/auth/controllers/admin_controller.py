@@ -307,7 +307,7 @@ def create_user():
 def get_user():
     user_id = request.args.get('id')
     try:
-        response = UserService().get_user(user_id)
+        response = UserService().get_normal_user(user_id, dict_format=True)
     except NotFoundException as e:
         return jsonify({'404': "user {}".format(e.msg)}), 404
     except:
@@ -338,7 +338,35 @@ def update_user():
     user_id = request.args.get('id')
     content = request.get_json()
     try:
-        response = UserService().update_user(user_id, content)
+        response = UserService().update_normal_user(user_id, content)
+    except NotFoundException as e:
+        return jsonify({'404': "user {}".format(e.msg)}), 404
+    except:
+        raise
+    else:
+        return jsonify({"OK": "user actualizado con exito!"}), 200
+
+@admins_blueprint.route('/admin/user/subscription/cancel', methods=['POST'])
+@auth_required
+@user_is_admin
+def cancel_subscription():
+    user_id = request.args.get('id')
+    try:
+        response = UserService().cancel_user_subscription(user_id)
+    except NotFoundException as e:
+        return jsonify({'404': "user {}".format(e.msg)}), 404
+    except:
+        raise
+    else:
+        return jsonify({"OK": "user actualizado con exito!"}), 200
+
+@admins_blueprint.route('/admin/user/subscription/upgrade', methods=['POST'])
+@auth_required
+@user_is_admin
+def upgrade_subscription():
+    user_id = request.args.get('id')
+    try:
+        response = UserService().upgrade_user_subscription(user_id)
     except NotFoundException as e:
         return jsonify({'404': "user {}".format(e.msg)}), 404
     except:
@@ -390,7 +418,6 @@ def create_product():
         return jsonify({"OK": "Producto creado con exito!"}), 200
 
 
-
 @admins_blueprint.route('/admin/product', methods=['DELETE'])
 @auth_required
 @user_is_admin
@@ -404,7 +431,6 @@ def delete_product():
         raise
     else:
         return jsonify({'OK': "product deleted"}), 200
-
 
 @admins_blueprint.route('/admin/product', methods=['PUT'])
 @auth_required

@@ -152,10 +152,10 @@ class OrderService(Service):
         date_to = datetime.date(year=year_to,month=month_to, day=1)
         result = []
         delta = relativedelta.relativedelta(date_from, date_to)
-        for delta_month in range(abs(delta.months)):
+        for delta_month in range(abs(delta.months)+1):
             date_from_aux = date_from + relativedelta.relativedelta(months=delta_month)
             date_to_aux = date_from + relativedelta.relativedelta(months=delta_month+1)
-            result.append({"year": date_to_aux.year, "month": date_to_aux.month, "amount": self.get_quantity_orders_date(date_from_aux, date_to_aux, state)})
+            result.append({"year": date_from_aux.year, "month": date_from_aux.month, "amount": self.get_quantity_orders_date(date_from_aux, date_to_aux, state)})
         return result
 
     def get_today_delivery_orders(self, delivery_id):
@@ -176,7 +176,7 @@ class OrderService(Service):
         result = OrderModel.query.filter_by(**filters).offset(pageNumber*pageSize).limit(pageSize)
         response = {}
         response['items'] = self.sqlachemy_to_dict(result.all())
-        response['totalItems'] = result.count()
+        response['totalItems'] = OrderModel.query.filter_by(**filters).count()
         return response
 
     def review_shop(self,_order_id,review):
