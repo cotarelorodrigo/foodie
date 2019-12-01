@@ -18,7 +18,7 @@ class OrderModel(BaseModel):
   favourPoints = db.Column(db.Integer, nullable=False)
   state = db.Column(db.String(128), nullable=False)
   price = db.Column(db.Float,nullable = False)
-  deliver_price = db.Column(db.Float)
+  delivery_price = db.Column(db.Float)
   delivery_pay = db.Column(db.Float)
   user_id = db.Column(db.Integer, db.ForeignKey('normal_users.user_id'), nullable=False)
   delivery_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=True)

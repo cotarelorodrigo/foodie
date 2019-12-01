@@ -33,19 +33,7 @@ class DeliveryService(Service):
         delivery_data = self.sqlachemy_to_dict(DeliveryUserModel.get_delivery(_id))
         delivery_data.update(data)
         return DeliveryUserModel.get_delivery(_id).update(delivery_data)
-
-
-    def add_review(self,id,review):
-        from src.auth.models.user_table import DeliveryUserModel
-        delivery = DeliveryUserModel.get_delivery(id)
-        old_rating = delivery.rating
-        reviews = delivery.reviews
-        new_rating = (reviews * old_rating + review) / (reviews + 1.0)
-        delivery.reviews = (reviews + 1)
-        delivery.rating = new_rating
-        delivery.save()
-
-        
+ 
     def get_N_deliverys(self, pageNumber, pageSize):
         from src.auth.models.user_table import DeliveryUserModel
         result = DeliveryUserModel.query.offset(pageNumber * pageSize).limit(pageSize)

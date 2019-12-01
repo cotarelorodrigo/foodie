@@ -36,6 +36,16 @@ class UserService(Service):
             return self.sqlachemy_to_dict(user)
         return user
 
+    def add_review(self,_id,review):
+        from src.auth.models.user_table import UserModel
+        delivery = UserModel.get_instance(_id)
+        old_rating = delivery.rating
+        reviews = delivery.reviews
+        new_rating = (reviews * old_rating + review) / (reviews + 1.0)
+        delivery.reviews = (reviews + 1)
+        delivery.rating = new_rating
+        delivery.save()
+
     def delete_user(self, _id):
         from src.auth.models.user_table import NormalUserModel
         return NormalUserModel.get_user(_id).delete()

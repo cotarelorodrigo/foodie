@@ -191,12 +191,9 @@ class OrderService(Service):
 
     def review_delivery(self,_order_id,review):
         from src.auth.models.order_table import OrderModel
-        from src.auth.services.delivery_service import DeliveryService
-
+        from src.auth.services.delivery_service import UserService
         order = OrderModel.query.filter_by(order_id=_order_id).one()
-        del_service = DeliveryService()
-        delivery_id = order.delivery_id
-        del_service.add_review(delivery_id,review)
+        UserService().add_review(order.delivery_id,review)
         order.delivery_review = review
         order.save()
         return self.sqlachemy_to_dict(order)
