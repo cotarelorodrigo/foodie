@@ -105,7 +105,7 @@ class OrderOfferSchema(Schema):
     class Meta:
         strict = True
 
-OrderState = {'delivered','pickedUp' , 'onWay', 'cancelled', 'created'}
+OrderState = {'delivered','pickedUp','onWay', 'cancelled', 'created'}
 
 class FavourOfferSchema(Schema):
     order_id = fields.Int(required=True)
