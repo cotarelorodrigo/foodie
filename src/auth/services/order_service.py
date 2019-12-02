@@ -185,7 +185,7 @@ class OrderService(Service):
         response = {}
         items = self.sqlachemy_to_dict(result.all())
         for item in items:
-            item.update({'products': OrderProductsModel.query.filter_by(order_id=item['order_id'])})
+            item.update({'products': self.sqlachemy_to_dict(OrderProductsModel.query.filter_by(order_id=item['order_id'].all()))})
         response['items'] = items
         response['totalItems'] = orders.count()
         return response
