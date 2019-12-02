@@ -184,8 +184,8 @@ class OrderService(Service):
         result = orders.offset(pageNumber*pageSize).limit(pageSize)
         response = {}
         items = self.sqlachemy_to_dict(result.all())
-        items = list(map(lambda order: order.update({'products': OrderProductsModel.query.filter_by(order_id=order['order_id'])}),
-                     items))
+        for item in items:
+            item.update({'products': OrderProductsModel.query.filter_by(order_id=item['order_id'])})
         response['items'] = items
         response['totalItems'] = orders.count()
         return response
