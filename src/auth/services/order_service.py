@@ -173,6 +173,7 @@ class OrderService(Service):
 
     def get_N_orders_filtered(self, pageNumber, pageSize, user_id, delivery_id, shop_id):
         from src.auth.models.order_table import OrderModel
+        from src.auth.models.order_table import OrderProductsModel
         orders = OrderModel.query
         if user_id is not None:
             orders = orders.filter_by(user_id=user_id)
@@ -182,6 +183,8 @@ class OrderService(Service):
             orders = orders.filter_by(shop_id=shop_id)
         result = orders.offset(pageNumber*pageSize).limit(pageSize)
         response = {}
+        result = map(lambda order: order.update({'products': OrderProductsModel.query(order_id=order.order_id)}),
+                     result)
         response['items'] = self.sqlachemy_to_dict(result.all())
         response['totalItems'] = orders.count()
         return response
