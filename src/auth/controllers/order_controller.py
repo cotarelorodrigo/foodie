@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from src.auth.services.order_service import OrderService
 from src.auth.schemas.schemas import OrderSchema
 from src.auth.services.service import Service
+from src.auth.auth_exception import NotFoundException
 import sqlalchemy
 import marshmallow 
 
@@ -17,7 +18,9 @@ def add_order():
     except marshmallow.exceptions.ValidationError as e:
         return jsonify({'msg': 'Missing order information: {}'.format(e)}), 400
     except sqlalchemy.exc.IntegrityError:
-        return jsonify({'msg': 'User_id not registered'}), 430
+        return jsonify({'msg': 'User_id or delivery_id not registered'}), 430
+    except NotFoundException as e:
+        return jsonify({'404': e.msg}), 404
     except:
         raise
     else:

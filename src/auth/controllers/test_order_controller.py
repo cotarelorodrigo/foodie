@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import patch
+from src.auth.auth_exception import NotFoundException
 import json
 from src.auth.controllers.baseTest import BaseTest
 
@@ -14,7 +15,9 @@ favour_offer_data={"order_id":1,"user_id":2,"points":20}
 
 class OrderTestCase(BaseTest):
 
-    def test_add_order(self):
+    @patch("src.auth.services.order_service.OrderService.set_order_price")
+    def test_add_order(self, set_order_price):
+        set_order_price.return_value = True
         response = self.client.post(
             '/orders',
             data=json.dumps({
@@ -40,7 +43,9 @@ class OrderTestCase(BaseTest):
         )
         assert response._status_code == 200
 
-    def test_cancel_order(self):
+    @patch("src.auth.services.order_service.OrderService.set_order_price")
+    def test_cancel_order(self, set_order_price):
+        set_order_price.return_value = True
         response = self.client.post(
             '/orders',
             data=json.dumps({
@@ -143,13 +148,15 @@ class OrderTestCase(BaseTest):
         )
         assert response._status_code == 408
 
-    def test_delivery_cant_accept_favours(self):
+    @patch("src.auth.services.order_service.OrderService.set_order_price")
+    def test_delivery_cant_accept_favours(self, set_order_price):
         from  src.auth.models.user_table import NormalUserModel
         from src.auth.models.user_table import DeliveryUserModel
         from src.auth.services.order_service import OrderService
         from src.auth.services.order_ofert_service import OrderOfferService
         from src.auth.auth_exception import NotFoundException
 
+        set_order_price.return_value = True
         CANTIDAD_FAVOUR_POINTS = 20
         user = NormalUserModel(user_data)
         user.save()
@@ -167,14 +174,15 @@ class OrderTestCase(BaseTest):
             order_ofert_service.update_offer_state(delivery.user_id, order.order_id, 'accepted')
 
 
-
-    def test_complete_order_gain_favour_points(self):
+    @patch("src.auth.services.order_service.OrderService.set_order_price")
+    def test_complete_order_gain_favour_points(self, set_order_price):
         from  src.auth.models.user_table import NormalUserModel
         from src.auth.models.user_table import DeliveryUserModel
         from src.auth.services.order_service import OrderService
         from src.auth.services.order_ofert_service import OrderOfferService
         from src.auth.auth_exception import NotFoundException
 
+        set_order_price.return_value = True
         CANTIDAD_FAVOUR_POINTS = 20
         user = NormalUserModel(user_data)
         user.save()
@@ -198,7 +206,7 @@ class OrderTestCase(BaseTest):
         assert user_d.favourPoints == user_d_old_favour_points + CANTIDAD_FAVOUR_POINTS
 
     def test_get_users_work_favours_ordered(self):
-        from  src.auth.models.user_table import NormalUserModel
+        from src.auth.models.user_table import NormalUserModel
         from src.auth.services.user_service import UserService
         from src.auth.services.direc_service import DirecService
         user = NormalUserModel(user_data)
@@ -219,7 +227,14 @@ class OrderTestCase(BaseTest):
         #Al ordenarlos el primer usuario tendria que ser el usuario 2
         assert users[0]["user_id"] == 2
 
-        
+    def test_order_with_invalid_products(self):
+        from src.auth.services.order_service import OrderService
+        from src.auth.models.order_table import OrderProductsModel
+        from src.auth.models.product_table import ProductModel
+        order_service = OrderService()
+        with self.assertRaisesRegex(NotFoundException, "El producto que quiere agregar no existe"):
+            order = order_service.create_order(order_data)
+
 
 
 
