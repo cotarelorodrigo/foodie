@@ -171,12 +171,19 @@ class OrderService(Service):
         NormalUserModel.get_user(user_id)
         return OrderModel.query.filter(OrderModel.delivery_id == user_id).filter(OrderModel.state == 'delivered').count()
 
-    def get_N_orders_filtered(self, pageNumber, pageSize, filters):
+    def get_N_orders_filtered(self, pageNumber, pageSize, user_id, delivery_id, shop_id):
         from src.auth.models.order_table import OrderModel
-        result = OrderModel.query.filter_by(**filters).offset(pageNumber*pageSize).limit(pageSize)
+        orders = OrderModel.query
+        if user_id is not None:
+            orders = orders.filter_by(user_id=user_id)
+        if delivery_id is not None:
+            orders = orders.filter_by(delivery_id=delivery_id)
+        if shop_id is not None:
+            orders = orders.filter_by(shop_id=shop_id)
+        result = orders.offset(pageNumber*pageSize).limit(pageSize)
         response = {}
         response['items'] = self.sqlachemy_to_dict(result.all())
-        response['totalItems'] = OrderModel.query.filter_by(**filters).count()
+        response['totalItems'] = orders.count()
         return response
 
     def review_shop(self,_order_id,review):

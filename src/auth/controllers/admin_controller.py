@@ -383,14 +383,10 @@ def upgrade_subscription():
 def orders():
     pageNumber = request.args.get('p')
     pageSize = request.args.get('pSize')
-    filters = {}
-    if request.args.get('user_id') is not None:
-        filters.update({'user_id': request.args.get('user_id')})
-    if request.args.get('delivery_id') is not None:
-        filters.update({'delivery_id': request.args.get('delivery_id')})
-    if request.args.get('user_id') is not None:
-        filters.update({'shop_id': request.args.get('shop_id')})
-    result = OrderService().get_N_orders_filtered(int(pageNumber) - 1, int(pageSize), filters)
+    user_id = request.args.get('user_id')
+    delivery_id = request.args.get('delivery_id')
+    shop_id = request.args.get('shop_id')
+    result = OrderService().get_N_orders_filtered(int(pageNumber) - 1, int(pageSize), user_id, delivery_id, shop_id)
     return jsonify(result), 200
 
 
