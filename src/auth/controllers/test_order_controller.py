@@ -235,6 +235,27 @@ class OrderTestCase(BaseTest):
         with self.assertRaisesRegex(NotFoundException, "El producto que quiere agregar no existe"):
             order = order_service.create_order(order_data)
 
+    def test_order_with_discount(self):
+        from src.auth.services.order_service import OrderService
+        from src.auth.models.product_table import ProductModel
+        #Agrego dos productos
+        p1 = ProductModel({"shop_id": 1,"name": "Hamburguesa con queso","description": "Hamburguesa con queso. Lechuga y tomate opcionales","price": 120})
+        p2 = ProductModel({"shop_id": 2,"name": "Hamburguesa normal","description": "Hamburguesa con queso. Lechuga y tomate opcionales","price": 90})
+        p1.save()
+        p2.save()
+        #Los sumo a la orden
+        order_data["products"] = [{"product_id": p1.product_id,"units": 2},{"product_id": p2.product_id,"units": 1}]
+        order_data["discount"] = True
+        order_service = OrderService()
+        order = order_service.create_order(order_data)
+        price_with_discount = (order_data["products"][0]["units"] * p1.price) + (order_data["products"][1]["units"] * p2.price)
+        print("Prc: {}".format(price_with_discount))
+        price_with_discount = price_with_discount - (0.2*price_with_discount)
+        print("Prc: {}".format(price_with_discount))
+        print("Precio de la orden: {}".format(order.price))
+        assert price_with_discount == order.price
+
+        
 
 
 

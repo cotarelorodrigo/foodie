@@ -50,11 +50,13 @@ class OrderService(Service):
         order = self.get_order(order_id)
         order_products = OrderProductsModel.query.filter_by(order_id=order_id)
         price = 0.0
-        for product in order_products:
-            product  = ProductModel.query.get(product.product_id)
+        for order_product in order_products:
+            product  = ProductModel.query.get(order_product.product_id)
             if not product:
                 raise NotFoundException("El producto que quiere agregar no existe")
-            price += product.price
+            price += (product.price * order_product.units)
+        if order.discount:    
+            price = price - 0.2*price
         order.price = price
         order.save()
 
