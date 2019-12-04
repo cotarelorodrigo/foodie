@@ -20,7 +20,7 @@ def get_user_token(user_data):
 
 @login_blueprint.route('/users/login', methods=['POST'])
 def login():
-    MINUTES_VALID_TOKEN = 20
+    MINUTES_VALID_TOKEN = 120
     content = request.get_json()
     service = UserService()
     try:

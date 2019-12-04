@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from src.auth.services.user_service import UserService
 from src.auth.services.order_ofert_service import OrderOfferService
 from src.auth.schemas.schemas import UserSchema, LoginSchema, CreditCardSchema
-from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException, NotFoundException, NotEnoughFavourPoints
+from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException, NotFoundException, NotEnoughFavourPoints, InvalidQueryParameters
 from src.jwt_handler import encode_data_to_jwt
 from src.auth.controllers.common_functions_controllers import auth_required
 from src.auth.services.direc_service import DirecService

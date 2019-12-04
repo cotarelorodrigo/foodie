@@ -8,7 +8,7 @@ from src.auth.services.products_service import ProductService
 from src.auth.schemas.schemas import StaticsDatetimeRangeSchema
 from src.auth.controllers.common_functions_controllers import auth_required, user_is_admin
 from marshmallow import ValidationError
-from src.auth.auth_exception import NotFoundException
+from src.auth.auth_exception import NotFoundException, InvalidQueryParameters
 import sqlalchemy
 import marshmallow
 
@@ -381,12 +381,33 @@ def upgrade_subscription():
 @auth_required
 @user_is_admin
 def orders():
+
     pageNumber = request.args.get('p')
     pageSize = request.args.get('pSize')
     user_id = request.args.get('user_id')
     delivery_id = request.args.get('delivery_id')
     shop_id = request.args.get('shop_id')
-    result = OrderService().get_N_orders_filtered(int(pageNumber) - 1, int(pageSize), user_id, delivery_id, shop_id)
+
+    if (pageNumber is None) | (pageSize is None):
+        raise InvalidQueryParameters("Invalid query values")
+    else:
+        try:
+            pageNumber = int(pageNumber)
+            pageSize = int(pageSize)
+        except:
+            raise InvalidQueryParameters("Invalid query type values")
+
+    if (user_id is None) & (delivery_id is None) & (shop_id is None):
+        raise InvalidQueryParameters("Invalid query values")
+    else:
+        try:
+            if user_id is not None: user_id = int(user_id)
+            if delivery_id is not None: delivery_id = int(delivery_id)
+            if shop_id is not None: user_id = int(shop_id)
+        except:
+            raise InvalidQueryParameters("Invalid query type values")
+
+    result = OrderService().get_N_orders_filtered(pageNumber - 1, pageSize, user_id, delivery_id, shop_id)
     return jsonify(result), 200
 
 

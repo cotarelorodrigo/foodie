@@ -3,6 +3,7 @@ from src.app import db
 from src.auth.auth_exception import NotFoundException
 from src.auth.models.base_table import BaseModel
 from src.auth.models.user_table import DeliveryUserModel
+from src.auth.models.product_table import ProductModel
 import time
 class OrderModel(BaseModel):
 
@@ -53,10 +54,8 @@ class OrderProductsModel(BaseModel):
 
   id = db.Column(db.Integer, primary_key=True)
   order_id = db.Column(db.Integer, db.ForeignKey('orders.order_id', ondelete='CASCADE'), nullable=False)
-  product_id = db.Column(db.Integer, nullable=False)
+  product_id = db.Column(db.Integer, db.ForeignKey('products.product_id', ondelete='CASCADE'), nullable=False)
   units = db.Column(db.Integer, nullable=False)
-  price = db.Column(db.Float, nullable=True)
-  name = db.Column(db.String(128), nullable=True)
 
   # class constructor
   def __init__(self, data):
