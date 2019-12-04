@@ -198,7 +198,7 @@ def put_make_favours_indicator(_id):
 @user_blueprint.route("/favour_offers/<_id>",methods=['GET'])
 def get_favour_offer_by_id(_id):
     service = OrderOfferService()
-    offer = get_favour_offer_by_id(_id)
+    offer = service.get_favour_offer_by_id(_id)
     return jsonify(offer), 200
  
 @user_blueprint.route("/favour_offers/<_id>",methods=['PATCH'])
