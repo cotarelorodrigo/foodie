@@ -255,6 +255,7 @@ class OrderTestCase(BaseTest):
     def test_order_wit_discount_subtract_user_favour_pounts(self):
         from src.auth.models.user_table import NormalUserModel, DeliveryUserModel
         from src.auth.services.order_service import OrderService
+        from src.auth.services.order_ofert_service import OrderOfferService
         from src.auth.models.product_table import ProductModel
         #Agrego dos productos
         p1 = ProductModel({"shop_id": 1,"name": "Hamburguesa con queso","description": "Hamburguesa con queso. Lechuga y tomate opcionales","price": 120})
@@ -266,16 +267,22 @@ class OrderTestCase(BaseTest):
         user.save()
         delivery = DeliveryUserModel(delivery_data)
         delivery.save()
-        #Los sumo a la orden
-        order_data_test = order_data
+        #Creo orden
+        order_data_test = order_data.copy()
         order_data_test["products"] = [{"product_id": p1.product_id,"units": 2},{"product_id": p2.product_id,"units": 1}]
         order_data_test["discount"] = True
         order_data_test["user_id"] = user.user_id
-        order_data_test["delivery_id"] = delivery.user_id
+        order_data_test["payWithPoints"] = False
         order_service = OrderService()
         order = order_service.create_order(order_data_test)
-        order_service.order_delivered(order.order_id)
-        assert order.state == 'delivered'
+        #Oferto a delivery
+        order_ofert_service = OrderOfferService()
+        order_ofert_data["order_id"] = order.order_id
+        order_ofert_data["delivery_id"] = delivery.user_id
+        order_ofert_id = order_ofert_service.create_order_ofert(order_ofert_data)
+        order_ofert_service.update_offer_state(delivery.user_id, order_ofert_id, 'accepted')
+        assert order.state == 'onWay'
+        
         
 
 
