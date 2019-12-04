@@ -249,13 +249,37 @@ class OrderTestCase(BaseTest):
         order_service = OrderService()
         order = order_service.create_order(order_data)
         price_with_discount = (order_data["products"][0]["units"] * p1.price) + (order_data["products"][1]["units"] * p2.price)
-        print("Prc: {}".format(price_with_discount))
         price_with_discount = price_with_discount - (0.2*price_with_discount)
-        print("Prc: {}".format(price_with_discount))
-        print("Precio de la orden: {}".format(order.price))
         assert price_with_discount == order.price
 
+    def test_order_wit_discount_subtract_user_favour_pounts(self):
+        from src.auth.models.user_table import NormalUserModel, DeliveryUserModel
+        from src.auth.services.order_service import OrderService
+        from src.auth.models.product_table import ProductModel
+        #Agrego dos productos
+        p1 = ProductModel({"shop_id": 1,"name": "Hamburguesa con queso","description": "Hamburguesa con queso. Lechuga y tomate opcionales","price": 120})
+        p2 = ProductModel({"shop_id": 2,"name": "Hamburguesa normal","description": "Hamburguesa con queso. Lechuga y tomate opcionales","price": 90})
+        p1.save()
+        p2.save()
+        #Creo el user y el delivery
+        user = NormalUserModel(user_data)
+        user.save()
+        delivery = DeliveryUserModel(delivery_data)
+        delivery.save()
+        #Los sumo a la orden
+        order_data_test = order_data
+        order_data_test["products"] = [{"product_id": p1.product_id,"units": 2},{"product_id": p2.product_id,"units": 1}]
+        order_data_test["discount"] = True
+        order_data_test["user_id"] = user.user_id
+        order_data_test["delivery_id"] = delivery.user_id
+        order_service = OrderService()
+        order = order_service.create_order(order_data_test)
+        order_service.order_delivered(order.order_id)
+        assert order.state == 'delivered'
         
+
+
+
 
 
 
