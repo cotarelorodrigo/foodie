@@ -9,6 +9,7 @@ class OrderService(Service):
     def create_order(self, order_data):
         from src.auth.models.order_table import OrderModel, OrderProductsModel
         from src.auth.schemas.schemas import OrderSchema
+        from src.auth.models.product_table import ProductModel
         from src.auth.services.user_service import UserService
         order_schema = OrderSchema()
         order_info, products_info = order_schema.load(order_data)
@@ -17,6 +18,10 @@ class OrderService(Service):
         #     if not user_service.user_order_by_favour(int(order_info["user_id"]), int(order_info["favourPoints"])):
         #         raise NotEnoughFavourPoints("Favour points insuficientes")
         order = OrderModel(order_info)
+        for p in products_info:
+            _p = self.sqlachemy_to_dict(ProductModel.query.filter_by(id=p['product_id']).first())
+            if _p is not None:
+                p.update({'price': _p['price'], 'name': _p['name']})
         products = [OrderProductsModel(product) for product in products_info]
         order.save() #Hay que guardar primero la orden orden porq es la parte unaria de la relacion
         for p in products:
