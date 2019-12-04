@@ -188,11 +188,12 @@ class OrderService(Service):
 
         for order in items:
             order_products = self.get_order_items(order["order_id"])
-            products = []
             for product in order_products:
                 p_info = ProductModel.query.get(product['product_id'])
-                products.append({"name": p_info.name, "price": p_info.price, "units": product["units"]})
-            order["products"] = products
+                product.pop("id")
+                product["name"] = p_info.name
+                product["price"] = p_info.price
+            order["products"] = order_products
 
         response['items'] = items
         response['totalItems'] = orders.count()
