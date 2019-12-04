@@ -39,7 +39,7 @@ def show_orders():
 
     orders = Service().sqlachemy_to_dict(orders.all())
 
-    return jsonify(orders)
+    return jsonify(orders), 200
 
 @orders_blueprint.route('/orders/<_id>/items', methods=['GET'])
 def get_order_items(_id):

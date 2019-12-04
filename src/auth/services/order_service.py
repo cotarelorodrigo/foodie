@@ -105,7 +105,7 @@ class OrderService(Service):
             order_info['favourPoints'] = order.favourPoints
         else:
             order_info["payWithPoints"] = False
-            order_info["delivery_price"] = order.delivery_price
+            order_info["delivery_price"] = order.delivery_pay
 
         user_service.pay_order(order.user_id, order.delivery_id, order_info)
         user_service.user_finish_working(order.delivery_id)
