@@ -56,6 +56,7 @@ class OrderProductsModel(BaseModel):
   product_id = db.Column(db.Integer, nullable=False)
   units = db.Column(db.Integer, nullable=False)
   price = db.Column(db.Float, nullable=True)
+  name = db.Column(db.String(128), nullable=True)
 
   # class constructor
   def __init__(self, data):
