@@ -122,6 +122,7 @@ class OrderSchema(Schema):
     price = fields.Field(required=True)
     state = fields.Str(required=True, validate=lambda s: s in OrderState)
     user_id = fields.Int(required=True)
+    discount = fields.Field(required=False)
 
     @post_load
     def make_order_products(self, data, **kwargs):

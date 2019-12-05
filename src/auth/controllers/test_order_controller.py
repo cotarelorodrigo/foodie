@@ -1,5 +1,6 @@
 import unittest
 from unittest.mock import patch
+from src.auth.auth_exception import NotFoundException
 import json
 from src.auth.controllers.baseTest import BaseTest
 
@@ -14,7 +15,9 @@ favour_offer_data={"order_id":1,"user_id":2,"points":20}
 
 class OrderTestCase(BaseTest):
 
-    def test_add_order(self):
+    @patch("src.auth.services.order_service.OrderService.set_order_price")
+    def test_add_order(self, set_order_price):
+        set_order_price.return_value = True
         response = self.client.post(
             '/orders',
             data=json.dumps({
@@ -40,7 +43,9 @@ class OrderTestCase(BaseTest):
         )
         assert response._status_code == 200
 
-    def test_cancel_order(self):
+    @patch("src.auth.services.order_service.OrderService.set_order_price")
+    def test_cancel_order(self, set_order_price):
+        set_order_price.return_value = True
         response = self.client.post(
             '/orders',
             data=json.dumps({
@@ -143,13 +148,15 @@ class OrderTestCase(BaseTest):
         )
         assert response._status_code == 408
 
-    def test_delivery_cant_accept_favours(self):
+    @patch("src.auth.services.order_service.OrderService.set_order_price")
+    def test_delivery_cant_accept_favours(self, set_order_price):
         from  src.auth.models.user_table import NormalUserModel
         from src.auth.models.user_table import DeliveryUserModel
         from src.auth.services.order_service import OrderService
         from src.auth.services.order_ofert_service import OrderOfferService
         from src.auth.auth_exception import NotFoundException
 
+        set_order_price.return_value = True
         CANTIDAD_FAVOUR_POINTS = 20
         user = NormalUserModel(user_data)
         user.save()
@@ -167,14 +174,15 @@ class OrderTestCase(BaseTest):
             order_ofert_service.update_offer_state(delivery.user_id, order.order_id, 'accepted')
 
 
-
-    def test_complete_order_gain_favour_points(self):
+    @patch("src.auth.services.order_service.OrderService.set_order_price")
+    def test_complete_order_gain_favour_points(self, set_order_price):
         from  src.auth.models.user_table import NormalUserModel
         from src.auth.models.user_table import DeliveryUserModel
         from src.auth.services.order_service import OrderService
         from src.auth.services.order_ofert_service import OrderOfferService
         from src.auth.auth_exception import NotFoundException
 
+        set_order_price.return_value = True
         CANTIDAD_FAVOUR_POINTS = 20
         user = NormalUserModel(user_data)
         user.save()
@@ -198,7 +206,7 @@ class OrderTestCase(BaseTest):
         assert user_d.favourPoints == user_d_old_favour_points + CANTIDAD_FAVOUR_POINTS
 
     def test_get_users_work_favours_ordered(self):
-        from  src.auth.models.user_table import NormalUserModel
+        from src.auth.models.user_table import NormalUserModel
         from src.auth.services.user_service import UserService
         from src.auth.services.direc_service import DirecService
         user = NormalUserModel(user_data)
@@ -219,7 +227,66 @@ class OrderTestCase(BaseTest):
         #Al ordenarlos el primer usuario tendria que ser el usuario 2
         assert users[0]["user_id"] == 2
 
+    def test_order_with_invalid_products(self):
+        from src.auth.services.order_service import OrderService
+        from src.auth.models.order_table import OrderProductsModel
+        from src.auth.models.product_table import ProductModel
+        order_service = OrderService()
+        with self.assertRaisesRegex(NotFoundException, "El producto que quiere agregar no existe"):
+            order = order_service.create_order(order_data)
+
+    def test_order_with_discount(self):
+        from src.auth.services.order_service import OrderService
+        from src.auth.models.product_table import ProductModel
+        #Agrego dos productos
+        p1 = ProductModel({"shop_id": 1,"name": "Hamburguesa con queso","description": "Hamburguesa con queso. Lechuga y tomate opcionales","price": 120})
+        p2 = ProductModel({"shop_id": 2,"name": "Hamburguesa normal","description": "Hamburguesa con queso. Lechuga y tomate opcionales","price": 90})
+        p1.save()
+        p2.save()
+        #Los sumo a la orden
+        order_data["products"] = [{"product_id": p1.id,"units": 2},{"product_id": p2.id,"units": 1}]
+        order_data["discount"] = True
+        order_service = OrderService()
+        order = order_service.create_order(order_data)
+        price_with_discount = (order_data["products"][0]["units"] * p1.price) + (order_data["products"][1]["units"] * p2.price)
+        price_with_discount = price_with_discount - (0.2*price_with_discount)
+        assert price_with_discount == order.price
+
+    def test_order_wit_discount_subtract_user_favour_pounts(self):
+        from src.auth.models.user_table import NormalUserModel, DeliveryUserModel
+        from src.auth.services.order_service import OrderService
+        from src.auth.services.order_ofert_service import OrderOfferService
+        from src.auth.models.product_table import ProductModel
+        #Agrego dos productos
+        p1 = ProductModel({"shop_id": 1,"name": "Hamburguesa con queso","description": "Hamburguesa con queso. Lechuga y tomate opcionales","price": 120})
+        p2 = ProductModel({"shop_id": 2,"name": "Hamburguesa normal","description": "Hamburguesa con queso. Lechuga y tomate opcionales","price": 90})
+        p1.save()
+        p2.save()
+        #Creo el user y el delivery
+        user = NormalUserModel(user_data)
+        user.save()
+        delivery = DeliveryUserModel(delivery_data)
+        delivery.save()
+        #Creo orden
+        order_data_test = order_data.copy()
+        order_data_test["products"] = [{"product_id": p1.id,"units": 2},{"product_id": p2.id,"units": 1}]
+        order_data_test["discount"] = True
+        order_data_test["user_id"] = user.user_id
+        order_data_test["payWithPoints"] = False
+        order_service = OrderService()
+        order = order_service.create_order(order_data_test)
+        #Oferto a delivery
+        order_ofert_service = OrderOfferService()
+        order_ofert_data["order_id"] = order.order_id
+        order_ofert_data["delivery_id"] = delivery.user_id
+        order_ofert_id = order_ofert_service.create_order_ofert(order_ofert_data)
+        order_ofert_service.update_offer_state(delivery.user_id, order_ofert_id, 'accepted')
+        assert order.state == 'onWay'
         
+        
+
+
+
 
 
 

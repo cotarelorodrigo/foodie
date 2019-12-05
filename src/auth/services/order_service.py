@@ -37,6 +37,28 @@ class OrderService(Service):
         order = OrderModel.query.filter_by(order_id=_order_id).one()
         return self.sqlachemy_to_dict(order)
 
+    def get_order(self, _id, dict_format=False):
+        from src.auth.models.order_table import OrderModel
+        order = OrderModel.get_instance(_id)
+        if dict_format:
+            return self.sqlachemy_to_dict(order)
+        return order
+
+    def set_order_price(self, order_id):
+        from src.auth.models.order_table import OrderProductsModel
+        from src.auth.models.product_table import ProductModel
+        order = self.get_order(order_id)
+        order_products = OrderProductsModel.query.filter_by(order_id=order_id)
+        price = 0.0
+        for order_product in order_products:
+            product  = ProductModel.query.get(order_product.product_id)
+            if not product:
+                raise NotFoundException("El producto que quiere agregar no existe")
+            price += (product.price * order_product.units)
+        if order.discount:    
+            price = price - 0.2*price
+        order.price = price
+        order.save()
 
     def calculate_price(self,_products_info):
         from src.auth.models.product_table import ProductModel
@@ -118,6 +140,7 @@ class OrderService(Service):
 
     #State: created
     def order_created(self, order_id):
+        self.set_order_price(order_id)
         self.change_order_state(order_id, "created")
 
     def order_picked_up(self,order_id):

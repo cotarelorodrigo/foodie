@@ -27,6 +27,7 @@ class OrderModel(BaseModel):
   modified_at = db.Column(db.DateTime)
   delivery_review = db.Column(db.Float, nullable = True)
   shop_review = db.Column(db.Float, nullable = True)
+  discount = db.Column(db.Boolean, nullable=False)
 
   # class constructor
   def __init__(self, data):
@@ -46,6 +47,7 @@ class OrderModel(BaseModel):
     self.modified_at = datetime.datetime.utcnow()
     self.delivery_review = None
     self.shop_review = None 
+    self.discount =  data.get("discount", False)
     
 class OrderProductsModel(BaseModel):
 
