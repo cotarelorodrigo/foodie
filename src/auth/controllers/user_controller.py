@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from src.auth.services.user_service import UserService
 from src.auth.services.order_ofert_service import OrderOfferService
 from src.auth.schemas.schemas import UserSchema, LoginSchema, CreditCardSchema
-from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException, NotFoundException, NotEnoughFavourPoints
+from src.auth.auth_exception import InvalidUserInformation, NotFoundEmail, AccessDeniedException, NotFoundException, NotEnoughFavourPoints, InvalidQueryParameters
 from src.jwt_handler import encode_data_to_jwt
 from src.auth.controllers.common_functions_controllers import auth_required
 from src.auth.services.direc_service import DirecService
@@ -61,7 +61,7 @@ def check_user_email(email):
     else:
         raise NotFoundEmail("user with that email doesnt exist")
 
-@user_blueprint.route('/user/<_id>/premium_subscription', methods=['PUT'])
+@user_blueprint.route('/users/<_id>/premium_subscription', methods=['PUT'])
 def set_premium_subscription(_id):
     service = UserService()
     user = service.get_normal_user(_id)
@@ -70,7 +70,17 @@ def set_premium_subscription(_id):
     content = request.get_json()
     card = card_schema.load(content)
     service.update_user(int(_id),{"suscripcion": "premium"})
-    return jsonify("subscription updated to premium")
+    return jsonify({"msg":"subscription updated to premium"}),200
+    
+
+@user_blueprint.route('/users/<_id>/premium_subscription', methods=['DELETE'])
+def cancel_premium_subscription(_id):
+    service = UserService()
+    user = service.get_normal_user(_id)
+    if not user: 
+        raise NotFoundException("user with that id doesn't exist.")
+    service.update_user(int(_id),{"suscripcion": "flat"})
+    return jsonify({"msg":"subscription updated to flat"}),200
 
 @user_blueprint.route('/users/<_id>/picture',methods=["PUT"])
 def change_picture(_id):
@@ -198,7 +208,7 @@ def put_make_favours_indicator(_id):
 @user_blueprint.route("/favour_offers/<_id>",methods=['GET'])
 def get_favour_offer_by_id(_id):
     service = OrderOfferService()
-    offer = get_favour_offer_by_id(_id)
+    offer = service.get_favour_offer_by_id(_id)
     return jsonify(offer), 200
  
 @user_blueprint.route("/favour_offers/<_id>",methods=['PATCH'])

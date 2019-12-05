@@ -53,7 +53,7 @@ class UserTestCase(BaseTest):
 
         self.assertEqual(response._status_code,200)
         response = self.client.put(
-            '/user/1/premium_subscription',
+            '/users/1/premium_subscription',
             data=json.dumps({
               "number": "5678-9143-0689-4572",
               "security_code": 123

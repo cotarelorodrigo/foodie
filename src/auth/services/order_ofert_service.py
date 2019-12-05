@@ -66,7 +66,7 @@ class OrderOfferService(Service):
 
     def get_favour_offer_by_id(self,_id):
         from src.auth.models.order_table import FavourOfferModel
-        response = FavourOfferModel().get_offer(_id)
+        response = FavourOfferModel.get_offer(_id)
         return self.sqlalchemy_to_dict(response)
 
     def get_delivery_current_offers(self,_id):

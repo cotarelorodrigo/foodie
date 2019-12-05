@@ -2,7 +2,6 @@ from src.auth.services.service import Service
 import googlemaps
 import os
 import math
-import re
 import src.settings
 
 class DirecService(Service):
@@ -24,13 +23,16 @@ class DirecService(Service):
             shop = {"latitude": -34.863794, "longitude": -58.389695}
             deliverys = [{"latitude": -34.858390, "longitude": -58.381415}, {"latitude": -34.861102, "longitude": -58.384215}, {"latitude": -34.863221, "longitude": -58.390684}]
         '''
-        coordinates_shop = {"latitude": shop["latitude"], "longitude":shop["longitude"]}
+        print("shop: {}".format(shop))
+        print("deliverys: {}".format(deliverys))
+        coordinates_shop = {"latitude": float(shop["latitude"]), "longitude": float(shop["longitude"])}
         coordinates_delviery = [{"latitude": d["latitude"], "longitude":d["longitude"]} for d in deliverys]
         matrix = self.gmaps_client.distance_matrix(origins=coordinates_shop, destinations=coordinates_delviery)
         distancias = []
         for delivery in matrix['rows'][0]['elements']:
             if delivery['status'] == 'OK':
-                dist = float(re.findall("\d+\.\d+", delivery['distance']['text'])[0]) 
+                print("d: {}".format(delivery))
+                dist = delivery['distance']['value'] 
                 distancias.append(dist)
             else:
                 distancias.append(math.inf)

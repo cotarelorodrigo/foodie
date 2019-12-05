@@ -7,7 +7,7 @@ class ProductModel(BaseModel):
   # table name
   __tablename__ = 'products'
 
-  product_id = db.Column(db.Integer, primary_key=True)
+  id = db.Column(db.Integer, primary_key=True)
   shop_id = db.Column(db.Integer, db.ForeignKey('shops.id', ondelete='CASCADE'), nullable=False)
   name = db.Column(db.String(128), nullable=False)
   description = db.Column(db.String(128), nullable=False)

@@ -244,7 +244,7 @@ class OrderTestCase(BaseTest):
         p1.save()
         p2.save()
         #Los sumo a la orden
-        order_data["products"] = [{"product_id": p1.product_id,"units": 2},{"product_id": p2.product_id,"units": 1}]
+        order_data["products"] = [{"product_id": p1.id,"units": 2},{"product_id": p2.id,"units": 1}]
         order_data["discount"] = True
         order_service = OrderService()
         order = order_service.create_order(order_data)
@@ -269,7 +269,7 @@ class OrderTestCase(BaseTest):
         delivery.save()
         #Creo orden
         order_data_test = order_data.copy()
-        order_data_test["products"] = [{"product_id": p1.product_id,"units": 2},{"product_id": p2.product_id,"units": 1}]
+        order_data_test["products"] = [{"product_id": p1.id,"units": 2},{"product_id": p2.id,"units": 1}]
         order_data_test["discount"] = True
         order_data_test["user_id"] = user.user_id
         order_data_test["payWithPoints"] = False

@@ -127,7 +127,7 @@ class OrderService(Service):
             order_info['favourPoints'] = order.favourPoints
         else:
             order_info["payWithPoints"] = False
-            order_info["delivery_price"] = order.delivery_price
+            order_info["delivery_price"] = order.delivery_pay
 
         user_service.pay_order(order.user_id, order.delivery_id, order_info)
         user_service.user_finish_working(order.delivery_id)
@@ -194,12 +194,32 @@ class OrderService(Service):
         NormalUserModel.get_user(user_id)
         return OrderModel.query.filter(OrderModel.delivery_id == user_id).filter(OrderModel.state == 'delivered').count()
 
-    def get_N_orders_filtered(self, pageNumber, pageSize, filters):
+    def get_N_orders_filtered(self, pageNumber, pageSize, user_id, delivery_id, shop_id):
         from src.auth.models.order_table import OrderModel
-        result = OrderModel.query.filter_by(**filters).offset(pageNumber*pageSize).limit(pageSize)
+        from src.auth.models.order_table import OrderProductsModel
+        from src.auth.models.product_table import ProductModel
+        orders = OrderModel.query
+        if user_id is not None:
+            orders = orders.filter_by(user_id=user_id)
+        if delivery_id is not None:
+            orders = orders.filter_by(delivery_id=delivery_id)
+        if shop_id is not None:
+            orders = orders.filter_by(shop_id=shop_id)
+        result = orders.offset(pageNumber*pageSize).limit(pageSize)
         response = {}
-        response['items'] = self.sqlachemy_to_dict(result.all())
-        response['totalItems'] = OrderModel.query.filter_by(**filters).count()
+        items = self.sqlachemy_to_dict(result.all())
+
+        for order in items:
+            order_products = self.get_order_items(order["order_id"])
+            for product in order_products:
+                p_info = ProductModel.query.get(product['id'])
+                product.pop("id")
+                product["name"] = p_info.name
+                product["price"] = p_info.price
+            order["products"] = order_products
+
+        response['items'] = items
+        response['totalItems'] = orders.count()
         return response
 
     def review_shop(self,_order_id,review):

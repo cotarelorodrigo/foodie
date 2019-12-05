@@ -18,7 +18,7 @@ def add_order():
     except marshmallow.exceptions.ValidationError as e:
         return jsonify({'msg': 'Missing order information: {}'.format(e)}), 400
     except sqlalchemy.exc.IntegrityError:
-        return jsonify({'msg': 'User_id, delivery_id or products not registered'}), 430
+        return jsonify({'msg': 'Informacion invalida o inexistente'}), 430
     except NotFoundException as e:
         return jsonify({'404': e.msg}), 404
     except:
@@ -42,7 +42,7 @@ def show_orders():
 
     orders = Service().sqlachemy_to_dict(orders.all())
 
-    return jsonify(orders)
+    return jsonify(orders), 200
 
 @orders_blueprint.route('/orders/<_id>/items', methods=['GET'])
 def get_order_items(_id):
