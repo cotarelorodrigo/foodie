@@ -70,7 +70,8 @@ def set_premium_subscription(_id):
     content = request.get_json()
     card = card_schema.load(content)
     service.update_user(int(_id),{"suscripcion": "premium"})
-    return jsonify("subscription updated to premium")
+    return jsonify({"msg":"subscription updated to premium"}),200
+    
 
 @user_blueprint.route('/users/<_id>/premium_subscription', methods=['DELETE'])
 def cancel_premium_subscription(_id):
@@ -79,7 +80,7 @@ def cancel_premium_subscription(_id):
     if not user: 
         raise NotFoundException("user with that id doesn't exist.")
     service.update_user(int(_id),{"suscripcion": "flat"})
-    return jsonify("subscription updated to flat")
+    return jsonify({"msg":"subscription updated to flat"}),200
 
 @user_blueprint.route('/users/<_id>/picture',methods=["PUT"])
 def change_picture(_id):
