@@ -61,7 +61,7 @@ def check_user_email(email):
     else:
         raise NotFoundEmail("user with that email doesnt exist")
 
-@user_blueprint.route('/user/<_id>/premium_subscription', methods=['PUT'])
+@user_blueprint.route('/users/<_id>/premium_subscription', methods=['PUT'])
 def set_premium_subscription(_id):
     service = UserService()
     user = service.get_normal_user(_id)
@@ -71,6 +71,15 @@ def set_premium_subscription(_id):
     card = card_schema.load(content)
     service.update_user(int(_id),{"suscripcion": "premium"})
     return jsonify("subscription updated to premium")
+
+@user_blueprint.route('/users/<_id>/premium_subscription', methods=['DELETE'])
+def cancel_premium_subscription(_id):
+    service = UserService()
+    user = service.get_normal_user(_id)
+    if not user: 
+        raise NotFoundException("user with that id doesn't exist.")
+    service.update_user(int(_id),{"suscripcion": "flat"})
+    return jsonify("subscription updated to flat")
 
 @user_blueprint.route('/users/<_id>/picture',methods=["PUT"])
 def change_picture(_id):
