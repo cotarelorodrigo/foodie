@@ -189,7 +189,7 @@ class OrderService(Service):
         for order in items:
             order_products = self.get_order_items(order["order_id"])
             for product in order_products:
-                p_info = ProductModel.query.get(product['product_id'])
+                p_info = ProductModel.query.get(product['id'])
                 product.pop("id")
                 product["name"] = p_info.name
                 product["price"] = p_info.price
