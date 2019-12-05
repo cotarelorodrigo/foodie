@@ -24,6 +24,7 @@ class UserModel(BaseModel):
     current_order = db.Column(db.Integer, nullable=True)
     rating = db.Column(db.Float, nullable=False)
     reviews = db.Column(db.Integer, nullable=False)
+    fcm_token = db.Column(db.String(128),nullable=True)
 
     created_at = db.Column(db.DateTime)
     last_login = db.Column(db.DateTime)
@@ -51,6 +52,8 @@ class UserModel(BaseModel):
         self.current_order = None
         self.rating = 0.0
         self.reviews = 0
+
+        self.fcm_token = None
 
         self.created_at = datetime.datetime.utcnow()
         self.last_login = datetime.datetime.utcnow()
