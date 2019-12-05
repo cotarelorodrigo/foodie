@@ -26,7 +26,7 @@ class DirecService(Service):
         '''
         print("shop: {}".format(shop))
         print("deliverys: {}".format(deliverys))
-        coordinates_shop = {"latitude": shop["latitude"], "longitude":shop["longitude"]}
+        coordinates_shop = {"latitude": float(shop["latitude"]), "longitude": float(shop["longitude"])}
         coordinates_delviery = [{"latitude": d["latitude"], "longitude":d["longitude"]} for d in deliverys]
         matrix = self.gmaps_client.distance_matrix(origins=coordinates_shop, destinations=coordinates_delviery)
         distancias = []
