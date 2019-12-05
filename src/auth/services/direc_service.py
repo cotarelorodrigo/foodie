@@ -2,7 +2,6 @@ from src.auth.services.service import Service
 import googlemaps
 import os
 import math
-import re
 import src.settings
 
 class DirecService(Service):
@@ -33,7 +32,7 @@ class DirecService(Service):
         for delivery in matrix['rows'][0]['elements']:
             if delivery['status'] == 'OK':
                 print("d: {}".format(delivery))
-                dist = float(re.findall("\d+\.\d+", delivery['distance']['text'])[0]) 
+                dist = delivery['distance']['value'] 
                 distancias.append(dist)
             else:
                 distancias.append(math.inf)
