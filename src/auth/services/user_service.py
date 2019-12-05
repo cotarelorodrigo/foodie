@@ -252,3 +252,8 @@ class UserService(Service):
         user.make_favours = make_favours
         user.save()
         return user
+
+    def discount_favour_point(self, user_id, point_to_discount):
+        user = self.get_user(user_id)
+        user.favourPoints -= point_to_discount
+        user.save()

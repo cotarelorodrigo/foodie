@@ -267,6 +267,7 @@ class OrderTestCase(BaseTest):
         user.save()
         delivery = DeliveryUserModel(delivery_data)
         delivery.save()
+        assert user.favourPoints == 30
         #Creo orden
         order_data_test = order_data.copy()
         order_data_test["products"] = [{"product_id": p1.id,"units": 2},{"product_id": p2.id,"units": 1}]
@@ -282,6 +283,9 @@ class OrderTestCase(BaseTest):
         order_ofert_id = order_ofert_service.create_order_ofert(order_ofert_data)
         order_ofert_service.update_offer_state(delivery.user_id, order_ofert_id, 'accepted')
         assert order.state == 'onWay'
+        #Completo orden
+        order_service.order_delivered(order.order_id)
+        assert user.favourPoints == 20
         
         
 

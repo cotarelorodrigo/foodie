@@ -132,6 +132,8 @@ class OrderService(Service):
         user_service.pay_order(order.user_id, order.delivery_id, order_info)
         user_service.user_finish_working(order.delivery_id)
         user_service.receive_order(order.user_id)
+        if order.discount:
+            user_service.discount_favour_point(order.user_id, 10)
         self.change_order_state(order_id, "delivered")
 
     #State: cancelled
