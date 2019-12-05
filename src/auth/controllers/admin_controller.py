@@ -403,7 +403,7 @@ def orders():
         try:
             if user_id is not None: user_id = int(user_id)
             if delivery_id is not None: delivery_id = int(delivery_id)
-            if shop_id is not None: user_id = int(shop_id)
+            if shop_id is not None: shop_id = int(shop_id)
         except:
             raise InvalidQueryParameters("Invalid query type values")
 
