@@ -17,7 +17,7 @@ def add_order():
     except marshmallow.exceptions.ValidationError as e:
         return jsonify({'msg': 'Missing order information: {}'.format(e)}), 400
     except sqlalchemy.exc.IntegrityError:
-        return jsonify({'msg': 'User_id not registered'}), 430
+        return jsonify({'msg': 'Informacion invalida o inexistente'}), 430
     except:
         raise
     else:

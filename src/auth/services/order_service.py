@@ -9,7 +9,6 @@ class OrderService(Service):
     def create_order(self, order_data):
         from src.auth.models.order_table import OrderModel, OrderProductsModel
         from src.auth.schemas.schemas import OrderSchema
-        from src.auth.models.product_table import ProductModel
         from src.auth.services.user_service import UserService
         order_schema = OrderSchema()
         order_info, products_info = order_schema.load(order_data)
@@ -18,10 +17,6 @@ class OrderService(Service):
         #     if not user_service.user_order_by_favour(int(order_info["user_id"]), int(order_info["favourPoints"])):
         #         raise NotEnoughFavourPoints("Favour points insuficientes")
         order = OrderModel(order_info)
-        for p in products_info:
-            _p = self.sqlachemy_to_dict(ProductModel.query.filter_by(id=p['product_id']).first())
-            if _p is not None:
-                p.update({'price': _p['price'], 'name': _p['name']})
         products = [OrderProductsModel(product) for product in products_info]
         order.save() #Hay que guardar primero la orden orden porq es la parte unaria de la relacion
         for p in products:
@@ -179,6 +174,7 @@ class OrderService(Service):
     def get_N_orders_filtered(self, pageNumber, pageSize, user_id, delivery_id, shop_id):
         from src.auth.models.order_table import OrderModel
         from src.auth.models.order_table import OrderProductsModel
+        from src.auth.models.product_table import ProductModel
         orders = OrderModel.query
         if user_id is not None:
             orders = orders.filter_by(user_id=user_id)
@@ -189,8 +185,16 @@ class OrderService(Service):
         result = orders.offset(pageNumber*pageSize).limit(pageSize)
         response = {}
         items = self.sqlachemy_to_dict(result.all())
-        for item in items:
-            item.update({'products': self.sqlachemy_to_dict(OrderProductsModel.query.filter_by(order_id=item['order_id']).all())})
+
+        for order in items:
+            order_products = self.get_order_items(order["order_id"])
+            for product in order_products:
+                p_info = ProductModel.query.get(product['id'])
+                product.pop("id")
+                product["name"] = p_info.name
+                product["price"] = p_info.price
+            order["products"] = order_products
+
         response['items'] = items
         response['totalItems'] = orders.count()
         return response
